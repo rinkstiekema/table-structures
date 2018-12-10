@@ -5,7 +5,7 @@ import pandas as pd
 root_dir = os.getcwd()
 file_list = ['train.csv', 'val.csv']
 data_root = os.path.join(os.path.dirname(root_dir), 'data')
-image_source_dir = data_root + '\images'
+image_source_dir = os.path.join(data_root,r'images')
 print(data_root)
 print(image_source_dir)
 for file in file_list:
