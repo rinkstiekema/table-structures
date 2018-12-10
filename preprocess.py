@@ -4,10 +4,9 @@ import pandas as pd
 
 root_dir = os.getcwd()
 file_list = ['train.csv', 'val.csv']
-image_source_dir = os.path.join(root_dir, 'in')
-data_root = os.path.join(root_dir, 'data')
+data_root = os.path.join(os.path.dirname(root_dir), 'data')
+image_source_dir = data_root + '\images'
 for file in file_list:
-    
     image_target_dir = os.path.join(data_root, file.split(".")[0])
     
     # read list of image files to process from file
