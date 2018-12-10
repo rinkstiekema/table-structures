@@ -6,6 +6,8 @@ root_dir = os.getcwd()
 file_list = ['train.csv', 'val.csv']
 data_root = os.path.join(os.path.dirname(root_dir), 'data')
 image_source_dir = data_root + '\images'
+print(data_root)
+print(image_source_dir)
 for file in file_list:
     image_target_dir = os.path.join(data_root, file.split(".")[0])
     
