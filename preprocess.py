@@ -6,17 +6,17 @@ root_dir = os.getcwd()
 file_list = ['train.csv', 'val.csv']
 data_root = os.path.join(os.path.dirname(root_dir), 'data')
 image_source_dir = os.path.join(data_root,r'images')
-print(data_root)
-print(image_source_dir)
+
 for file in file_list:
     image_target_dir = os.path.join(data_root, file.split(".")[0])
-    
+
     # read list of image files to process from file
     image_list = pd.read_csv(os.path.join(data_root, file), header=None)[0]
     
     print("Start preprocessing images")
-    for image in image_list:
+    for image in image_list[1:]:
         # open image file
+        print(os.path.join(image_source_dir, image))
         img = cv2.imread(os.path.join(image_source_dir, image))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         

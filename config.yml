@@ -14,7 +14,7 @@ train:
 dataset:
   type: object_detection
   # From which directory to read the dataset.
-  dir: tfdata/
+  dir: ../data/tfdata/
   image_preprocessing:
     min_size: 600
     max_size: 1024
