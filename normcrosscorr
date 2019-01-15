@@ -1,0 +1,532 @@
+#!/bin/bash
+#
+# Developed by Fred Weinhaus 8/25/2009 .......... revised 7/11/2017
+#
+# ------------------------------------------------------------------------------
+# 
+# Licensing:
+# 
+# Copyright © Fred Weinhaus
+# 
+# My scripts are available free of charge for non-commercial use, ONLY.
+# 
+# For use of my scripts in commercial (for-profit) environments or 
+# non-free applications, please contact me (Fred Weinhaus) for 
+# licensing arrangements. My email address is fmw at alink dot net.
+# 
+# If you: 1) redistribute, 2) incorporate any of these scripts into other 
+# free applications or 3) reprogram them in another scripting language, 
+# then you must contact me for permission, especially if the result might 
+# be used in a commercial or for-profit environment.
+# 
+# My scripts are also subject, in a subordinate manner, to the ImageMagick 
+# license, which can be found at: http://www.imagemagick.org/script/license.php
+# 
+# ------------------------------------------------------------------------------
+# 
+####
+#
+# USAGE: normcrosscorr [-s] [-p] [-m mode] [-c color] [-t type] 
+# smallfile largefile corrfile [matchfile]
+# USAGE: normcrosscorr [-h or -help]
+#
+# OPTIONS:
+#
+# -s                stretch the correlation surface to full dynamic range so 
+#                   that the best match is full white; default is unstretched
+# -p                apply a pseudocolor to the correlation surface image; 
+#                   default is no pseudocoloring
+# -m      mode      mode for matchfile output; choices are: draw, overlay or 
+#                   best; draw colored box at best match location, overlay
+#                   the small image at match location on a one half transparent
+#                   large image or output the best match subsection; 
+#                   default=draw
+# -c      color     color to use for drawing box on large image where best 
+#                   matched subsection was found; default=black
+# -t      type      type of approach used to combine color correlation results 
+#                   into a single grayscale surface image; choices are: gray,
+#                   rec709luma, rec601luma, average and rms; default=gray
+#
+###
+#
+# NAME: NORMCROSSCORR 
+# 
+# PURPOSE: To compute the normalized cross correlation surface to find where 
+# a small image best matches within a larger image.
+# 
+# DESCRIPTION: NORMCROSSCORR computes the normalized cross correlation surface 
+# (image) to find where a small (first) image best matches within a larger 
+# (second) image. Since the matching may differ for each channel, the output  
+# correlation image will be converted to grayscale. Any alpha channel on either 
+# input image will be removed automatically before processing. Values in the 
+# correlation surface can vary between +1 and -1, with a perfect match 
+# being +1. If the correlation surface result is saved to an image format 
+# that does not support negative values, the correlation surface will be 
+# clamped so that all negative values are zero.
+# 
+# 
+# OPTIONS: 
+# 
+# -s ... Stretch the normalized cross correlation surface image to full 
+# dynamic range. Default is no stretch.
+# 
+# -p ... Apply a pseudocoloring to the normalized cross correlation surface 
+# image where red corresponds to the highest values and purple to the lowest 
+# values. Default is no pseudocoloring.
+# 
+# -m mode ... MODE is the layout mode for the optional matchfile image.
+# Choices are draw (or d), overlay (or o) or best (or b). Draw simply draws 
+# a colored box outline at the best match subsection in the larger image. 
+# Overlay inserts the small image at the match location of a 30% opaque 
+# version of the larger image. Best outputs the subsection of the larger image 
+# that best matches the smaller image. The default="draw". Ignored if no 
+# matchfile specified.
+# 
+# -c color ... COLOR is the color to use to draw the outline of the best 
+# matching subsection in the larger image when mode=draw. Any valid IM color 
+# specification may be used. The default=black.
+# 
+# -t type ... TYPE of approach used to combine color correlation results into 
+# a single grayscale surface image. The choices are: gray, rec709luma, 
+# rec601luma, average and rms. The default=gray. Note that average and rms 
+# require IM 6.8.5.5 or higher.
+# 
+# REQUIREMENTS: IM version 6.5.4-7 or higher, but compiled with HDRI enabled 
+# in any quantum level of Q8, Q16 or Q32. Also requires the FFTW delegate 
+# library.
+# 
+# LIMITATIONS: Artifacts can be produced in the correlation surface image 
+# when there are constant color regions in the larger image of equal or larger 
+# size than the smaller image. This occurs, because the standard deviation in 
+# those regions is zero or near zero, thereby causing a divide by (near) zero 
+# situation, which in turn cause a larger than 1 correlation value. Some 
+# mitigation of this is performed in the script.
+# 
+# REFERENCES: 
+# F. Weinhaus and G. Latshaw, Edge Extraction Based Image Correlation, Proceedings SPIE, Vol. 205, 67 - 75, 1979.
+# http://en.wikipedia.org/wiki/Normalized_cross-correlation#Normalized_cross-correlation
+# 
+# See http://www.fmwconcepts.com/imagemagick/fourier_transforms/fourier.html 
+# for more details about the Fourier Transform with ImageMagick.
+# 
+# CAVEAT: No guarantee that this script will work on all platforms, 
+# nor that trapping of inconsistent parameters is complete and 
+# foolproof. Use At Your Own Risk. 
+# 
+# 
+######
+#
+
+# set default values
+stretch="no"		#yes or no
+pseudocolor="no"    #yes or no
+mode="draw"			#draw or overlay
+color="black"		#any valid IM color
+type="gray"
+transp=0.3			#transparency of large image in mode=overlay
+
+# set directory for temporary files
+tmpdir="/tmp"
+
+# set up functions to report Usage and Usage with Description
+PROGNAME=`type $0 | awk '{print $3}'`  # search for executable on path
+PROGDIR=`dirname $PROGNAME`            # extract directory of program
+PROGNAME=`basename $PROGNAME`          # base name of program
+usage1() 
+	{
+	echo >&2 ""
+	echo >&2 "$PROGNAME:" "$@"
+	sed >&2 -e '1,/^####/d;  /^###/g;  /^#/!q;  s/^#//;  s/^ //;  4,$p' "$PROGDIR/$PROGNAME"
+	}
+usage2() 
+	{
+	echo >&2 ""
+	echo >&2 "$PROGNAME:" "$@"
+	sed >&2 -e '1,/^####/d;  /^######/g;  /^#/!q;  s/^#*//;  s/^ //;  4,$p' "$PROGDIR/$PROGNAME"
+	}
+
+
+# function to report error messages
+errMsg()
+	{
+	echo ""
+	echo $1
+	echo ""
+	usage1
+	exit 1
+	}
+
+# function crossCorr to compute IFT of complex product of (A*)x(B), 
+# where A* is complex conjugate
+# A*=a1-ia2; B=b1+ib2
+# (A*)x(B)=(a1xb1+a2*b2) + i(a1xb2-a2xb1)
+crossCorr()
+	{
+	img1=$1
+	img2=$2
+	# note both images contain 2 frames
+	if [ "$im_version" -ge "06080701" ]; then
+	convert \( $img1 -complex conjugate \) $img2 -complex multiply \
+		$fouriernorm +ift "$dir/tmp0.mpc"
+	else
+		convert $img1 $img2 \
+			\( -clone 0 -clone 2 -define compose:clamp=false -compose multiply -composite \) \
+			\( -clone 1 -clone 3 -define compose:clamp=false -compose multiply -composite \) \
+			\( -clone 4 -clone 5 -define compose:clamp=false -compose plus -composite \) \
+			\( -clone 0 -clone 3 -define compose:clamp=false -compose multiply -composite \) \
+			\( -clone 1 -clone 2 -define compose:clamp=false -compose multiply -composite \) \
+			\( -clone 7 -clone 8 +swap -define compose:clamp=false -compose minus -composite \) \
+			-delete 0-5,7,8 $fouriernorm +ift "$dir/tmp0.mpc"
+	fi
+	}
+
+# function to test for minus at start of value of second part of option 1 or 2
+checkMinus()
+	{
+	test=`echo "$1" | grep -c '^-.*$'`   # returns 1 if match; 0 otherwise
+    [ $test -eq 1 ] && errMsg "$errorMsg"
+	}
+
+# test for correct number of arguments and get values
+if [ $# -eq 0 ]
+	then
+	# help information
+   echo ""
+   usage2
+   exit 0
+elif [ $# -gt 12 ]
+	then
+	errMsg "--- TOO MANY ARGUMENTS WERE PROVIDED ---"
+else
+	while [ $# -gt 0 ]
+		do
+			# get parameter values
+			case "$1" in
+		  -h|-help)    # help information
+					   echo ""
+					   usage2
+					   exit 0
+					   ;;
+				-s)    # get stretch
+					   stretch="yes"
+					   ;;
+				-p)    # get pseudocolor
+					   pseudocolor="yes"
+					   ;;
+			   	-m)    # mode
+					   shift  # to get the next parameter
+					   # test if parameter starts with minus sign 
+					   errorMsg="--- INVALID MODE SPECIFICATION ---"
+					   checkMinus "$1"
+					   mode=`echo "$1" | tr "[:upper:]" "[:lower:]"`
+					   case "$mode" in
+					   		draw|d) mode="draw" ;;
+					   		overlay|o) mode="overlay" ;;
+					   		best|b) mode="best" ;;
+					   		*) errMsg "--- MODE=$mode IS NOT A VALID CHOICE ---" ;;
+					   esac
+					   ;;
+			   	-c)    # get color
+					   shift  # to get the next parameter
+					   # test if parameter starts with minus sign 
+					   errorMsg="--- INVALID COLOR SPECIFICATION ---"
+					   checkMinus "$1"
+					   color="$1"
+					   ;;
+			   	-t)    # type
+					   shift  # to get the next parameter
+					   # test if parameter starts with minus sign 
+					   errorMsg="--- INVALID TYPE SPECIFICATION ---"
+					   checkMinus "$1"
+					   type=`echo "$1" | tr "[:upper:]" "[:lower:]"`
+					   case "$type" in
+					   		gray) ;;
+					   		rec709luma) ;;
+					   		rec601luma) ;;
+					   		average) ;;
+					   		rms) ;;
+					   		*) errMsg "--- TYPE=$type IS NOT A VALID CHOICE ---" ;;
+					   esac
+					   ;;
+				 -)    # STDIN and end of arguments
+					   break
+					   ;;
+				-*)    # any other - argument
+					   errMsg "--- UNKNOWN OPTION ---"
+					   ;;
+		     	 *)    # end of arguments
+					   break
+					   ;;
+			esac
+			shift   # next option
+	done
+	#
+	# get infile, filtfile and outfile
+	smallfile="$1"
+	largefile="$2"
+	corrfile="$3"
+	matchfile="$4"
+fi
+
+# test that infile provided
+[ "$smallfile" = "" ] && errMsg "NO SMALL INPUT FILE SPECIFIED"
+
+# test that filtfile provided
+[ "$largefile" = "" ] && errMsg "NO LARGE INPUT FILE SPECIFIED"
+
+# test that outfile provided
+[ "$corrfile" = "" ] && errMsg "NO CORRELATION FILE SPECIFIED"
+
+
+
+# Setup directory for temporary files
+# On exit remove ALL -- the whole directory of temporary images
+dir="$tmpdir/$PROGNAME.$$"
+trap "rm -rf $dir; exit 0" 0
+trap "rm -rf $dir; exit 1" 1 2 3 15
+#trap "rm -rf $dir; exit 1" ERR
+mkdir "$dir" || {
+  echo >&2 "$PROGNAME: Unable to create working dir \"$dir\" -- ABORTING"
+  exit 10
+}
+
+# read the input image and filter image into the temp files and test validity.
+convert -quiet "$smallfile" -alpha off +repage "$dir/tmpA1.mpc" ||
+	errMsg "--- FILE $smallfile DOES NOT EXIST OR IS NOT AN ORDINARY FILE, NOT READABLE OR HAS ZERO SIZE  ---"
+
+convert -quiet "$largefile" -alpha off +repage "$dir/tmpA2.mpc" ||
+	errMsg "--- FILE $largefile DOES NOT EXIST OR IS NOT AN ORDINARY FILE, NOT READABLE OR HAS ZERO SIZE  ---"
+
+
+# test for valid version of IM
+im_version=`convert -list configure | \
+	sed '/^LIB_VERSION_NUMBER */!d;  s//,/;  s/,/,0/g;  s/,0*\([0-9][0-9]\)/\1/g' | head -n 1`
+[ "$im_version" -lt "06050407" ] && errMsg "--- REQUIRES IM VERSION 6.5.4-7 OR HIGHER ---"
+#echo "im_version=$im_version;"
+
+# test for hdri enabled
+if [ "$im_version" -ge "07000000" ]; then
+	hdri_on=`convert -version | grep "HDRI"`	
+else
+	hdri_on=`convert -list configure | grep "enable-hdri"`
+fi
+[ "$hdri_on" = "" ] && errMsg "--- REQUIRES HDRI ENABLED IN IM COMPILE ---"
+
+if [ "$im_version" -ge "07000000" ]; then
+	identifying="magick identify"
+else
+	identifying="identify"
+fi
+
+# get image dimensions to be sure that infile1 is smaller than infile2
+ws=`$identifying -ping -format "%w" "$dir/tmpA1.mpc"`
+hs=`$identifying -ping -format "%h" "$dir/tmpA1.mpc"`
+wlo=`$identifying -ping -format "%w" "$dir/tmpA2.mpc"`
+hlo=`$identifying -ping -format "%h" "$dir/tmpA2.mpc"`
+
+[ $ws -gt $wlo ] && errMsg "--- SECOND IMAGE MUST BE WIDER THAN FIRST IMAGE ---"
+[ $hs -gt $hlo ] && errMsg "--- SECOND IMAGE MUST BE TALLER THAN FIRST IMAGE ---"
+
+# get diff sizes for final crop to avoid best match with wrap around
+wd=$((wlo-ws))
+hd=$((hlo-hs))
+
+# compute even dimensions for large image
+wl=`convert xc: -format "%[fx:2*ceil($wlo/2)]" info:`
+hl=`convert xc: -format "%[fx:2*ceil($hlo/2)]" info:`
+
+# test if large image is odd, and if so, then pad to even with the mean
+test1=`convert xc: -format "%[fx:(($wl==$wlo) && ($hl==$hlo))?1:0]" info:`
+if [ $test1 -eq 0 ]; then
+	meanl=`convert "$dir/tmpA2.mpc" -format "%[fx:100*mean.r]\%,%[fx:100*mean.g]\%,%[fx:100*mean.b]\%" info:`
+	convert "$dir/tmpA2.mpc" -background "gray($meanl)" -extent ${wl}x${hl} "$dir/tmpA2.mpc"
+fi
+#echo "test1=$test1; test2=$test2; ws=$ws; hs=$hs; wlo=$wlo; hlo=$hlo; wl=$wl; hl=$hl;"
+
+: '
+C = ((S-Ms) X (L-Ml))/(sigmaS*sqrt(Ns(U X L^2) - (U X L)^2)
+Note above does not work when try to compensate for std of Large image equal 0, so use following
+C = (((S-Ms) X (L-Ml))/Ns) / (sigmaS*sqrt((U X L^2)/Ns - (U X L)^2/(Ns*Ns))
+where
+A X B = I(F(A*)F(B)] and A* is complex conjugate of A, F=FFT and I=IFT
+L is large image.
+L-Ml is the mean subtracted large image. 
+S-Ms is the mean subtracted small image. 
+U is a unit image (value=1) 
+Both S-Ms and U are padded at right and bottom to size of L. 
+
+Note numerator can be expanded from spatial format to show that it is
+sum[(S-Ms)(L)] - Ml*sum(S-Ms)
+But the second term is zero since sum(S-Ms)=sum(S)-N*Ms and both are just the total pixel values in the small image, so
+C = (((S-Ms) X (L))/Ns) / (sigmaS*sqrt((U X L^2)/Ns - (U X L)^2/(Ns*Ns))
+'
+
+# compute N=wsxhs = total pixels in small image
+Ns=`echo "$ws*$hs" | bc`
+Nl=`echo "$wl*$hl" | bc`
+
+
+# get quantumrange
+qrange=`convert xc: -precision 10 -format "%[fx:quantumrange]" info:`
+qrangesqr=`echo "scale=10; sqrt($qrange)" | bc`
+
+
+# get factors
+fact1=`echo "scale=10; 1/$Ns" | bc`
+fact2=`echo "scale=10; $qrange/($Ns*$Ns)" | bc`
+
+#echo "Ns=$Ns; Nl=$Nl fact1=$fact1; fact2=$fact2; qrange=$qrange; qrangesqr=$qrangesqr;"
+
+
+# get mean and std of small image
+mean=`convert "$dir/tmpA1.mpc" -format "%[fx:100*mean.r]\%,%[fx:100*mean.g]\%,%[fx:100*mean.b]\%" info:`
+std=`convert "$dir/tmpA1.mpc" -format "%[fx:100*standard_deviation.r]\%,%[fx:100*standard_deviation.g]\%,%[fx:100*standard_deviation.b]\%" info:`
+
+
+# ncc has range -1 to +1, so need to scale that to range 0 to quantumrange
+# thus we scale by dividing std by quantumrange and 
+# note that negatives are clipped by PNG output.
+if [ "$im_version" -lt "06050410" ]; then
+	#HDRI was unscaled by quantumrange
+	# so need the extra factor of quantumrange?
+	# not sure why a perfect match is considerably less that quantumrange?
+	std=`convert xc: -format "%[fx:$std/(quantumrange)]" info:`
+fi
+#echo "mean=$mean; std=$std;"
+
+if [ "$im_version" -ge "06080610" ]; then
+	fouriernorm="-define fourier:normalize=inverse"
+	normfact=""
+else
+	# default is forward normalization
+	fouriernorm=""
+	normfact="-evaluate multiply $Nl"
+fi
+#echo "fouriernorm=$fouriernorm; normfact=$normfact"
+
+# get square of large image and take FFT
+# correct for IM normalization by multiplying by quantumrange
+convert "$dir/tmpA2.mpc" "$dir/tmpA2.mpc" -define compose:clamp=false -compose multiply -composite -evaluate multiply $qrange $fouriernorm +fft "$dir/tmpL2.mpc"
+
+# take FFT of large image
+convert "$dir/tmpA2.mpc" $fouriernorm +fft "$dir/tmpL.mpc"
+
+# subtract mean from small image and pad and take FFT
+# unnormalize FFT by multiplying by Nl if normalization is forward
+convert "$dir/tmpA1.mpc" \( -size ${ws}x${hs} xc:"rgb($mean)" \) +swap -define compose:clamp=false -compose minus -composite \
+	-background black -extent ${wl}x${hl} $fouriernorm +fft $normfact "$dir/tmpS.mpc"
+
+# create identity U image (value=1) and pad and take FFT
+# unnormalize FFT by multiplying by Nl if normalization is forward
+convert -size ${ws}x${hs} xc:white -background black -extent ${wl}x${hl} $fouriernorm +fft $normfact "$dir/tmpU.mpc"
+
+# create ((S-Ms) X (L))/Ns
+crossCorr  "$dir/tmpS.mpc"  "$dir/tmpL.mpc"
+convert "$dir/tmp0.mpc" -evaluate multiply $fact1 "$dir/tmpSL.mpc"
+
+# create (U X L^2)/Ns
+crossCorr "$dir/tmpU.mpc" "$dir/tmpL2.mpc"
+convert "$dir/tmp0.mpc" -evaluate multiply $fact1 "$dir/tmpL2.mpc"
+
+#create (U X L)^2/Ns^2
+# multiply by qrange to account for IM normalization in multiply
+# so final multiply is qrange/(Ns*Ns)
+crossCorr  "$dir/tmpU.mpc"  "$dir/tmpL.mpc"
+convert "$dir/tmp0.mpc" "$dir/tmp0.mpc" -define compose:clamp=false -compose multiply -composite -evaluate multiply $fact2 "$dir/tmpL.mpc"
+
+# compute the std of L denominator image
+# IM normalizes sqrt in range 0 to 1, then multiplies by qrange
+# thus need to divide by sqrt(qrange) to compensate
+# make white image
+# trap values for std of large image if too close to 0 (when sub region is too constant a color), so no divide by zero
+# replacing the use of -fx "(abs(u)<0.002)?1:u"
+# note do not need abs since std should be non-negative
+convert \( "$dir/tmpL2.mpc" "$dir/tmpL.mpc" +swap -define compose:clamp=false -compose minus -composite \
+		-evaluate pow 0.5 -evaluate divide $qrangesqr \) \
+	\( -size ${wl}x${hl} xc:white \) \
+	\( -clone 0 -threshold 2% -negate \) \
+	-compose over -composite "$dir/tmpL.mpc"
+
+
+# set up grayproc
+[ "$type" = "average" -a "$im_version" -lt "06080505" ] && errMsg "--- TYPE=AVERAGE REQUIRES IM 6.8.5.5 OR HIGHER ---"
+[ "$type" = "rms" -a "$im_version" -lt "06080505" ] && errMsg "--- TYPE=RMS REQUIRES IM 6.8.5.5 OR HIGHER ---"
+
+if [ "$type" = "gray" ]; then
+	gproc="-colorspace gray"
+elif [ "$type" = "rec709luma" ]; then
+	gproc="-colorspace rec709luma"
+elif [ "$type" = "rec601luma" ]; then
+	gproc="-colorspace rec601luma"
+elif [ "$type" = "average" ]; then
+	gproc="-grayscale average"
+elif [ "$type" = "rms" ]; then
+	gproc="-grayscale rms"
+fi
+
+
+#evaluate normalize cross correlation image
+convert "$dir/tmpSL.mpc"  \
+	\( "$dir/tmpL.mpc" \( -size ${wl}x${hl} xc:"rgb($std)" \) -define compose:clamp=false -compose multiply -composite \) \
+	+swap -compose over -define compose:clamp=false -compose divide -composite -crop ${wd}x${hd}+0+0 +repage $gproc \
+	"$dir/tmp0.mpc"
+
+
+
+# setup pseudocolor lut
+if [ "$pseudocolor" = "yes" ]; then
+	convert xc:blueviolet xc:blue xc:cyan xc:green1 \
+		xc:yellow xc:orange xc:red +append \
+		-filter cubic -resize 256x1 "$dir/tmpP.mpc"
+	colorize="$dir/tmpP.mpc -clut"
+else
+colorize=""
+fi
+
+# setup stretch
+if [ "$stretch" = "yes" ]; then
+	convert \( "$dir/tmp0.mpc" -auto-level \) $colorize "$corrfile"
+else
+	convert "$dir/tmp0.mpc" $colorize "$corrfile"
+fi
+
+
+#echo "get match"
+if [ "$im_version" -ge "06080610" ]; then
+	max=`convert $dir/tmp0.mpc -format "%[fx:maxima]" info:`
+	coords=`$identifying -define identify:locate=maximum -define identify:limit=1 $dir/tmp0.mpc | tail -n 1 | sed -n 's/^.* \([0-9]*,[0-9]*\)/\1/p'`
+	echo ""
+	echo "Match Coords: ($coords) And Score In Range 0 to 1: ($max)"
+	echo ""
+else
+	max=`convert "$dir/tmp0.mpc" -format "%[fx:maxima]" info:`
+	str=`convert "$dir/tmp0.mpc" -fx "u>=($max-quantumscale)?debug(u):0" null: 2>&1`
+	coords=`echo "$str" | sed -n 's/^.*\[\([0-9]*,[0-9]*\)\]\.red.*$/\1/p'`
+	echo ""
+	echo "Match Coords: ($coords) And Score In Range 0 to 1: ($max)"
+	echo ""
+fi
+
+# compute subsection
+ulx=`echo $coords | cut -d,  -f 1`
+uly=`echo $coords | cut -d,  -f 2`
+subsection="${ws}x${hs}+$ulx+$uly"
+#echo "$subsection"
+
+
+if [ "$matchfile" != "" -a "$mode" = "draw" ]; then
+	lrx=$(($ulx+$ws))
+	lry=$(($uly+$hs))
+#echo "ulx=$ulx; uly=$uly; lrx=$lrx; lry=$lry"
+	convert $dir/tmpA2.mpc[${wlo}x${hlo}+0+0] -fill none -stroke "$color" \
+		-draw "rectangle $ulx,$uly $lrx,$lry" "$matchfile"
+elif [ "$matchfile" != "" -a "$mode" = "overlay" ]; then
+	convert \( "$dir/tmpA2.mpc" -alpha on -channel a -evaluate set $transp% +channel \) "$dir/tmpA1.mpc" \
+		-geometry "$subsection" -compose over -composite "$matchfile"
+elif [ "$matchfile" != "" -a "$mode" = "best" ]; then
+	convert $dir/tmpA2.mpc[${ws}x${hs}+${ulx}+${uly}] "$matchfile"
+fi
+exit 0
+
+
+
