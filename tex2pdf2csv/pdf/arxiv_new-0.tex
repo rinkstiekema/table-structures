@@ -1,0 +1,25 @@
+\documentclass{article}
+\begin{document}
+\begin{table}[b]
+	\centering
+	\begin{tabular}{ @{} l | r | r | r @{} }
+		\toprule
+		Name & \# Classes & \# of samples & Dimension \\
+		\midrule 
+		URL~\cite{ma2009identifying} & 2 & 2 396 130 & 3 231 961 \\
+		Webspam~\cite{webb2006introducing} & 2 &  350 000 & 16 609 143 \\
+		\midrule 
+		ImageNet~\cite{russakovsky2015imagenet} & 1000 & 1,2 million & 256x256x3\\
+		MNIST~\cite{lecun2010mnisthandwrittendigit} & 10 & 60 000 & 28x28 \\
+		CIFAR-10~\cite{krizhevsky2009learning} & 10 & 60 000 & 32x32x3 \\
+		\midrule
+		ATIS~\cite{hemphill1990atis} & 128 & 4 978 \textit{s} / 56 590 \textit{w} & - \\
+		\midrule
+		Hansards~\cite{hansards} & - & 948K \textit{s} / 15 657K \textit{w} & - \\
+		\bottomrule
+	\end{tabular}
+	\caption{Real World Application Datasets. \textit{s} stands for sentences (or pairs) and \textit{w} for words. }
+	\label{tbl:DataSets}
+
+\end{table}
+\end{document}

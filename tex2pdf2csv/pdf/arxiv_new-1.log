@@ -1,0 +1,302 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.1.18)  18 JAN 2019 13:36
+entering extended mode
+**./pdf/arxiv_new-1.tex
+(pdf/arxiv_new-1.tex
+LaTeX2e <2018-12-01>
+("E:\Programs\MiKTeX 2.9\tex/latex/base\article.cls"
+Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
+("E:\Programs\MiKTeX 2.9\tex/latex/base\size10.clo"
+File: size10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+No file arxiv_new-1.aux.
+\openout1 = `arxiv_new-1.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 6.
+! Undefined control sequence.
+l.7 			\toprule
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.9 			\midrule
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.10 			\multirow
+                 { 3}{*}{Piz Daint} & \multirow{ 3}{*}{Webspam} & LR & 32 & ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.10 			\multirow{ 3}{*}{Piz Daint} & \multirow
+                                               { 3}{*}{Webspam} & LR & 32 & ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.10 ...bspam} & LR & 32 & 2.40 (2.16) & \multirow
+                                                  { 3}{*}{\ssarone} & 0.68 (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.10 ... & 2.40 (2.16) & \multirow{ 3}{*}{\ssarone
+                                                  } & 0.68 (0.35) & \textbf{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.12 			\midrule
+                
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.13 			\multirow
+                 { 3}{*}{Piz Daint}& \multirow{ 3}{*}{URL} & LR & 32 & 2.64 ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.13 			\multirow{ 3}{*}{Piz Daint}& \multirow
+                                              { 3}{*}{URL} & LR & 32 & 2.64 ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.13 ...}{URL} & LR & 32 & 2.64 (2.58) & \multirow
+                                                  { 3}{*}{\ssarone} & 0.75 (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.13 ... & 2.64 (2.58) & \multirow{ 3}{*}{\ssarone
+                                                  } & 0.75 (0.70) & \textbf{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.15 			\midrule
+                
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.16 			\multirow
+                 { 2}{*}{Piz Daint}& Webspam & LR & 8 & 4.67 (3.79) & \multi...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.16 ...Webspam & LR & 8 & 4.67 (3.79) & \multirow
+                                                  { 2}{*}{\ssartwo} & 2.56 (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.16 ... & 4.67 (3.79) & \multirow{ 2}{*}{\ssartwo
+                                                  } & 2.56 (1.58) & \textbf{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.18 			\midrule
+                
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.19 			\multirow
+                 { 2}{*}{Greina (IB)} & Webspam & LR & 8 & 6.52 (4.67) & \mu...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.19 ...Webspam & LR & 8 & 6.52 (4.67) & \multirow
+                                                  { 2}{*}{\ssartwo} & 3.63 (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.19 ... & 6.52 (4.67) & \multirow{ 2}{*}{\ssartwo
+                                                  } & 3.63 (1.90) & \textbf{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.21 			\midrule
+                
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.22 			\multirow
+                 { 2}{*}{Greina (GigE)} & Webspam & LR & 8 & 76.80 (75.95) &...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.22 ...bspam & LR & 8 & 76.80 (75.95) & \multirow
+                                                  { 2}{*}{\ssartwo} & 3.79 (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.22 ... 76.80 (75.95) & \multirow{ 2}{*}{\ssartwo
+                                                  } & 3.79 (2.95) & \textbf{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \bottomrule 
+                            
+l.24 			\bottomrule
+                   
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (129.66652pt too wide) in paragraph at lines 6--26
+ [][] 
+ []
+
+[1
+
+{C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+(e:\Documents\School\Thesis\tex2pdf\pdf\arxiv_new-1.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 225 strings out of 492946
+ 2567 string characters out of 3137735
+ 65202 words of memory out of 3000000
+ 4202 multiletter control sequences out of 15000+200000
+ 5772 words of font info for 21 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 23i,7n,17p,359b,270s stack positions out of 5000i,500n,10000p,200000b,50000s
+<E:/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx8.pfb><E:/Programs
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Programs/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/cm/cmr8.pfb>
+Output written on e:\Documents\School\Thesis\tex2pdf\pdf\arxiv_new-1.pdf (1 pag
+e, 45271 bytes).
+PDF statistics:
+ 18 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

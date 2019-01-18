@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import subprocess
 
 
 def substring_indexes(substring, string):
@@ -28,22 +29,22 @@ def strip_comments(input):
 
 def get_tables(input):
     input = strip_comments(input)
-    length = len(r"\begin{table}")
+    lengths = [len(r"\begin{table}"), len(r"\begin{table*}")]
     starts = [r"\begin{table}", r"\begin{table*}"]
     ends = [r"\end{table}", r"\end{table*}"]
 
     result = []
-    for idx, start in enumerate(starts):
+    for start_idx, start in enumerate(starts):
         start_occurrences = []
         for match in substring_indexes(start, input):
             start_occurrences.append(match)
 
         end_occurrences = []
-        for match in substring_indexes(ends[idx], input):
+        for match in substring_indexes(ends[start_idx], input):
             end_occurrences.append(match)
 
         for idx, occurrence in enumerate(start_occurrences):
-            result.append(input[occurrence + length: end_occurrences[idx]])
+            result.append(input[occurrence + lengths[start_idx]: end_occurrences[idx]])
     return result
 
 
@@ -83,38 +84,51 @@ def get_caption(table):
 
 
 if len(sys.argv) < 3:
-    print("Missing arguments. Usage: <input-folder> <output-file>")
+    print("Missing arguments. Usage: <input-file> <output-folder>")
     exit(-1)
 
-input_folder = sys.argv[1]
-output_file = sys.argv[2]
-input_files = os.listdir(input_folder)
+input_file = sys.argv[1]
+output_folder = sys.argv[2]
+
+json = []
+
+
+ext = input_file.split(".")[-1]
+if ext != "tex":
+    print("Not a .text file")
+    exit(-1)
 
 output = []
+with open(input_file) as f:
+    data = f.read()
+    tables = get_tables(data)
 
-for input_file in input_files:
-    print("Processing: "+input_file)
+    for table in tables:
+        caption = get_caption(table)
+        tabular = get_tabular(table)
+        noCols = get_no_columns(tabular)
+        noRows = get_no_rows(tabular)
 
-    ext = input_file.split(".")[-1]
-    if ext != "tex":
-        continue
+        output.append({
+            "file": input_file,
+            "table": table,
+            "caption": caption,
+            "shape": (noCols, noRows)
+        })
 
-    with open(input_folder+input_file) as f:
-        data = f.read()
-        tables = get_tables(data)
+doc_start = r"""\documentclass{article}
+\begin{document}
+\begin{table}"""
 
-        for table in tables:
-            caption = get_caption(table)
-            tabular = get_tabular(table)
-            noCols = get_no_columns(tabular)
-            noRows = get_no_rows(tabular)
+doc_end = r"""
+\end{table}
+\end{document}"""
 
-            output.append({
-                "file": input_file,
-                "table": table,
-                "caption": caption,
-                "shape": (noCols, noRows)
-            })
+for idx, table in enumerate(output):
+    doc = doc_start + table["table"] + doc_end
+    input_file_name = input_file.split("/")[-1].split(".")[0]
 
-with open(output_file, 'w') as f:
-    json.dump(output, f)
+    outfile_path = output_folder+ '/' + input_file_name + '-' + str(idx) +'.tex'
+    with open(outfile_path, 'w+') as outfile:
+        outfile.write(doc)
+    subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path)

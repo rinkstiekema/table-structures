@@ -1,0 +1,159 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.1.18)  18 JAN 2019 13:36
+entering extended mode
+**./pdf/arxiv_new-0.tex
+(pdf/arxiv_new-0.tex
+LaTeX2e <2018-12-01>
+("E:\Programs\MiKTeX 2.9\tex/latex/base\article.cls"
+Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
+("E:\Programs\MiKTeX 2.9\tex/latex/base\size10.clo"
+File: size10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+No file arxiv_new-0.aux.
+\openout1 = `arxiv_new-0.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 5.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 5.
+! Undefined control sequence.
+l.6 		\toprule
+              
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.8 		\midrule
+              
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `ma2009identifying' on page 1 undefined on input line 9
+.
+
+
+LaTeX Warning: Citation `webb2006introducing' on page 1 undefined on input line
+ 10.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.11 		\midrule
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `russakovsky2015imagenet' on page 1 undefined on input 
+line 12.
+
+
+LaTeX Warning: Citation `lecun2010mnisthandwrittendigit' on page 1 undefined on
+ input line 13.
+
+
+LaTeX Warning: Citation `krizhevsky2009learning' on page 1 undefined on input l
+ine 14.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.15 		\midrule
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `hemphill1990atis' on page 1 undefined on input line 16
+.
+
+! Undefined control sequence.
+<recently read> \midrule 
+                         
+l.17 		\midrule
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `hansards' on page 1 undefined on input line 18.
+
+! Undefined control sequence.
+<recently read> \bottomrule 
+                            
+l.19 		\bottomrule
+                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[1{C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+(e:\Documents\School\Thesis\tex2pdf\pdf\arxiv_new-0.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 212 strings out of 492946
+ 2438 string characters out of 3137735
+ 61202 words of memory out of 3000000
+ 4194 multiletter control sequences out of 15000+200000
+ 4294 words of font info for 16 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 23i,8n,22p,251b,238s stack positions out of 5000i,500n,10000p,200000b,50000s
+<E:/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><E:/Program
+s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Programs/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on e:\Documents\School\Thesis\tex2pdf\pdf\arxiv_new-0.pdf (1 pag
+e, 39802 bytes).
+PDF statistics:
+ 18 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+
