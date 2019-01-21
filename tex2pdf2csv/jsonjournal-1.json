@@ -1,0 +1,19 @@
+[{
+  "name": "1",
+  "page": 0,
+  "figType": "Table",
+  "regionBoundary": {
+    "x1": 133.76800537109375,
+    "y1": 309.8900146484375,
+    "x2": 382.0,
+    "y2": 442.8900146484375
+  },
+  "caption": "Table 1: Randomly generated instances of the minimum common subgraph problem solved with a time bound of 2000s. Sizes of MCS (average over four runs) for exact and greedy approach. *: approximate solution due to time out.",
+  "imageText": ["5", "55", "5", "130", "131.25", "5", "60", "10", "128", "132.75", "5", "75", "25", "207.75", "*", "184.75", "10", "55", "5", "183.75", "*", "154.50", "10", "60", "10", "177.75", "*", "154.75", "10", "75", "25", "270.00", "*", "269.25", "20", "55", "5", "241.50", "*", "171.75", "20", "60", "10", "232.00", "*", "152.25", "20", "75", "25", "346.25", "*", "279.00", "#initial", "exact", "greedy", "#trees", "#nodes", "labels", "#", "edges", "#", "edges", "0.85"],
+  "captionBoundary": {
+    "x1": 133.76800537109375,
+    "y1": 455.4847106933594,
+    "x2": 477.47943115234375,
+    "y2": 484.3759765625
+  }
+}]

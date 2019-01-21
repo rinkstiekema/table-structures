@@ -1,0 +1,19 @@
+[{
+  "name": "1",
+  "page": 0,
+  "figType": "Table",
+  "regionBoundary": {
+    "x1": 208.0,
+    "y1": 283.8900146484375,
+    "x2": 403.0,
+    "y2": 299.8900146484375
+  },
+  "caption": "Table 1: Conditions for a 4m Geostationary sphere",
+  "imageText": ["Parameter", "value"],
+  "captionBoundary": {
+    "x1": 194.35299682617188,
+    "y1": 276.6607360839844,
+    "x2": 416.8934326171875,
+    "y2": 281.64202880859375
+  }
+}]

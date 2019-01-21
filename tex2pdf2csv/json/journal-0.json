@@ -1,0 +1,19 @@
+[{
+  "name": "1",
+  "page": 0,
+  "figType": "Table",
+  "regionBoundary": {
+    "x1": 133.0,
+    "y1": 364.8900146484375,
+    "x2": 487.0,
+    "y2": 449.8900146484375
+  },
+  "caption": "Table 1: The five traditions used in this work.",
+  "imageText": ["Name", "#", "manu-", "#", "parent-child", "#", "features", "#", "variant", "readings", "scripts", "pairs", "maximum", "average", "Notre", "Besoin", "13", "13", "44", "5", "2,18", "Parzival", "21", "20", "122", "6", "2,59", "Florilegium", "22", "21", "547", "5", "2,19", "Sermon", "158", "34", "33", "270", "3", "2,12", "Heinrichi", "48", "51", "1042", "17", "4,84"],
+  "captionBoundary": {
+    "x1": 204.91799926757812,
+    "y1": 358.7967224121094,
+    "x2": 406.3327941894531,
+    "y2": 363.77801513671875
+  }
+}]

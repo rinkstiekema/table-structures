@@ -93,15 +93,17 @@ output_folder = sys.argv[2]
 json = []
 
 
-ext = input_file.split(".")[-1]
-if ext != "tex":
-    print("Not a .text file")
+ext = os.path.splitext(input_file)[1]
+if ext != ".tex":
+    print("Not a .tex file")
     exit(-1)
 
 output = []
 with open(input_file) as f:
     data = f.read()
     tables = get_tables(data)
+    print(input_file)
+    print(str(len(tables)) + " tables found")
 
     for table in tables:
         caption = get_caption(table)
@@ -126,9 +128,9 @@ doc_end = r"""
 
 for idx, table in enumerate(output):
     doc = doc_start + table["table"] + doc_end
-    input_file_name = input_file.split("/")[-1].split(".")[0]
+    input_file_name = os.path.splitext(input_file)[0].split("/")[-1]
 
     outfile_path = output_folder+ '/' + input_file_name + '-' + str(idx) +'.tex'
     with open(outfile_path, 'w+') as outfile:
         outfile.write(doc)
-    subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path)
+    subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

@@ -1,0 +1,19 @@
+[{
+  "name": "1",
+  "page": 0,
+  "figType": "Table",
+  "regionBoundary": {
+    "x1": 136.59100341796875,
+    "y1": 123.8900146484375,
+    "x2": 606.659423828125,
+    "y2": 229.8900146484375
+  },
+  "caption": "Table 1: Distributed optimization using MPI-OPT. The times are averages for a full dataset pass, with the communication part in brackets. Speedup versus dense MPI is shown end-to-end, with communication speedup in brackets.",
+  "imageText": ["URL", "LR", "8", "104.50", "(100.46)", "8.26", "(4.22)", "12.65", "(23.81)", "SVM", "32", "1.98", "(1.93)", "0.56", "(0.53)", "3.54", "(3.64)", "2*Piz", "Daint", "Webspam", "LR", "8", "4.67", "(3.79)", "2*", "2.56", "(1.58)", "1.82", "(2.40)", "URL", "LR", "8", "3.77", "(3.53)", "2.09", "(1.50)", "1.80", "(2.35)", "2*Greina", "(IB)", "Webspam", "LR", "8", "6.52", "(4.67)", "2*", "3.63", "(1.90)", "1.80", "(2.46)", "URL", "LR", "8", "8.14", "(4.47)", "6.11", "(2.49)", "1.33", "(1.80)", "2*Greina", "(GigE)", "Webspam", "LR", "8", "76.80", "(75.95)", "2*", "3.79", "(2.95)", "20.26", "(25.75)"],
+  "captionBoundary": {
+    "x1": 133.76803588867188,
+    "y1": 241.80770874023438,
+    "x2": 477.4784240722656,
+    "y2": 270.69903564453125
+  }
+}]
