@@ -2,7 +2,7 @@ import sys
 import os
 import json
 import subprocess
-
+import itertools
 
 def substring_indexes(substring, string):
     last_found = -1  # Begin at -1 so the next position to search from is 0
@@ -82,55 +82,113 @@ def get_caption(table):
 
     return result[:endings[end]]
 
+def insert_v_lines(tabular):
+    original_spec = tabular.split("{")[1].split("}")[0]
+    spec = original_spec
+
+    for idx, i in enumerate(spec):
+        spec = spec[:idx*2] + '|' + spec[idx*2:]
+    spec = spec + "|"
+
+    spec = ''.join(ch for ch, _ in itertools.groupby(spec))
+
+    tabular = tabular.replace(original_spec, spec, 1)
+    return tabular
+
+def insert_h_lines(tabular):
+    tabular = tabular.replace(r"\hline", "")
+    lines = tabular.split(r'\\')
+    tabular = r'\\ \hline'.join(lines)
+    return tabular
+
+def insert_color(doc, color):
+    length = len(r'\begin{tabular}')
+    col_structure_start = doc.find(r'\begin{tabular}') + length
+    col_structure_end = col_structure_start + doc[col_structure_start:].find("}") + 1
+    result = doc[:col_structure_end] + r"\arrayrulecolor{"+color+"}" + doc[col_structure_end:]
+    return result
+
+def cleanup(dir_name):
+    dir_list = os.listdir(dir_name)
+
+    for item in dir_list:
+        if not item.endswith(".png"):
+            os.remove(os.path.join(dir_name, item))
 
 if len(sys.argv) < 3:
-    print("Missing arguments. Usage: <input-file> <output-folder>")
+    print("Missing arguments. Usage: <input-folder> <output-folder>")
     exit(-1)
 
-input_file = sys.argv[1]
+input_folder = sys.argv[1]
 output_folder = sys.argv[2]
 
-json = []
+input_files = os.listdir(input_folder)
 
+for input_file in input_files:
+    json = []
+    ext = os.path.splitext(input_file)[1]
+    if ext != ".tex":
+        break
 
-ext = os.path.splitext(input_file)[1]
-if ext != ".tex":
-    print("Not a .tex file")
-    exit(-1)
+    output = []
+    
+    try:
+        with open(input_folder + "/" + input_file) as f:
+            data = f.read()
+            tables = get_tables(data)
+            print(str(len(tables)) + " tables found")
 
-output = []
-with open(input_file) as f:
-    data = f.read()
-    tables = get_tables(data)
-    print(input_file)
-    print(str(len(tables)) + " tables found")
+            for table in tables:
+                caption = get_caption(table)
+                tabular = get_tabular(table)
+                tabular = insert_v_lines(tabular)
+                tabular = insert_h_lines(tabular)
+                noCols = get_no_columns(tabular)
+                noRows = get_no_rows(tabular)
 
-    for table in tables:
-        caption = get_caption(table)
-        tabular = get_tabular(table)
-        noCols = get_no_columns(tabular)
-        noRows = get_no_rows(tabular)
+                table = r" \begin{tabular}" + tabular + r" \end{tabular}"
 
-        output.append({
-            "file": input_file,
-            "table": table,
-            "caption": caption,
-            "shape": (noCols, noRows)
-        })
+                output.append({
+                    "file": input_file,
+                    "table": table,
+                    "caption": caption,
+                    "shape": (noCols, noRows)
+                })
 
-doc_start = r"""\documentclass{article}
-\begin{document}
-\begin{table}"""
+        doc_start = r"""\documentclass{article}
+        \usepackage{colortbl}
+        \begin{document}
+        \thispagestyle{empty}
+        \begin{table}"""
 
-doc_end = r"""
-\end{table}
-\end{document}"""
+        doc_end = r"""
+        \end{table}
+        \end{document}"""
 
-for idx, table in enumerate(output):
-    doc = doc_start + table["table"] + doc_end
-    input_file_name = os.path.splitext(input_file)[0].split("/")[-1]
+        for idx, table in enumerate(output):
+            doc = doc_start + table["table"] + doc_end
 
-    outfile_path = output_folder+ '/' + input_file_name + '-' + str(idx) +'.tex'
-    with open(outfile_path, 'w+') as outfile:
-        outfile.write(doc)
-    subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            doc_color = insert_color(doc, "red")
+            doc_white = insert_color(doc, "white")
+
+            file_name = os.path.splitext(input_file)[0].split("/")[-1]
+
+            outpath_borders = output_folder + '/' + file_name + '-' + str(idx) + '-borders'
+            outpath_noborders = output_folder + '/' + file_name + '-' + str(idx) + '-noborders'
+
+            with open(outpath_borders+'.tex', 'w+') as outfile:
+               outfile.write(doc_color)
+
+            with open(outpath_noborders+'.tex', 'w+') as outfile:
+                outfile.write(doc_white)
+
+            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex')
+            subprocess.call('dvipng -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi')
+            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex')
+            subprocess.call('dvipng -T tight -o ' + outpath_noborders + '.png ' + outpath_noborders + '.dvi')
+
+            #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except:
+        print("Skipping")
+
+cleanup(output_folder)

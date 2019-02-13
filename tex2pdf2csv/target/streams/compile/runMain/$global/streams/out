@@ -1,11 +1,15 @@
-[0m[[0minfo[0m] [0mRunning pdffigures2/org.allenai.pdffigures2.FigureExtractorBatchCli E:\Documents\School\Thesis\code\tex2pdf2csv\pdf -d E:\Documents\School\Thesis\code\tex2pdf2csv\pdf\out -a Table[0m
+[0m[[0minfo[0m] [0mRunning org.allenai.pdffigures2.FigureExtractorBatchCli [0m
 [0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
 [0m[[0mdebug[0m] [0m  Classpath:[0m
 [0m[[0mdebug[0m] [0m	E:\Documents\School\Thesis\code\tex2pdf2csv\target\scala-2.10\classes[0m
 [0m[[0mdebug[0m] [0m	C:\Users\User\.sbt\boot\scala-2.10.6\lib\scala-library.jar[0m
 [0m[[0mdebug[0m] [0mWaiting for thread run-main-0 to terminate.[0m
-[0m[[31merror[0m] [0m(run-main-0) java.lang.ClassNotFoundException: pdffigures2/org.allenai.pdffigures2.FigureExtractorBatchCli[0m
-java.lang.ClassNotFoundException: pdffigures2/org.allenai.pdffigures2.FigureExtractorBatchCli
+[0m[[31merror[0m] [0m(run-main-0) java.lang.ClassNotFoundException: org.allenai.pdffigures2.FigureExtractorBatchCli[0m
+java.lang.ClassNotFoundException: org.allenai.pdffigures2.FigureExtractorBatchCli
+	at java.lang.ClassLoader.findClass(ClassLoader.java:530)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sbt.classpath.ClasspathFilter.loadClass(ClassLoaders.scala:59)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
 	at java.lang.Class.forName0(Native Method)
 	at java.lang.Class.forName(Class.java:348)
 	at sbt.Run.getMainMethod(Run.scala:72)

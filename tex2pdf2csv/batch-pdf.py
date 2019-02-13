@@ -19,7 +19,7 @@ if not os.path.exists("pdffigures2"):
 	print("pdffigures2 is not available in this folder")
 	exit(-1)
 
-os.system(r'cd pdffigures2 & sbt "run-main org.allenai.pdffigures2.FigureExtractorBatchCli ../' + pdf_folder + ' -s stat_file.json -d ../json/ -a Table "')
+os.system(r'cd pdffigures2 & sbt "run-main org.allenai.pdffigures2.FigureExtractorBatchCli -a Table ../' + pdf_folder + ' -s stat_file.json -d ../json/"')
 
 json_files = os.listdir("json")
 
