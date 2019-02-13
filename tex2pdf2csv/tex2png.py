@@ -115,77 +115,70 @@ def cleanup(dir_name):
         if not item.endswith(".png"):
             os.remove(os.path.join(dir_name, item))
 
-if len(sys.argv) < 3:
-    print("Missing arguments. Usage: <input-file> <output-folder>")
-    exit(-1)
+def tex2png(input_file, output_folder):
+    json = []
+    ext = os.path.splitext(input_file)[1]
+    if ext != ".tex":
+        exit(-1)
 
-input_file = sys.argv[1]
-output_folder = sys.argv[2]
+    output = []
 
-json = []
-ext = os.path.splitext(input_file)[1]
-if ext != ".tex":
-    break
+    try:
+        with open(input_file) as f:
+            data = f.read()
+            tables = get_tables(data)
+            print(str(len(tables)) + " tables found")
 
-output = []
+            for table in tables:
+                caption = get_caption(table)
+                tabular = get_tabular(table)
+                tabular = insert_v_lines(tabular)
+                tabular = insert_h_lines(tabular)
+                noCols = get_no_columns(tabular)
+                noRows = get_no_rows(tabular)
 
-try:
-    with open(input_file) as f:
-        data = f.read()
-        tables = get_tables(data)
-        print(str(len(tables)) + " tables found")
+                table = r" \begin{tabular}" + tabular + r" \end{tabular}"
 
-        for table in tables:
-            caption = get_caption(table)
-            tabular = get_tabular(table)
-            tabular = insert_v_lines(tabular)
-            tabular = insert_h_lines(tabular)
-            noCols = get_no_columns(tabular)
-            noRows = get_no_rows(tabular)
+                output.append({
+                    "file": f.name,
+                    "table": table,
+                    "caption": caption,
+                    "shape": (noCols, noRows)
+                })
 
-            table = r" \begin{tabular}" + tabular + r" \end{tabular}"
+        doc_start = r"""\documentclass{article}
+        \usepackage{colortbl}
+        \begin{document}
+        \thispagestyle{empty}
+        \begin{table}"""
 
-            output.append({
-                "file": input_file,
-                "table": table,
-                "caption": caption,
-                "shape": (noCols, noRows)
-            })
+        doc_end = r"""
+        \end{table}
+        \end{document}"""
 
-    doc_start = r"""\documentclass{article}
-    \usepackage{colortbl}
-    \begin{document}
-    \thispagestyle{empty}
-    \begin{table}"""
+        for idx, table in enumerate(output):
+            doc = doc_start + table["table"] + doc_end
 
-    doc_end = r"""
-    \end{table}
-    \end{document}"""
+            doc_color = insert_color(doc, "red")
+            doc_white = insert_color(doc, "white")
 
-    for idx, table in enumerate(output):
-        doc = doc_start + table["table"] + doc_end
+            file_name = os.path.splitext(input_file)[0].split("/")[-1]
 
-        doc_color = insert_color(doc, "red")
-        doc_white = insert_color(doc, "white")
+            outpath_borders = output_folder + '/' + file_name + '-' + str(idx) + '-borders'
+            outpath_noborders = output_folder + '/' + file_name + '-' + str(idx) + '-noborders'
 
-        file_name = os.path.splitext(input_file)[0].split("/")[-1]
+            with open(outpath_borders+'.tex', 'w+') as outfile:
+               outfile.write(doc_color)
 
-        outpath_borders = output_folder + '/' + file_name + '-' + str(idx) + '-borders'
-        outpath_noborders = output_folder + '/' + file_name + '-' + str(idx) + '-noborders'
+            with open(outpath_noborders+'.tex', 'w+') as outfile:
+                outfile.write(doc_white)
 
-        with open(outpath_borders+'.tex', 'w+') as outfile:
-           outfile.write(doc_color)
+            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex')
+            subprocess.call('dvipng -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi')
+            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex')
+            subprocess.call('dvipng -T tight -o ' + outpath_noborders + '.png ' + outpath_noborders + '.dvi')
 
-        with open(outpath_noborders+'.tex', 'w+') as outfile:
-            outfile.write(doc_white)
+            #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception as e: print(e)
 
-        subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex')
-        subprocess.call('dvipng -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi')
-        subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex')
-        subprocess.call('dvipng -T tight -o ' + outpath_noborders + '.png ' + outpath_noborders + '.dvi')
-
-        #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-except:
-    print("Skipping")
-
-cleanup(output_folder)
+    cleanup(output_folder)
