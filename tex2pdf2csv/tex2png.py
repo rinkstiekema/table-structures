@@ -164,8 +164,8 @@ def tex2png(input_file, output_folder):
 
             file_name = os.path.splitext(input_file)[0].split("/")[-1]
 
-            outpath_borders = output_folder + '/' + file_name + '-' + str(idx) + '-borders'
-            outpath_noborders = output_folder + '/' + file_name + '-' + str(idx) + '-noborders'
+            outpath_borders = output_folder + file_name + '-' + str(idx) + '-borders'
+            outpath_noborders = output_folder + file_name + '-' + str(idx) + '-noborders'
 
             with open(outpath_borders+'.tex', 'w+') as outfile:
                outfile.write(doc_color)
@@ -173,12 +173,12 @@ def tex2png(input_file, output_folder):
             with open(outpath_noborders+'.tex', 'w+') as outfile:
                 outfile.write(doc_white)
 
-            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex')
-            subprocess.call('dvipng -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi')
-            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex')
-            subprocess.call('dvipng -T tight -o ' + outpath_noborders + '.png ' + outpath_noborders + '.dvi')
+            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi', stdout=open(os.devnull, 'wb'))
+            subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + outpath_noborders + '.png ' + outpath_noborders + '.dvi',stdout=open(os.devnull, 'wb'))
 
             #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
 
-    cleanup(output_folder)
+    # cleanup(output_folder)

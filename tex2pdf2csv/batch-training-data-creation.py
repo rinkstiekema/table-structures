@@ -15,13 +15,15 @@ if __name__ == '__main__':
 	output_folder = sys.argv[2]
 
 	input_folder_list = os.listdir(input_folder)
+	for input_file in input_folder_list:
+		tex2png(input_folder+input_file, output_folder)
 
-	processes = [mp.Process(target=tex2png, args=(input_folder + input_file, output_folder)) for input_file in input_folder_list]
+	# processes = [mp.Process(target=tex2png, args=(input_folder + input_file, output_folder)) for input_file in input_folder_list]
 
-	# Run processes
-	for p in processes:
-	    p.start()
+	# # Run processes
+	# for p in processes:
+	#     p.start()
 
-	# Exit the completed processes
-	for p in processes:
-	    p.join()
+	# # Exit the completed processes
+	# for p in processes:
+	#     p.join()
