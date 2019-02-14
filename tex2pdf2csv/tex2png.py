@@ -3,6 +3,7 @@ import os
 import json
 import subprocess
 import itertools
+import shutil
 
 def substring_indexes(substring, string):
     last_found = -1  # Begin at -1 so the next position to search from is 0
@@ -116,7 +117,11 @@ def cleanup(dir_name):
 
     for item in dir_list:
         if not item.endswith(".png"):
-            os.remove(os.path.join(dir_name, item))
+            filename = os.path.join(dir_name, item)
+            if os.isdir(filename):
+                os.remove(filename)
+            else:
+                shutil.removetree(filename)
 
 def tex2png(input_file, output_folder):
     json = []
