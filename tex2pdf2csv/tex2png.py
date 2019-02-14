@@ -99,6 +99,9 @@ def insert_h_lines(tabular):
     tabular = tabular.replace(r"\hline", "")
     lines = tabular.split(r'\\')
     tabular = r'\\ \hline'.join(lines)
+
+    heading_idx = tabular[tabular.find("{"):].find("}") + 1
+    tabular = tabular[:heading_idx] + r"\hline" + tabular[heading_idx:]
     return tabular
 
 def insert_color(doc, color):
@@ -181,4 +184,4 @@ def tex2png(input_file, output_folder):
             #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
 
-    # cleanup(output_folder)
+    cleanup(output_folder)
