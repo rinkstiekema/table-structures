@@ -177,9 +177,9 @@ def tex2png(input_file, output_folder):
                 outfile.write(doc_white)
 
             subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + output_folder + outpath_borders + '.png ' + output_folder + outpath_borders + '.dvi', stdout=open(os.devnull, 'wb'))
             subprocess.call('latex -aux-directory /aux-bs -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o ' + outpath_noborders + '.png ' + outpath_noborders + '.dvi',stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + output_folder +  outpath_noborders + '.png ' +  output_folder + outpath_noborders + '.dvi',stdout=open(os.devnull, 'wb'))
 
             #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
