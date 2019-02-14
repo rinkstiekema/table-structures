@@ -179,7 +179,7 @@ def tex2png(input_file, output_folder):
             aux_folder = output_folder + 'aux'
 
             if not os.path.exists(aux_folder):
-                os.makedir(aux_folder)
+                os.mkdir(aux_folder)
 
             subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex', stdout=open(os.devnull, 'wb'))
             subprocess.call('dvipng -q* -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi', stdout=open(os.devnull, 'wb'))
