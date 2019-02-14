@@ -118,10 +118,10 @@ def cleanup(dir_name):
     for item in dir_list:
         if not item.endswith(".png"):
             filename = os.path.join(dir_name, item)
-            if os.isdir(filename):
+            if os.path.isdir(filename):
                 os.remove(filename)
             else:
-                shutil.removetree(filename)
+                shutil.rmtree(filename)
 
 def tex2png(input_file, output_folder):
     json = []
