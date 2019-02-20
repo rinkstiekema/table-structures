@@ -118,11 +118,10 @@ def cleanup(dir_name):
     for item in dir_list:
         if not item.endswith(".png"):
             filename = os.path.join(dir_name, item)
-            if os.path.isdir(filename):
-                shutil.rmtree(filename)
-            else:
+            print(filename, os.path.isdir(filename))
+            if not os.path.isdir(filename):
                 os.remove(filename)
-                
+
 
 def tex2png(input_file, output_folder):
     json = []
@@ -172,27 +171,23 @@ def tex2png(input_file, output_folder):
             doc_white = insert_color(doc, "white")
 
             file_name = os.path.splitext(input_file)[0].split("/")[-1]
-
             outpath_borders = output_folder + file_name + '-' + str(idx) + '-borders'
             outpath_noborders = output_folder + file_name + '-' + str(idx) + '-noborders'
 
             with open(outpath_borders+'.tex', 'w+') as outfile:
                outfile.write(doc_color)
-
+            
             with open(outpath_noborders+'.tex', 'w+') as outfile:
                 outfile.write(doc_white)
 
-            aux_folder = output_folder + 'aux'
-
-            if not os.path.exists(aux_folder):
-                os.mkdir(aux_folder)
+            aux_folder = os.path.join(output_folder, 'aux-bs')
 
             subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex', stdout=open(os.devnull, 'wb'))
             subprocess.call('dvipng -q* -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi', stdout=open(os.devnull, 'wb'))
             subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex', stdout=open(os.devnull, 'wb'))
             subprocess.call('dvipng -q* -T tight -o ' + outpath_noborders + '.png ' +  outpath_noborders + '.dvi',stdout=open(os.devnull, 'wb'))
 
-            #subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
 
     cleanup(output_folder)

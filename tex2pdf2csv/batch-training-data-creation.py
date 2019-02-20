@@ -14,6 +14,10 @@ if __name__ == '__main__':
 	input_folder = sys.argv[1]
 	output_folder = sys.argv[2]
 
+	aux_folder = os.path.join(output_folder, 'aux-bs')
+	if not os.path.exists(aux_folder):
+		os.makedirs(aux_folder)
+
 	input_folder_list = os.listdir(input_folder)
 	for input_file in input_folder_list:
 		tex2png(input_folder+input_file, output_folder)
