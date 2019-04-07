@@ -116,7 +116,6 @@ def cleanup(dir_name):
     dir_list = os.listdir(dir_name)
 
     for item in dir_list:
-        print(item)
         if not item.endswith(".png"):
             filename = os.path.join(dir_name, item)
             if not os.path.isdir(filename):
