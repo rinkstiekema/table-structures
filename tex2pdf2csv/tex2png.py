@@ -180,11 +180,11 @@ def tex2png(input_file, output_folder):
                 outfile.write(doc_white)
 
             aux_folder = os.path.join(output_folder, 'aux-bs')
-
-            subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_borders + '.tex', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o ' + outpath_borders + '.png ' + outpath_borders + '.dvi', stdout=open(os.devnull, 'wb'))
-            subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_noborders + '.tex', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o ' + outpath_noborders + '.png ' +  outpath_noborders + '.dvi',stdout=open(os.devnull, 'wb'))
+	    print('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_borders + '.tex"')	    
+            subprocess.call('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_borders + '.tex"', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o "' + outpath_borders + '.png" "' + outpath_borders + '.dvi"', stdout=open(os.devnull, 'wb'))
+            subprocess.call('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_noborders + '.tex"', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o "' + outpath_noborders + '.png" "' +  outpath_noborders + '.dvi"',stdout=open(os.devnull, 'wb'))
 
             # subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
