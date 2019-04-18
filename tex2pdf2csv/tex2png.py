@@ -102,7 +102,7 @@ def insert_h_lines(tabular):
     tabular = r'\\ \hline'.join(lines)
 
     heading_idx = tabular[tabular.find("{"):].find("}") + 1
-    tabular = tabular[:heading_idx] + r"\hline" + tabular[heading_idx:]
+    tabular = tabular[:heading_idx] + r"\hline " + tabular[heading_idx:]
     return tabular
 
 def insert_color(doc, color):
@@ -139,16 +139,18 @@ def tex2png(input_file, output_folder):
             for table in tables:
                 caption = get_caption(table)
                 tabular = get_tabular(table)
-                tabular = insert_v_lines(tabular)
-                tabular = insert_h_lines(tabular)
-                noCols = get_no_columns(tabular)
-                noRows = get_no_rows(tabular)
+                tabular_lines = insert_v_lines(tabular)
+                tabular_lines = insert_h_lines(tabular_lines)
+                noCols = get_no_columns(tabular_lines)
+                noRows = get_no_rows(tabular_lines)
 
-                table = r" \begin{tabular}" + tabular + r" \end{tabular}"
+                table_lines = r" \begin{tabular}" + tabular_lines + r" \end{tabular}" 
+                table = r" \begin{tabular}" + tabular + r" \end{tabular}" 
 
                 output.append({
                     "file": f.name,
                     "table": table,
+                    "table_lines": table_lines,
                     "caption": caption,
                     "shape": (noCols, noRows)
                 })
@@ -165,27 +167,27 @@ def tex2png(input_file, output_folder):
 
         for idx, table in enumerate(output):
             doc = doc_start + table["table"] + doc_end
+            doc_lines = doc_start + table["table_lines"] + doc_end
 
-            doc_color = insert_color(doc, "red")
-            doc_white = insert_color(doc, "white")
+            doc = insert_color(doc, "black")
+            doc_lines = insert_color(doc_lines, "red")
 
-            file_name = os.path.splitext(input_file)[0].split("/")[-1]
-            outpath_borders = output_folder + file_name + '-' + str(idx) + '-borders'
-            outpath_noborders = output_folder + file_name + '-' + str(idx) + '-noborders'
+            file_name = os.path.splitext(input_file)[0].split("\\")[-1]       
+            outpath_A = output_folder + file_name + '-' + str(idx) + '-A'
+            outpath_B = output_folder + file_name + '-' + str(idx) + '-B'
 
-            with open(outpath_borders+'.tex', 'w+') as outfile:
-               outfile.write(doc_color)
+            with open(outpath_A+'.tex', 'w+') as outfile:
+               outfile.write(doc)
             
-            with open(outpath_noborders+'.tex', 'w+') as outfile:
-                outfile.write(doc_white)
+            with open(outpath_B+'.tex', 'w+') as outfile:
+                outfile.write(doc_lines)
 
             aux_folder = os.path.join(output_folder, 'aux-bs')
-	    print('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_borders + '.tex"')	    
-            subprocess.call('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_borders + '.tex"', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o "' + outpath_borders + '.png" "' + outpath_borders + '.dvi"', stdout=open(os.devnull, 'wb'))
-            subprocess.call('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_noborders + '.tex"', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o "' + outpath_noborders + '.png" "' +  outpath_noborders + '.dvi"',stdout=open(os.devnull, 'wb'))
-
+            # print('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_A + '.tex"')
+            subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_A + '.tex', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + outpath_A + '.png ' + outpath_A + '.dvi', stdout=open(os.devnull, 'wb'))
+            subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_B + '.tex', stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + outpath_B + '.png ' +  outpath_B + '.dvi',stdout=open(os.devnull, 'wb'))
             # subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
 
