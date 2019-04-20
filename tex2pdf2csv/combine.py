@@ -22,12 +22,12 @@ def combine_images(location):
 	images_list = os.listdir(location)
 	for image in images_list:
 		base_name = "-".join(".".join(image.split(".")[0:-1]).split("-")[0:-1])
-
+		print(image, location+base_name+"-A.png")
 		img_A = Image.open(location+base_name+"-A.png")
 		img_B = Image.open(location+base_name+"-B.png")
+
 		old_size = img_A.size
 		new_size = img_B.size
-
 		new_A = Image.new("RGB", new_size, color="white") 
 		new_A.paste(img_A, (int((new_size[0]-old_size[0])/2),
 		                      int((new_size[1]-old_size[1])/2)))
@@ -39,5 +39,5 @@ def combine_images(location):
 		scipy.misc.imsave(location+base_name+".png", combined)
 
 def combine(location):
-	combine_images(location)
+	#combine_images(location)
 	clean_up(location)

@@ -134,7 +134,7 @@ def tex2png(input_file, output_folder):
         with open(input_file) as f:
             data = f.read()
             tables = get_tables(data)
-            print(str(len(tables)) + " tables found")
+            #print(str(len(tables)) + " tables found")
 
             for table in tables:
                 caption = get_caption(table)
@@ -172,10 +172,10 @@ def tex2png(input_file, output_folder):
             doc = insert_color(doc, "black")
             doc_lines = insert_color(doc_lines, "red")
 
-            file_name = os.path.splitext(input_file)[0].split("\\")[-1]       
+            file_name = os.path.splitext(input_file)[0].split("/")[-1]       
             outpath_A = output_folder + file_name + '-' + str(idx) + '-A'
             outpath_B = output_folder + file_name + '-' + str(idx) + '-B'
-
+	    print(outpath_A)
             with open(outpath_A+'.tex', 'w+') as outfile:
                outfile.write(doc)
             
@@ -183,11 +183,12 @@ def tex2png(input_file, output_folder):
                 outfile.write(doc_lines)
 
             aux_folder = os.path.join(output_folder, 'aux-bs')
-            # print('latex -interaction batchmode -output-directory "'+ output_folder + '" "' + outpath_A + '.tex"')
-            subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_A + '.tex', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o ' + outpath_A + '.png ' + outpath_A + '.dvi', stdout=open(os.devnull, 'wb'))
-            subprocess.call('latex -aux-directory ' + aux_folder + ' -quiet -interaction batchmode -output-directory '+ output_folder + ' ' + outpath_B + '.tex', stdout=open(os.devnull, 'wb'))
-            subprocess.call('dvipng -q* -T tight -o ' + outpath_B + '.png ' +  outpath_B + '.dvi',stdout=open(os.devnull, 'wb'))
+	    #print(os.listdir(output_folder))
+	    #print('latex -interaction=batchmode -output-directory='+ output_folder + ' ' + outpath_A + '.tex')
+            subprocess.call('latex -interaction=batchmode -output-directory='+ output_folder + ' ' + outpath_A + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + outpath_A + '.png ' + outpath_A + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
+            subprocess.call('latex -interaction=batchmode -output-directory='+ output_folder + ' ' + outpath_B + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + outpath_B + '.png ' +  outpath_B + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
             # subprocess.call('pdflatex -interaction nonstopmode -output-directory '+ output_folder + ' ' + outfile_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e: print(e)
 
