@@ -1,0 +1,11 @@
+keras
+git+https://www.github.com/keras-team/keras-contrib.git
+matplotlib
+numpy
+scipy
+pillow
+#urllib
+#skimage
+scikit-image
+#gzip
+#pickle
