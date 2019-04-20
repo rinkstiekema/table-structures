@@ -1,11 +1,11 @@
 from __future__ import print_function, division
 
-from keras.layers import Input, Dropout, Concatenate
-from keras.layers import BatchNormalization, Activation
-from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.convolutional import UpSampling2D, Conv2D
-from keras.models import Model
-from keras.optimizers import Adam
+from Keras.layers import Input, Dropout, Concatenate
+from Keras.layers import BatchNormalization, Activation
+from Keras.layers.advanced_activations import LeakyReLU
+from Keras.layers.convolutional import UpSampling2D, Conv2D
+from Keras.models import Model
+from Keras.optimizers import Adam
 import datetime
 import matplotlib.pyplot as plt
 import sys
