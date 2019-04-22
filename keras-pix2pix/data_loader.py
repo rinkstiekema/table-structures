@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class DataLoader():
-    def __init__(self, dataset_name, img_res):
+    def __init__(self, dataset_name, img_res=(128, 128)):
         self.dataset_name = dataset_name
         self.img_res = img_res
 
@@ -21,11 +21,10 @@ class DataLoader():
 
             h, w, _ = img.shape
             _w = int(w/2)
-            img_B, img_A = img[:, :_w, :], img[:, _w:, :]
+            img_A, img_B = img[:, _w:, :], img[:, :_w, :]
 
             img_A = self.pad(img_A)
             img_B = self.pad(img_B)
-
             # img_A = scipy.misc.imresize(img_A, self.img_res)
             # img_B = scipy.misc.imresize(img_B, self.img_res)
 
@@ -43,7 +42,7 @@ class DataLoader():
         return imgs_A, imgs_B
 
     def load_batch(self, batch_size=1, is_testing=False):
-        data_type = "train" if not is_testing else "test"
+        data_type = "train" if not is_testing else "val"
         path = glob('./datasets/%s/%s/*' % (self.dataset_name, data_type))
 
         self.n_batches = int(len(path) / batch_size)
@@ -55,11 +54,13 @@ class DataLoader():
                 img = self.imread(img)
                 h, w, _ = img.shape
                 half_w = int(w/2)
-                img_A = img[:, :half_w, :]
-                img_B = img[:, half_w:, :]
+                img_A, img_B = img[:, half_w:, :], img[:, :half_w, :]
 
                 img_A = self.pad(img_A)
                 img_B = self.pad(img_B)
+                
+                # img_A = scipy.misc.imresize(img_A, self.img_res)
+                # img_B = scipy.misc.imresize(img_B, self.img_res)
 
                 if not is_testing and np.random.random() > 0.5:
                         img_A = np.fliplr(img_A)
@@ -73,11 +74,12 @@ class DataLoader():
 
             yield imgs_A, imgs_B
 
+
+    def imread(self, path):
+        return scipy.misc.imread(path, mode='RGB').astype(np.float)
+
     def pad(self, a):
         """Return bottom right padding."""
         zeros = np.zeros(self.img_res)
         zeros[:a.shape[0], :a.shape[1], :a.shape[2]] = a
         return zeros
-
-    def imread(self, path):
-        return scipy.misc.imread(path, mode='RGB').astype(np.float)
