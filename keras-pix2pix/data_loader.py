@@ -4,13 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class DataLoader():
-    def __init__(self, dataset_name, img_res=(128, 128)):
-        self.dataset_name = dataset_name
+    def __init__(self, dataset_location, img_res=(128, 128)):
+        self.dataset_location = dataset_location
         self.img_res = img_res
 
     def load_data(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "test"
-        path = glob('./datasets/%s/%s/*' % (self.dataset_name, data_type))
+        path = glob('%s/%s/*' % (self.dataset_location, data_type))
 
         batch_images = np.random.choice(path, size=batch_size)
 
@@ -43,7 +43,7 @@ class DataLoader():
 
     def load_batch(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "val"
-        path = glob('./datasets/%s/%s/*' % (self.dataset_name, data_type))
+        path = glob('%s/%s/*' % (self.dataset_location, data_type))
 
         self.n_batches = int(len(path) / batch_size)
 

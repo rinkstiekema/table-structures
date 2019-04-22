@@ -17,7 +17,7 @@ from PIL import Image
 class Pix2Pix():
     def __init__(self):
         # Input shape
-        self.dataset_name = sys.argv[1]
+        self.dataset_location = sys.argv[1]
         self.img_rows = 275
         self.img_cols = 1764 
         
@@ -35,7 +35,7 @@ class Pix2Pix():
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
 
         # Configure data loader
-        self.data_loader = DataLoader(dataset_name=self.dataset_name,
+        self.data_loader = DataLoader(dataset_location=self.dataset_location,
                                       img_res=(self.img_rows, self.img_cols))
 
 
@@ -195,7 +195,7 @@ class Pix2Pix():
                     self.sample_images(epoch, batch_i)
 
     def sample_images(self, epoch, batch_i):
-        os.makedirs('images/%s' % self.dataset_name, exist_ok=True)
+        os.makedirs('images/', exist_ok=True)
         r, c = 3, 3
 
         imgs_A, imgs_B = self.data_loader.load_data(batch_size=3, is_testing=True)
@@ -215,7 +215,7 @@ class Pix2Pix():
                 axs[i, j].set_title(titles[i])
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig("images/%s/%d_%d.png" % (self.dataset_name, epoch, batch_i))
+        fig.savefig("images/%d_%d.png" % (epoch, batch_i))
         plt.close()
 
 
