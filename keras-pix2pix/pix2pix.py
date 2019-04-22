@@ -18,17 +18,17 @@ class Pix2Pix():
     def __init__(self):
         # Input shape
         self.dataset_name = sys.argv[1]
-        self.img_rows = 0
-        self.img_cols = 0
+        self.img_rows = 275
+        self.img_cols = 1764 
         
-        path = './datasets/%s/' % (self.dataset_name)
-        for root, dirnames, files in os.walk(path):
-            for name in files:
-                file_path = os.path.join(root,  name)
-                im = Image.open(file_path)
-                width, height = im.size
-                self.img_cols = max(width, self.img_cols)
-                self.img_rows = max(height, self.img_rows)
+        #path = './datasets/%s/' % (self.dataset_name)
+        #for root, dirnames, files in os.walk(path):
+        #    for name in files:
+        #        file_path = os.path.join(root,  name)
+        #        im = Image.open(file_path)
+        #        width, height = im.size
+        #        self.img_cols = max(width, self.img_cols)
+        #        self.img_rows = max(height, self.img_rows)
         print(self.img_cols, self.img_rows)        
 
         self.channels = 3
