@@ -36,7 +36,7 @@ class Pix2Pix():
 
         # Configure data loader
         self.data_loader = DataLoader(dataset_location=self.dataset_location,
-                                      img_res=(self.img_rows, self.img_cols))
+                                      img_res=(self.img_rows, self.img_cols, self.channels))
 
 
         # Calculate output shape of D (PatchGAN)
