@@ -18,8 +18,8 @@ class Pix2Pix():
     def __init__(self):
         # Input shape
         self.dataset_location = sys.argv[1]
-        self.img_rows = 275
-        self.img_cols = 1764 
+        self.img_rows = 2048
+        self.img_cols = 2048 
         
         #path = './datasets/%s/' % (self.dataset_name)
         #for root, dirnames, files in os.walk(path):
@@ -113,17 +113,21 @@ class Pix2Pix():
         d5 = conv2d(d4, self.gf*8)
         d6 = conv2d(d5, self.gf*8)
         d7 = conv2d(d6, self.gf*8)
+        d8 = conv2d(d7, self.gf*8)
+        d9 = conv2d(d8, self.gf*8)
 
         # Upsampling
-        u1 = deconv2d(d7, d6, self.gf*8)
-        u2 = deconv2d(u1, d5, self.gf*8)
-        u3 = deconv2d(u2, d4, self.gf*8)
-        u4 = deconv2d(u3, d3, self.gf*4)
-        u5 = deconv2d(u4, d2, self.gf*2)
-        u6 = deconv2d(u5, d1, self.gf)
+        u1 = deconv2d(d9, d8, self.gf*8)
+        u2 = deconv2d(u1, d7, self.gf*8)
+        u3 = deconv2d(u2, d6, self.gf*8)
+        u4 = deconv2d(u3, d5, self.gf*8)
+        u5 = deconv2d(u4, d4, self.gf*8)
+        u6 = deconv2d(u5, d3, self.gf*4)
+        u7 = deconv2d(u6, d2, self.gf*2)
+        u8 = deconv2d(u7, d1, self.gf)
 
-        u7 = UpSampling2D(size=2)(u6)
-        output_img = Conv2D(self.channels, kernel_size=4, strides=1, padding='same', activation='tanh')(u7)
+        u9 = UpSampling2D(size=2)(u8)
+        output_img = Conv2D(self.channels, kernel_size=4, strides=1, padding='same', activation='tanh')(u9)
 
         return Model(d0, output_img)
 
@@ -147,8 +151,10 @@ class Pix2Pix():
         d2 = d_layer(d1, self.df*2)
         d3 = d_layer(d2, self.df*4)
         d4 = d_layer(d3, self.df*8)
+        d5 = d_layer(d4, self.df*8)
+        d6 = d_layer(d5, self.df*8)
 
-        validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
+        validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d6)
 
         return Model([img_A, img_B], validity)
 
