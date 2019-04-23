@@ -196,6 +196,9 @@ class Pix2Pix():
                 # If at save interval => save generated image samples
                 if batch_i % sample_interval == 0:
                     self.sample_images(epoch, batch_i)
+                    self.save_models()
+
+
 
     def sample_images(self, epoch, batch_i):
         os.makedirs('images/', exist_ok=True)
@@ -220,6 +223,18 @@ class Pix2Pix():
                 cnt += 1
         fig.savefig("images/%d_%d.png" % (epoch, batch_i), dpi=1000)
         plt.close()
+
+    def save_models(self):
+        generator_json = self.generator.to_json()
+        with open("generator.json", "w") as json_file:
+            json_file.write(generator_json)
+
+        discriminator_json = self.discriminator.to_json()
+        with open("predictor.json", "w") as json_file:
+            json_file.write(discriminator_json)
+
+        self.generator.save_weights("./saved-models/generator.h5")
+        self.discriminator.save_weights("./saved-models/discriminator.h5")
 
 
 if __name__ == '__main__':
