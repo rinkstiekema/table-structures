@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.misc
+import matplotlib.pyplot as plt
 
 def pad(a):
     """Return bottom right padding."""
@@ -12,4 +13,8 @@ def imread(path):
 
 img = imread("../2905-0.png")
 img_padded = pad(img)
-scipy.misc.imsave("../2905-0-padded.png", img_padded)
+fig, axs = plt.subplots(1, 1)
+axs.imshow(img_padded)
+fig.savefig("../2905-0-padded.png", dpi=1000)
+plt.close()
+

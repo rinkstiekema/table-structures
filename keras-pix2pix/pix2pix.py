@@ -218,7 +218,7 @@ class Pix2Pix():
                 axs[i, j].set_title(titles[i])
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig("images/%d_%d.png" % (epoch, batch_i))
+        fig.savefig("images/%d_%d.png" % (epoch, batch_i), dpi=1000)
         plt.close()
 
 
