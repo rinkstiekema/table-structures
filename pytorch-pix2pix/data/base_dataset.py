@@ -75,7 +75,7 @@ def get_params(opt, size):
 
     flip = random.random() > 0.5
 
-    return {'crop_pos': (x, y), 'flip': flip}
+    return {'crop_pos': (x, y), 'flip': flip, 'load_size': opt.load_size} 
 
 
 def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, convert=True):
