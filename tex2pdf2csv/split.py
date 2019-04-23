@@ -1,5 +1,6 @@
 from sklearn.model_selection import train_test_split
 import os
+import random
 import sys 
 
 location = sys.argv[1]
@@ -10,20 +11,20 @@ test_data = images[int(len(images)/100 * 80):]
 
 try:
     os.mkdir(os.path.join(location, "train"))
-    print("Directory " , dirName ,  " Created ") 
+    print("Directory train Created ") 
 except FileExistsError:
-    print("Directory " , dirName ,  " already exists")
+    print("Directory train already exists")
 
 try:
     os.mkdir(os.path.join(location, "test"))
-    print("Directory " , dirName ,  " Created ") 
+    print("Directory test Created ") 
 except FileExistsError:
-    print("Directory " , dirName ,  " already exists")
+    print("Directory test already exists")
 
 for image in train_data:
-    os.rename(location, os.path.join(location, "train"))
+    os.rename(location+image, os.path.join(location, "train", image))
 
 for image in test_data:
-    os.rename(location, os.path.join(location, "test"))
+    os.rename(location+image, os.path.join(location, "test", image))
 
 

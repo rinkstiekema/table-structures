@@ -175,7 +175,7 @@ def tex2png(input_file, output_folder):
             file_name = os.path.splitext(input_file)[0].split("/")[-1]       
             outpath_A = output_folder + file_name + '-' + str(idx) + '-A'
             outpath_B = output_folder + file_name + '-' + str(idx) + '-B'
-	    print(outpath_A)
+            #print(outpath_A)
             with open(outpath_A+'.tex', 'w+') as outfile:
                outfile.write(doc)
             
