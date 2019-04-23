@@ -18,8 +18,8 @@ class Pix2Pix():
     def __init__(self):
         # Input shape
         self.dataset_location = sys.argv[1]
-        self.img_rows = 2048
-        self.img_cols = 2048 
+        self.img_rows = 1024
+        self.img_cols = 1024 
         
         #path = './datasets/%s/' % (self.dataset_name)
         #for root, dirnames, files in os.walk(path):
