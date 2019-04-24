@@ -157,9 +157,12 @@ def tex2png(input_file, output_folder):
 
         doc_start = r"""\documentclass{article}
         \usepackage{colortbl}
+        \usepackage{xcolor}
         \begin{document}
         \thispagestyle{empty}
         \begin{table}"""
+
+        color = r"""\color{white}"""
 
         doc_end = r"""
         \end{table}
@@ -167,7 +170,7 @@ def tex2png(input_file, output_folder):
 
         for idx, table in enumerate(output):
             doc = doc_start + table["table"] + doc_end
-            doc_lines = doc_start + table["table_lines"] + doc_end
+            doc_lines = doc_start + color + table["table_lines"] + doc_end
 
             doc = insert_color(doc, "black")
             doc_lines = insert_color(doc_lines, "red")
@@ -175,9 +178,9 @@ def tex2png(input_file, output_folder):
             file_name = os.path.splitext(input_file)[0].split("/")[-1]       
             outpath_A = output_folder + file_name + '-' + str(idx) + '-A'
             outpath_B = output_folder + file_name + '-' + str(idx) + '-B'
-            #print(outpath_A)
+
             with open(outpath_A+'.tex', 'w+') as outfile:
-               outfile.write(doc)
+                outfile.write(doc)
             
             with open(outpath_B+'.tex', 'w+') as outfile:
                 outfile.write(doc_lines)
