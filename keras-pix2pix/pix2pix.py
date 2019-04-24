@@ -152,7 +152,7 @@ class Pix2Pix():
 
         return Model([img_A, img_B], validity)
 
-    def train(self, epochs, batch_size=1, sample_interval=50):
+    def train(self, epochs, batch_size=3, sample_interval=50):
 
         start_time = datetime.datetime.now()
 
