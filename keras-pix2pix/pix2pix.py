@@ -13,6 +13,7 @@ from data_loader import DataLoader
 import numpy as np
 import os
 from PIL import Image
+import scipy.misc
 
 class Pix2Pix():
     def __init__(self):
@@ -208,18 +209,26 @@ class Pix2Pix():
 
         # Rescale images 0 - 1
         gen_imgs = 0.5 * gen_imgs + 0.5
-
-        titles = ['Condition', 'Generated', 'Original']
-        fig, axs = plt.subplots(r, c)
+        result_image = np.array()
         cnt = 0
         for i in range(r):
+            img = np.array()
             for j in range(c):
-                axs[i,j].imshow(gen_imgs[cnt])
-                axs[i, j].set_title(titles[i])
-                axs[i,j].axis('off')
-                cnt += 1
-        fig.savefig(os.path.join(sys.argv[3], "/%d_%d.png" % (epoch, batch_i)), dpi=1000)
-        plt.close()
+                img = np.hstack((img, gen_imgs[i][j]))
+            result_image = np.vstack((result_image, img))
+        scipy.misc.imsave(os.path.join(sys.argv[3], "/%d_%d.png" % (epoch, batch_i)), result_image)
+
+        # titles = ['Condition', 'Generated', 'Original']
+        # fig, axs = plt.subplots(r, c)
+        # cnt = 0
+        # for i in range(r):
+        #     for j in range(c):
+        #         axs[i,j].imshow(gen_imgs[cnt])
+        #         axs[i, j].set_title(titles[i])
+        #         axs[i,j].axis('off')
+        #         cnt += 1
+        # fig.savefig(os.path.join(sys.argv[3], "/%d_%d.png" % (epoch, batch_i)), dpi=1000)
+        # plt.close()
 
     def save_models(self):
         generator_json = self.generator.to_json()
