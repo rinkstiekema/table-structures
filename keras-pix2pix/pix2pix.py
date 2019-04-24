@@ -198,7 +198,7 @@ class Pix2Pix():
 
 
     def sample_images(self, epoch, batch_i):
-        os.makedirs('images/', exist_ok=True)
+        os.makedirs('images-1/', exist_ok=True)
         r, c = 3, 3
 
         imgs_A, imgs_B = self.data_loader.load_data(batch_size=3, is_testing=True)
