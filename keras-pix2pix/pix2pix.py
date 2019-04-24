@@ -19,8 +19,8 @@ class Pix2Pix():
     def __init__(self):
         # Input shape
         self.dataset_location = sys.argv[1]
-        self.img_rows = 1024
-        self.img_cols = 1024 
+        self.img_rows = int(sys.argv[4])
+        self.img_cols = int(sys.argv[4])
         
         #path = './datasets/%s/' % (self.dataset_name)
         #for root, dirnames, files in os.walk(path):
@@ -209,42 +209,34 @@ class Pix2Pix():
 
         # Rescale images 0 - 1
         gen_imgs = 0.5 * gen_imgs + 0.5
-        result_image = np.array()
+
+        titles = ['Condition', 'Generated', 'Original']
+        fig, axs = plt.subplots(r, c)
         cnt = 0
         for i in range(r):
-            img = np.array()
             for j in range(c):
-                img = np.hstack((img, gen_imgs[i][j]))
-            result_image = np.vstack((result_image, img))
-        scipy.misc.imsave(os.path.join(sys.argv[3], "/%d_%d.png" % (epoch, batch_i)), result_image)
-
-        # titles = ['Condition', 'Generated', 'Original']
-        # fig, axs = plt.subplots(r, c)
-        # cnt = 0
-        # for i in range(r):
-        #     for j in range(c):
-        #         axs[i,j].imshow(gen_imgs[cnt])
-        #         axs[i, j].set_title(titles[i])
-        #         axs[i,j].axis('off')
-        #         cnt += 1
-        # fig.savefig(os.path.join(sys.argv[3], "/%d_%d.png" % (epoch, batch_i)), dpi=1000)
-        # plt.close()
+                axs[i,j].imshow(gen_imgs[cnt])
+                axs[i, j].set_title(titles[i])
+                axs[i,j].axis('off')
+                cnt += 1
+        fig.savefig(os.path.join(sys.argv[3], "%d_%d.png" % (epoch, batch_i)), dpi=1000)
+        plt.close()
 
     def save_models(self):
         generator_json = self.generator.to_json()
-        with open(os.path.join(sys.argv[4], "generator.json"), "w") as json_file:
+        with open(os.path.join(sys.argv[3], "generator.json"), "w") as json_file:
             json_file.write(generator_json)
 
         discriminator_json = self.discriminator.to_json()
-        with open(os.path.join(sys.argv[4], "predictor.json"), "w") as json_file:
+        with open(os.path.join(sys.argv[3], "predictor.json"), "w") as json_file:
             json_file.write(discriminator_json)
 
-        self.generator.save_weights(os.path.join(sys.argv[4], "generator.h5"))
-        self.discriminator.save_weights(os.path.join(sys.argv[4], "discriminator.h5"))
+        self.generator.save_weights(os.path.join(sys.argv[3], "generator.h5"))
+        self.discriminator.save_weights(os.path.join(sys.argv[3], "discriminator.h5"))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 4:
-        print("Missing argument, usage: <dataset-name> <sample-location> <model-location>")
+    if len(sys.argv) < 5:
+        print("Missing argument, usage: <dataset-name> <sample-location> <model-location> <load-size>")
     gan = Pix2Pix()
-    gan.train(epochs=200, batch_size=3, sample_interval=1000)
+    gan.train(epochs=200, batch_size=3, sample_interval=5)

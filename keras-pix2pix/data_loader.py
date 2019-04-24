@@ -80,6 +80,6 @@ class DataLoader():
 
     def pad(self, a):
         """Return bottom right padding."""
-        zeros = np.full((1024, 1024, 3), 255)
+        zeros = np.full(self.img_res, 255)
         zeros[:a.shape[0], :a.shape[1], :a.shape[2]] = a
         return zeros
