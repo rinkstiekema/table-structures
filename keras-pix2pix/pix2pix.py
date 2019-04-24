@@ -198,7 +198,7 @@ class Pix2Pix():
 
 
     def sample_images(self, epoch, batch_i):
-        os.makedirs('images-1/', exist_ok=True)
+        os.makedirs(sys.argv[3], exist_ok=True)
         r, c = 3, 3
 
         imgs_A, imgs_B = self.data_loader.load_data(batch_size=3, is_testing=True)
@@ -218,24 +218,24 @@ class Pix2Pix():
                 axs[i, j].set_title(titles[i])
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig("images-1/%d_%d.png" % (epoch, batch_i), dpi=1000)
+        fig.savefig(os.path.join(sys.argv[3], "/%d_%d.png" % (epoch, batch_i)), dpi=1000)
         plt.close()
 
     def save_models(self):
         generator_json = self.generator.to_json()
-        with open("./saved-models/generator.json", "w") as json_file:
+        with open(os.path.join(sys.argv[4], "generator.json"), "w") as json_file:
             json_file.write(generator_json)
 
         discriminator_json = self.discriminator.to_json()
-        with open("./saved-models/predictor.json", "w") as json_file:
+        with open(os.path.join(sys.argv[4], "predictor.json"), "w") as json_file:
             json_file.write(discriminator_json)
 
-        self.generator.save_weights("./saved-models/generator.h5")
-        self.discriminator.save_weights("./saved-models/discriminator.h5")
+        self.generator.save_weights(os.path.join(sys.argv[4], "generator.h5"))
+        self.discriminator.save_weights(os.path.join(sys.argv[4], "discriminator.h5"))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Missing argument, usage: <dataset-name>")
+    if len(sys.argv) < 4:
+        print("Missing argument, usage: <dataset-name> <sample-location> <model-location>")
     gan = Pix2Pix()
     gan.train(epochs=200, batch_size=3, sample_interval=1000)
