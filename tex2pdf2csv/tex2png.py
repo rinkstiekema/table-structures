@@ -22,7 +22,7 @@ def strip_comments(input):
     result = ""
     for line in table_list:
         idx = line.find("%")
-        if idx == 0 or (idx > 0 and line[idx-1] != "\\"):
+        if idx == 0 or (idx > 0 and line[idx-1] != "/"):
             continue
         result += line + '\n'
     return result

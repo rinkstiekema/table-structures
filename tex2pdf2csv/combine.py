@@ -46,5 +46,5 @@ def combine_images(location):
 			continue
 
 def combine(location):
-	combine_images(location)
+	#combine_images(location)
 	clean_up(location)
