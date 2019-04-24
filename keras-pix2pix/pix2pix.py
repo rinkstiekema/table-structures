@@ -223,11 +223,11 @@ class Pix2Pix():
 
     def save_models(self):
         generator_json = self.generator.to_json()
-        with open("generator.json", "w") as json_file:
+        with open("./saved-models/generator.json", "w") as json_file:
             json_file.write(generator_json)
 
         discriminator_json = self.discriminator.to_json()
-        with open("predictor.json", "w") as json_file:
+        with open("./saved-models/predictor.json", "w") as json_file:
             json_file.write(discriminator_json)
 
         self.generator.save_weights("./saved-models/generator.h5")
@@ -238,4 +238,4 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Missing argument, usage: <dataset-name>")
     gan = Pix2Pix()
-    gan.train(epochs=200, batch_size=1, sample_interval=200)
+    gan.train(epochs=200, batch_size=3, sample_interval=200)

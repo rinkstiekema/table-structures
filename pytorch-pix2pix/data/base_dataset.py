@@ -127,9 +127,10 @@ def __make_power_2(img, base, method=Image.BICUBIC):
 
 def __pad(img, target_width):
     """Return bottom right padding."""
-    padded = np.zeros((target_width, target_width, 3))
-    padded[:img.size[1], :img.size[0], :3] = img
-    return padded
+    np_img = np.array(img)
+    padded = np.full((target_width, target_width, 3), 255)
+    padded[:np_img[0], :np_img[1], :np_img[2]] = np_img
+    return Image.fromarray(padded)
 
 
 def __scale_width(img, target_width, method=Image.BICUBIC):
