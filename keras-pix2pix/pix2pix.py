@@ -238,4 +238,4 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Missing argument, usage: <dataset-name>")
     gan = Pix2Pix()
-    gan.train(epochs=200, batch_size=3, sample_interval=200)
+    gan.train(epochs=200, batch_size=3, sample_interval=1000)
