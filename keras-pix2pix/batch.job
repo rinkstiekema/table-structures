@@ -1,7 +1,10 @@
 #!/bin/sh
 #SBATCH --time=10:00:00
 #SBATCH -N 1
-#SBATCH -C gpunode
+#SBATCH -C TitanX
 #SBATCH --gres=gpu:1
 
-python3 pix2pix.py /var/scratch/rsa680/datasets/gen-tables/
+module load cuDNN/cuda10.0
+module load cuda10.0/toolkit
+
+python3 pix2pix.py /var/scratch/rsa680/datasets/gen-tables/ /var/scratch/rsa680/datasets/gen-tables/samples/ /var/scratch/rsa680/datasets/gen-tables/model/ 1024
