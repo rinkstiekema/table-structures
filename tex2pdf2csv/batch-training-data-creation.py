@@ -17,8 +17,8 @@ if __name__ == '__main__':
 	output_folder = sys.argv[2]
 
 	aux_folder = os.path.join(output_folder, 'aux-bs')
-	if not os.path.exists(aux_folder):
-		os.makedirs(aux_folder)
+	#if not os.path.exists(aux_folder):
+	#	os.makedirs(aux_folder)
 
 	#input_folder_list = os.listdir(input_folder)
 	#count = 0

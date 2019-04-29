@@ -219,7 +219,7 @@ class Pix2Pix():
                 axs[i, j].set_title(titles[i])
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig(os.path.join(sys.argv[3], "%d_%d.png" % (epoch, batch_i)), dpi=1000)
+        fig.savefig(os.path.join(sys.argv[2], "%d_%d.png" % (epoch, batch_i)), dpi=1000)
         plt.close()
 
     def save_models(self):
@@ -239,4 +239,4 @@ if __name__ == '__main__':
     if len(sys.argv) < 5:
         print("Missing argument, usage: <dataset-name> <sample-location> <model-location> <load-size>")
     gan = Pix2Pix()
-    gan.train(epochs=200, batch_size=3, sample_interval=5)
+    gan.train(epochs=200, batch_size=1, sample_interval=200)
