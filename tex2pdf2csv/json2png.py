@@ -1,0 +1,20 @@
+import os
+import sys
+import json
+# import tabula
+
+def json2png(root, file_name):
+	png_folder = os.path.join(root, "../png")
+	
+	json_file = os.path.join(root, 'json', file_name)
+	if not os.path.exists(png_folder):
+		os.makedirs(png_folder)
+
+	with open(json_file) as jfile:
+		print("Converting "+file_name)
+		data = json.load(jfile)
+		for idx, table in enumerate(data):
+			if(table["figType"] == "Table"):
+				regionBoundary = table['regionBoundary']
+				bbox = [regionBoundary['y1'], regionBoundary['x1'], regionBoundary['y2'], regionBoundary['x2']]
+				
