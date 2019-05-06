@@ -9,6 +9,7 @@ import combine
 import rulers 
 import scipy.misc
 import textboxtract
+import json2csv
 
 def init_folders(base_folder):
 	pdf_folder = os.path.join(base_folder, "pdf")
@@ -27,8 +28,12 @@ def init_folders(base_folder):
 	outlines_folder = os.path.join(base_folder, "outlines")
 	if not os.path.exists(outlines_folder):
 		os.makedirs(outlines_folder)
-
-	return pdf_folder, json_folder, png_folder, outlines_folder
+	
+	csv_folder = os.path.join(base_folder, "csv")
+	if not os.path.exists(csv_folder):
+		os.makedirs(csv_folder)
+	
+	return pdf_folder, json_folder, png_folder, outlines_folder, csv_folder
 
 if __name__ == '__main__':
 	if not os.path.exists("pdffigures2"):
@@ -36,7 +41,7 @@ if __name__ == '__main__':
 		exit(-1)
 
 	opt = Options().parse()
-	pdf_folder, json_folder, png_folder, outlines_folder = init_folders(opt.dataroot)
+	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
 
 	if(opt.generate_images):
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '\ -d ' + json_folder + '\ ' + pdf_folder + '"')
@@ -52,5 +57,11 @@ if __name__ == '__main__':
 	# Process the tables, add outline URL to respective JSON file
 	#predictor.predict(json_folder, outlines_folder)
 
-	rulers.rule(json_folder)	
-	textboxtract.extract(json_folder)
+	# Interpret ruling lines and write individual cells to json file
+	rulers.rule(json_folder)
+
+	# Extract the text, using the bounding boxes, from the original PDF
+	textboxtract.extract(json_folder, pdf_folder)
+
+	# Create CSV files from the extracted text and locations of said text
+	json2csv.json2csv(json_folder, csv_folder)
