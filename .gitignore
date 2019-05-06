@@ -5,3 +5,4 @@ keras-pix2pix/images-1/
 images.zip
 saved-models.zip
 */__pycache__
+.vscode/

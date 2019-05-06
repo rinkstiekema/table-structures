@@ -18,9 +18,9 @@ def imread(path, is_grayscale = False):
     else:
         return scipy.misc.imread(path).astype(np.float)
 
-def pad(a):
+def pad(a, img_res):
 	"""Return bottom right padding."""
-	zeros = np.full(self.img_res, 255)
+	zeros = np.full(img_res, 255)
 	zeros[:a.shape[0], :a.shape[1], :a.shape[2]] = a
 	return zeros
 
@@ -36,8 +36,8 @@ def combine_images(location):
 			img_A = scipy.misc.imread(location+base_name+"-A.png", mode='RGB').astype(np.float)
 			img_B = scipy.misc.imread(location+base_name+"-B.png", mode='RGB').astype(np.float) 
 			
-			img_A = pad(img_A)
-			img_B = pad(img_B)
+			img_A = pad(img_A, (1024, 1024, 3))
+			img_B = pad(img_B, (1024, 1024, 3))
 
 			old_size = img_A.size
 			new_size = img_B.size
