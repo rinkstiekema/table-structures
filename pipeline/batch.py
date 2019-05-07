@@ -44,6 +44,7 @@ if __name__ == '__main__':
 	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
 
 	if not opt.skip_generate_images:
+		print("Generating images")
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '\ -d ' + json_folder + '\ ' + pdf_folder + '"')
 		for image in os.listdir(png_folder):
 			# to do remove from json file
@@ -59,12 +60,15 @@ if __name__ == '__main__':
 
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
+		print("Finding cells")
 		rulers.rule(json_folder)
 
 	# Extract the text, using the bounding boxes, from the original PDF
 	if not opt.skip_extract_text:
+		print("Extracting text")
 		textboxtract.extract(json_folder, pdf_folder)
 
 	# Create CSV files from the extracted text and locations of said text
 	if not opt.skip_create_csv:
+		print("Creating csv")
 		json2csv.json2csv(json_folder, csv_folder)
