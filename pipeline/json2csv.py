@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 def json2csv(json_folder, csv_folder):
-    for json_file in json_folder:
+    for json_file in os.listdir(json_folder):
         json_location = os.path.join(json_folder, json_file)
         with open(json_location, 'r+') as jfile:
             tables = json.load(jfile)
