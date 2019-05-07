@@ -54,8 +54,8 @@ def get_hough_lines(img, verbose=False):
 	lines = list(map(lambda x: [(x[0][0], x[0][1]),(x[0][2], x[0][3])], lines))
 	if(verbose):
 		for line in lines:
-			cv2.line(gray, line[0], line[1], (255,255,255),1)
-		cv2.imshow("image", gray)
+			cv2.line(img, line[0], line[1], (255,255,255),1)
+		cv2.imshow("image", img)
 		cv2.waitKey(0)
 
 	# Flatten lines list
@@ -92,39 +92,42 @@ def rule(json_folder):
 			result = [] # eventually new json file
 			tables = json.load(jfile) # current json file
 			for table in tables:
-				img = cv2.imread(table["outlineURL"])
+				try:
+					img = cv2.imread(table["outlineURL"])
+					gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+					img = cv2.Canny(gray,500, 500,apertureSize = 3)
+					kernel = np.ones((3,3),np.uint8)
+					img = cv2.dilate(img, kernel,iterations = 1)
+					kernel = np.ones((5,5),np.uint8)
+					img = cv2.erode(img,kernel,iterations = 1)
 
-				gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-				img = cv2.Canny(img,500, 500,apertureSize = 3)
-				kernel = np.ones((3,3),np.uint8)
-				img = cv2.dilate(img, kernel,iterations = 1)
-				kernel = np.ones((5,5),np.uint8)
-				img = cv2.erode(img,kernel,iterations = 1)
+					lines = get_hough_lines(img, False)
 
-				lines = get_hough_lines(img, False)
+					intersection_points = []
+					for idx, i in enumerate(lines):
+						for j in lines[idx+1:]:
+							try:
+								intersection_points.append(line_intersection(i, j))
+							except Exception as e:
+								#print(e)
+								continue
 
-				intersection_points = []
-				for idx, i in enumerate(lines):
-					for j in lines[idx+1:]:
-						try:
-							intersection_points.append(line_intersection(i, j))
-						except Exception as e:
-							#print(e)
-							continue
+					intersection_points = list(set(intersection_points))
+					intersection_points = fuse(intersection_points, 5)
+					intersection_points = align(intersection_points, 10)
 
-				intersection_points = list(set(intersection_points))
-				intersection_points = fuse(intersection_points, 5)
-				intersection_points = align(intersection_points, 10)
+					cells = []
+					intersection_points.sort()
+					for idx, i in enumerate(intersection_points):
+						cell = find_cell(i, intersection_points[idx:])
+						if cell:
+							cells.append(cell)
 
-				cells = []
-				intersection_points.sort()
-				for idx, i in enumerate(intersection_points):
-					cell = find_cell(i, intersection_points[idx:])
-					if cell:
-						cells.append(cell)
-
-				table["cells"] = cells
-				result.append[table]
+					table["cells"] = cells
+					result.append(table)
+				except:
+					print("Skipping step")
+					continue
 			jfile.seek(0)
 			jfile.write(json.dumps(result))
 			jfile.truncate()

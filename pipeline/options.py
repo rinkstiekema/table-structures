@@ -14,7 +14,10 @@ class Options():
         """Define options"""
         # basic parameters
         parser.add_argument('--dataroot', required=True, help='Path to image folder')
-        parser.add_argument('--generate_images', action='store_true', help='Generate images from PDF files')
+        parser.add_argument('--skip_generate_images', action='store_true', help='Skip: generate images from PDF files')
+        parser.add_argument('--skip_find_cells', action='store_true', help='Skip: apply image transforms to find cells from the outline image')
+        parser.add_argument('--skip_extract_text', action='store_true', help='Skip: finding text from boundary boxes')
+        parser.add_argument('--skip_create_csv', action='store_true', help='Skip: creating csv from found text')
         self.initialized = True
         return parser
 
