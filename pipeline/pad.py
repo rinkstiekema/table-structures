@@ -14,8 +14,9 @@ if len(sys.argv) < 2:
     exit(-1)
 
 folder = sys.argv[1]
-resolution = (sys.argv[2], sys.argv[2], 3)
+resolution = (int(sys.argv[2]), int(sys.argv[2]), 3)
 for image in os.listdir(folder):
+    print(image)
     location = os.path.join(folder, image)
     padded = pad(scipy.misc.imread(location, mode='RGB').astype(np.float), resolution)
     scipy.misc.imsave(location, padded)

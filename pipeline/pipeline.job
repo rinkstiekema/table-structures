@@ -1,0 +1,9 @@
+#!/bin/bash
+#SBATCH --time=05:00:00
+#SBATCH -C TitanX
+#SBATCH --gres=gpu:1
+
+module load cuDNN/cuda10.0
+module load cuda10.0/toolkit
+
+python batch.py --dataroot /var/scratch/rsa680/datasets/aaai/ --skip_generate_images --skip_find_cells --skip_extract_text
