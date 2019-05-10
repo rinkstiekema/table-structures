@@ -40,7 +40,7 @@ class TableGenerator():
             return start+positions, end
 
         def get_header(n_col):
-            textbf = r"""\textbf{}"""
+            textbf = r""" \textbf{} """
             if choice([True, False, False, False]):
                 textbf = ""
             header = ""
@@ -52,11 +52,11 @@ class TableGenerator():
                 header += word + " & "
             header = header[:-2]
 
-            header += "\\\\ "
+            header += r""" \\ """
             if choice([True, True, True, False]):
-                header += " \\hline "
+                header += r""" \hline """
             if choice([True, False]):
-                header = " \\hline " + header
+                header = r""" \hline """ + header
 
             header += "\n "
             return header
@@ -76,19 +76,19 @@ class TableGenerator():
                     
                     if use_bold:
                         if choice([True, False, False, False, False, False, False, False, False, False]):
-                            word = r"""\textbf{""" + word + r"""}"""
+                            word = r""" \textbf{""" + word + r"""} """
 
                     body += word + " & "
                 body = body[:-2]
-                body += r"""\\"""
+                body += r""" \\ """
 
             locations = sample(range(1, n_row+2), n_hlines)
             locations.sort(reverse = True)
 
-            body = body.split(r"""\\""")
-            h_line = "\\\\ \hline \n "
-            d_hline = "\\\\ \hline \hline \n "
-            end_line = "\\\\ \n "
+            body = body.split(r""" \\ """)
+            h_line = r""" \\ \hline """
+            d_hline = r""" \\ \hline \hline """
+            end_line = r""" \\ """ 
 
             for idx, _ in reversed(list(enumerate(body))):
                 if idx in locations:
@@ -115,19 +115,29 @@ class TableGenerator():
          
         return table
 
+def generate_tables(output_folder, amount):
+    generator = TableGenerator()
+    # Generate n tables
+    for i in range(amount):
+        table = generator.generate()
+        with open(os.path.join(output_folder, str(i)+".tex"), "w") as outfile:
+            outfile.write(table)
+
 if __name__ == '__main__':
     if(len(sys.argv) < 3):
-        print("Missing argument: amount location")
+        print("Missing argument. Usage: <location> <amount>")
+        exit(-1)
 
-    n = int(sys.argv[1])
-    location = sys.argv[2]
+    location = sys.argv[1]
+    n = int(sys.argv[2])
     generator = TableGenerator()
     
+    # Generate n tables
     for i in range(n):
-        try:
-            table = generator.generate()
-            with open(os.path.join(location, str(i)+".tex"), "w") as outfile:
-                outfile.write(table)
-        except Exception as e:
-            print(e)
-            continue
+        #try:
+        table = generator.generate()
+        with open(os.path.join(location, str(i)+".tex"), "w") as outfile:
+            outfile.write(table)
+        # except Exception as e:
+        #     print(e)
+        #     continue

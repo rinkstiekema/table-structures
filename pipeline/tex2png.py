@@ -172,12 +172,14 @@ def tex2png(input_file, output_folder):
             doc = doc_start + table["table"] + doc_end
             doc_lines = doc_start + color + table["table_lines"] + doc_end
 
-            doc = insert_color(doc, "black")
+            # doc_lines = doc.replace(r"""\rule[1px]{0}""", r"""\hline""")
+            # doc_lines = doc_lines.replace(r"""@{\hspace{1.25em}}""", r"""|""")
             doc_lines = insert_color(doc_lines, "red")
+            doc = insert_color(doc, "black")
 
-            file_name = os.path.splitext(input_file)[0].split("/")[-1]       
-            outpath_A = output_folder + file_name + '-' + str(idx) + '-A'
-            outpath_B = output_folder + file_name + '-' + str(idx) + '-B'
+            file_name = os.path.basename(input_file)
+            outpath_A = os.path.join(output_folder, os.path.splitext(file_name)[0]) + '-A'
+            outpath_B = os.path.join(output_folder, os.path.splitext(file_name)[0]) + '-B'
 
             with open(outpath_A+'.tex', 'w+') as outfile:
                 outfile.write(doc)
@@ -186,8 +188,6 @@ def tex2png(input_file, output_folder):
                 outfile.write(doc_lines)
 
             aux_folder = os.path.join(output_folder, 'aux-bs')
-	    #print(os.listdir(output_folder))
-	    #print('latex -interaction=batchmode -output-directory='+ output_folder + ' ' + outpath_A + '.tex')
             subprocess.call('latex -interaction=batchmode -output-directory='+ output_folder + ' ' + outpath_A + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
             subprocess.call('dvipng -q* -T tight -o ' + outpath_A + '.png ' + outpath_A + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
             subprocess.call('latex -interaction=batchmode -output-directory='+ output_folder + ' ' + outpath_B + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
