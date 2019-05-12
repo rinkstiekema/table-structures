@@ -95,7 +95,7 @@ def rule(json_folder):
 				try:
 					img = cv2.imread(table["outlineURL"])
 					gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-					img = cv2.Canny(gray,500, 500,apertureSize = 3)
+					img = cv2.Canny(gray, 500, 500,apertureSize = 3)
 					kernel = np.ones((3,3),np.uint8)
 					img = cv2.dilate(img, kernel,iterations = 1)
 					kernel = np.ones((5,5),np.uint8)
