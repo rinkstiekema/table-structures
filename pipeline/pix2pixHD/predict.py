@@ -29,8 +29,6 @@ elif opt.data_type == 8:
         
 if opt.verbose:
     print(model)
-else:
-    from run_engine import run_trt_engine, run_onnx
     
 for i, data in enumerate(dataset):
     if i >= opt.how_many:
