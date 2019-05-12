@@ -36,10 +36,6 @@ def init_folders(base_folder):
 	return pdf_folder, json_folder, png_folder, outlines_folder, csv_folder
 
 if __name__ == '__main__':
-	if not os.path.exists("pdffigures2"):
-		print("pdffigures2 is not available in this folder")
-		exit(-1)
-
 	opt = Options().parse()
 	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
 
@@ -57,6 +53,7 @@ if __name__ == '__main__':
 
 	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
+		print("Predicting outliens")
 		os.system('./pix2pixHD/scripts/predict.sh')
 
 	# Interpret ruling lines and write individual cells to json file
