@@ -48,7 +48,7 @@ for i, data in enumerate(dataset):
     else:        
         generated = model.inference(data['label'], data['inst'], data['image'])
         
-    visual = ('synthesized_image', util.tensor2im(generated.data[0]))
+    visual = util.tensor2im(generated.data[0])
     img_path = data['path']
     print('process image... %s' % img_path)
     visualizer.save_image_predict(visual, img_path, opt.results_dir)
