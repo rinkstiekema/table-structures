@@ -133,6 +133,7 @@ class Visualizer():
         webpage.add_images(ims, txts, links, width=self.win_size)
     
     def save_image_predict(self, visual, image_path, result_dir):
+        short_path = ntpath.basename(image_path[0])
         name = os.path.splitext(short_path)[0]
         image_name = '%s.png' % (name)
         save_path = os.path.join(result_dir, image_name)
