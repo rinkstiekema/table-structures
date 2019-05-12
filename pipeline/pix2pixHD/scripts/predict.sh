@@ -1,0 +1,1 @@
+ python predict.py --name gen-tables-hd --checkpoints_dir /var/scratch/rsa680/datasets/checkpoints --dataroot /var/scratch/rsa680/datasets/aaai/ --loadSize 1024 --fineSize 1024 --no_instance --label_no 0
