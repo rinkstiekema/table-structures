@@ -56,7 +56,8 @@ if __name__ == '__main__':
 			scipy.misc.imsave(os.path.join(png_folder, image), img)
 
 	# Process the tables, add outline URL to respective JSON file
-	#predictor.predict(json_folder, outlines_folder)
+	if not opt.skip_predict:
+		os.system('./pix2pixHD/scripts/predict.sh')
 
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:

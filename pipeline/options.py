@@ -14,6 +14,7 @@ class Options():
         """Define options"""
         # basic parameters
         parser.add_argument('--dataroot', required=True, help='Path to image folder')
+        parser.add_argument('--skip_predict', action='store_true', help='Skip: predicting outlines')
         parser.add_argument('--skip_generate_images', action='store_true', help='Skip: generate images from PDF files')
         parser.add_argument('--skip_find_cells', action='store_true', help='Skip: apply image transforms to find cells from the outline image')
         parser.add_argument('--skip_extract_text', action='store_true', help='Skip: finding text from boundary boxes')
