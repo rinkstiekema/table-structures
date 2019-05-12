@@ -14,6 +14,7 @@ class AlignedDatasetPredict(BaseDataset):
         dir_A = 'png'
         self.dir_A = os.path.join(opt.dataroot, dir_A)
         self.A_paths = sorted(make_dataset(self.dir_A))
+        print("Found %s images" % len(self.A_paths))
 
         ### load precomputed instance-wise encoded features
         if opt.load_features:                              

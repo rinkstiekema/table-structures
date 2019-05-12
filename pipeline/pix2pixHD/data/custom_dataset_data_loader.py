@@ -5,12 +5,13 @@ from data.base_data_loader import BaseDataLoader
 def CreateDataset(opt):
     dataset = None
     if opt.isPredict:
+        print("Creating dataset for prediction")
         from data.aligned_dataset_predict import AlignedDatasetPredict
         dataset = AlignedDatasetPredict()
     else:
         from data.aligned_dataset import AlignedDataset
         dataset = AlignedDataset()
-        
+
     print("dataset [%s] was created" % (dataset.name()))
     dataset.initialize(opt)
     return dataset
