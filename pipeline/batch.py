@@ -54,7 +54,7 @@ if __name__ == '__main__':
 	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
 		print("Predicting outlines")
-		os.system('./pix2pixHD/scripts/predict.sh')
+		os.system('cd pix2pixHD; ./scripts/predict.sh')
 
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
