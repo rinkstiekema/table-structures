@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
 	if not opt.skip_generate_images:
 		print("Generating images")
-		os.system('"java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + ' -d ' + json_folder + ' ' + pdf_folder + '"')
+		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + ' -d ' + json_folder + ' ' + pdf_folder)
 		for image in os.listdir(png_folder):
 			# to do remove from json file
 			img = scipy.misc.imread(os.path.join(png_folder, image), mode='RGB').astype(np.float)
