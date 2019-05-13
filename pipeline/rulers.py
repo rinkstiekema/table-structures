@@ -93,7 +93,9 @@ def rule(json_folder):
 			tables = json.load(jfile) # current json file
 			for table in tables:
 				try:
-					img = cv2.imread(table["outlineURL"])
+					original_size = (table["regionBoundary"]["x2"] - table["regionBoundary"]["x1"], table["regionBoundary"]["y2"] - table["regionBoundary"]["y1"])
+					original_size = (int(original_size[0]*72/25.4), int(original_size[1]*72/25.4))
+					img = cv2.imread(table["outlineURL"])[0:int(original_size[1]), 0:int(original_size[0])]
 					gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 					img = cv2.Canny(gray, 500, 500,apertureSize = 3)
 					kernel = np.ones((3,3),np.uint8)
@@ -122,6 +124,17 @@ def rule(json_folder):
 						cell = find_cell(i, intersection_points[idx:])
 						if cell:
 							cells.append(cell)
+
+					test_img = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
+					cv2.imshow('image',test_img)
+					cv2.waitKey(0)
+					cv2.destroyAllWindows()
+					for cell in cells:
+						cv2.circle(test_img, cell[0], 1, (0, 0, 255), -1)
+						cv2.circle(test_img, cell[1], 1, (0, 0, 255), -1)
+					cv2.imshow('image',test_img)
+					cv2.waitKey(0)
+					cv2.destroyAllWindows()
 
 					table["cells"] = cells
 					result.append(table)
