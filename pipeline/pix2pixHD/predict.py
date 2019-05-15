@@ -52,5 +52,4 @@ for i, data in enumerate(dataset):
     img_path = data['path']
     print('process image... %s' % img_path)
     visualizer.save_image_predict(visual, img_path, opt.results_dir)
-
-webpage.save()
+    

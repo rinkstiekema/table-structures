@@ -35,6 +35,18 @@ def init_folders(base_folder):
 	
 	return pdf_folder, json_folder, png_folder, outlines_folder, csv_folder
 
+def add_outline_url(json_folder, outline_folder):
+	for json_file in json_file_list:
+		json_file_location = os.path.join(json_folder, json_file)
+		with open(json_file_location, 'r+') as jfile:
+			result = [] # eventually new json file
+			tables = json.load(jfile) # current json file
+			for table in tables:
+				table["outlineURL"] = os.path.join(outline_folder, os.path.basename(table["renderURL"]))
+			jfile.seek(0)
+			jfile.write(json.dumps(result))
+			jfile.truncate()
+
 if __name__ == '__main__':
 	opt = Options().parse()
 	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
@@ -55,6 +67,7 @@ if __name__ == '__main__':
 	if not opt.skip_predict:
 		print("Predicting outlines")
 		os.system('cd pix2pixHD; ./scripts/predict.sh %s' % outlines_folder)
+		add_outline_url(json_folder, outlines_folder)
 
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
