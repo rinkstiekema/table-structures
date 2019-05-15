@@ -95,7 +95,7 @@ def rule(json_folder):
 			for table in tables:
 				try:
 					original_size = (table["regionBoundary"]["x2"] - table["regionBoundary"]["x1"], table["regionBoundary"]["y2"] - table["regionBoundary"]["y1"])
-					original_size = (int(original_size[0])*300/150), int(original_size[1])*300/150))
+					original_size = (int(original_size[0]*300/150), int(original_size[1]*300/150))
 					img = cv2.imread(table["outlineURL"])[0:int(original_size[1]), 0:int(original_size[0])]
 					gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 					img = cv2.Canny(gray, 500, 500,apertureSize = 3)
