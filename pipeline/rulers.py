@@ -142,6 +142,5 @@ def rule(json_folder):
 					jfile.write(json.dumps(result))
 					jfile.truncate()
 				except Exception as e:
-					print("Skipping step")
-					print(e)
+					print("Skipping step",e)
 					continue
