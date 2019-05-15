@@ -2,6 +2,7 @@ import os
 import numpy as np
 import json
 import cv2
+import traceback
 
 def align(points, d):
     n = len(points)
@@ -134,5 +135,5 @@ def rule(json_folder):
 					jfile.write(json.dumps(result))
 					jfile.truncate()
 				except Exception as e:
-					print("Skipping step",e)
+					print("Skipping step", traceback.format_exc())
 					continue
