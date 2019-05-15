@@ -43,6 +43,7 @@ def add_outline_url(json_folder, outline_folder):
 			tables = json.load(jfile) # current json file
 			for table in tables:
 				table["outlineURL"] = os.path.join(outline_folder, os.path.basename(table["renderURL"]))
+				result.append(table)
 			jfile.seek(0)
 			jfile.write(json.dumps(result))
 			jfile.truncate()
