@@ -126,15 +126,7 @@ def rule(json_folder):
 							cells.append(cell)
 
 					test_img = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
-					cv2.imshow('image',test_img)
-					cv2.waitKey(0)
-					cv2.destroyAllWindows()
-					for cell in cells:
-						cv2.circle(test_img, cell[0], 1, (0, 0, 255), -1)
-						cv2.circle(test_img, cell[1], 1, (0, 0, 255), -1)
-					cv2.imshow('image',test_img)
-					cv2.waitKey(0)
-					cv2.destroyAllWindows()
+
 
 					table["cells"] = cells
 					result.append(table)
