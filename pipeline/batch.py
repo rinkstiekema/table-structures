@@ -36,7 +36,7 @@ def init_folders(base_folder):
 	return pdf_folder, json_folder, png_folder, outlines_folder, csv_folder
 
 def add_outline_url(json_folder, outline_folder):
-	for json_file in json_file_list:
+	for json_file in os.listdir(json_folder):
 		json_file_location = os.path.join(json_folder, json_file)
 		with open(json_file_location, 'r+') as jfile:
 			result = [] # eventually new json file
