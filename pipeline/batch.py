@@ -54,7 +54,7 @@ if __name__ == '__main__':
 	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
 		print("Predicting outlines")
-		os.system('cd pix2pixHD; ./scripts/predict.sh %s' % outlines_folder)
+		os.system('cd pdffigures2; ./scripts/predict.sh %s' % outlines_folder)
 
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
