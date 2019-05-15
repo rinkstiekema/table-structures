@@ -138,10 +138,10 @@ def rule(json_folder):
 
 					table["cells"] = cells
 					result.append(table)
+					jfile.seek(0)
+					jfile.write(json.dumps(result))
+					jfile.truncate()
 				except Exception as e:
 					print("Skipping step")
 					print(e)
 					continue
-			jfile.seek(0)
-			jfile.write(json.dumps(result))
-			jfile.truncate()
