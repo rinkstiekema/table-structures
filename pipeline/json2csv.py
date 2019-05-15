@@ -26,7 +26,7 @@ def json2csv(json_folder, csv_folder):
                     
                 df = pd.DataFrame(matrix)
 
-                csv_name = os.path.splitext(table["renderURL"].split("\\")[-1])[0] + ".csv"
+                csv_name = os.path.splitext(os.path.basename(table["renderURL"]))[0] + ".csv"
                 df.to_csv(os.path.join(csv_folder, csv_name), index=False, header=False)
 
 
