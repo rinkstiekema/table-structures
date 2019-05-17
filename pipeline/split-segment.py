@@ -17,7 +17,7 @@ for t in types:
     if not os.path.exists(label_location):  
         os.mkdir(label_location)
 
-    data = images[:original_length/100 * t["range"])]
+    data = images[:original_length/100 * t["range"]]
 
     for image in data:
         os.rename(os.path.join(location, "train_A", image), os.path.join(img_location, image))
