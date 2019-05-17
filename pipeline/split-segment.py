@@ -23,4 +23,4 @@ for t in types:
         os.rename(os.path.join(location, "train_A", image), os.path.join(img_location, image))
         os.rename(os.path.join(location, "train_B", image), os.path.join(label_location, image))
 
-    images = images[original_length/100 * t["range"])+1:]
+    images = images[original_length/100 * t["range"]+1:]
