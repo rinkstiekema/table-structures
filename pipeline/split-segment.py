@@ -18,6 +18,6 @@ for t in types:
 
     for image in data:
         os.rename(os.path.join(location, "train_A", image), os.path.join(location, t["name"], image))
-        os.rename(os.path.join(location, "train_A", image), os.path.join(location, t["name"]+"_label", image))
+        os.rename(os.path.join(location, "train_B", image), os.path.join(location, t["name"]+"_label", image))
 
     images = images[original_length/100 * t["range"])+1:]
