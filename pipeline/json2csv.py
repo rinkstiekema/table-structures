@@ -13,10 +13,9 @@ def json2csv(json_folder, csv_folder):
                 # Unique occurences of rows and columns
                 rows = list(set([x["rect"][0][1] for x in table["cells"]]))
                 columns = list(set([x["rect"][0][0] for x in table["cells"]]))
-
                 # Replace row/col by their index
-                index_rows = list(set(sorted([cell["rect"][0][1] for cell in table["cells"]])))
-                index_columns = list(set(sorted([cell["rect"][0][0] for cell in table["cells"]])))
+                index_rows = sorted(list(set([cell["rect"][0][1] for cell in table["cells"]])))
+                index_columns = sorted(list(set([cell["rect"][0][0] for cell in table["cells"]])))
 
                 matrix = [['' for _ in range(len(columns))] for _ in range(len(rows))]
                 for cell in table["cells"]:
@@ -25,7 +24,6 @@ def json2csv(json_folder, csv_folder):
                     matrix[x][y] = cell["words"]
                     
                 df = pd.DataFrame(matrix)
-
                 csv_name = os.path.splitext(os.path.basename(table["renderURL"]))[0] + ".csv"
                 df.to_csv(os.path.join(csv_folder, csv_name), index=False, header=False)
 
