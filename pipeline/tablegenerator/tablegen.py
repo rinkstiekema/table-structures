@@ -88,9 +88,7 @@ if __name__ == '__main__':
                 
                 table_tex = tex_generator.generate_tex(table)
                 outline_tex = tex_generator.generate_tex_outline(table)
-                print(table_tex)
-                print(outline_tex)
-                exit()
+
                 with open(os.path.join(tex_path, path[0],str(idx))+'-'+str(i)+'.tex', 'w+') as tex_file:
                     tex_file.write(table_tex)
                 subprocess.call('latex -interaction=batchmode -output-directory='+ os.path.join(png_path, path[0]) + ' ' + os.path.join(tex_path, path[0], str(idx)+'-'+str(i)) + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
