@@ -19,7 +19,7 @@ class TableGenerator():
     def generate(self):
         n_rows = randint(2, 15)
         n_columns = randint(2, 8)
-        n_text_columns = 0 if self.randBoolean(80) else randint(0, n_columns)
+        n_text_columns = 0 if self.randBoolean(80) else randint(1, n_columns)
         return Table(self.table_type, n_rows, n_columns, n_text_columns)
 
 def make_dir(path):
