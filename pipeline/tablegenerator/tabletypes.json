@@ -1,0 +1,47 @@
+[
+    {
+        "n_headers": 1,
+        "n_stubs": 0,
+        "indicator_type": "none"
+    },
+    {
+        "n_headers": 0,
+        "n_stubs": 1,
+        "indicator_type": "none"
+    },
+    {
+        "n_headers": 1,
+        "n_stubs": 1,
+        "indicator_type": "stub"
+    },
+    {
+        "n_headers": 1,
+        "n_stubs": 1,
+        "indicator_type": "none"
+    },
+    {
+        "n_headers": 2,
+        "n_stubs": 1,
+        "indicator_type": "header"
+    },
+    {
+        "n_headers": 2,
+        "n_stubs": 1,
+        "indicator_type": "stub"
+    },
+    {
+        "n_headers": 2,
+        "n_stubs": 1,
+        "indicator_type": "none"
+    },
+    {
+        "n_headers": 1,
+        "n_stubs": 2,
+        "indicator_type": "stub"
+    },
+    {
+        "n_headers": 1,
+        "n_stubs": 2,
+        "indicator_type": "none"
+    }
+]

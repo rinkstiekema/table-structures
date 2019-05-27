@@ -7,3 +7,5 @@ saved-models.zip
 */__pycache__
 .vscode/
 pipeline/model/
+scraper/papers/*
+pipeline/segmentation/checkpoints/*

@@ -12,7 +12,7 @@ def texboxtract(pdf, tables):
         page = doc[int(table["page"])]
         words = page.getTextWords()
         for idx, cell in enumerate(table["cells"]):
-            rect = [cell[0][0]/300*150+table["regionBoundary"]["x1"], cell[0][1]/300*150+table["regionBoundary"]["y1"], cell[1][0]/300*150+table["regionBoundary"]["x1"], cell[1][1]/300*150+table["regionBoundary"]["y1"]]            
+            rect = [cell[0][0]/300*150+table["regionBoundary"]["x1"], cell[0][1]/300*150+table["regionBoundary"]["y1"], cell[1][0]/300*150+table["regionBoundary"]["x1"], cell[1][1]/300*150+table["regionBoundary"]["y1"]]
             mywords = [w for w in words if fitz.Rect(w[:4]) in fitz.Rect(rect)]
             mywords.sort(key = itemgetter(3, 0))   # sort by y1, x0 of the word rect
             group = groupby(mywords, key = itemgetter(3))
@@ -41,5 +41,6 @@ def extract(json_folder, pdf_folder):
                 jfile.truncate()
                 elapsed_time = time.time() - start_time
                 print("Took: "+time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-            except: 
+            except Exception as e:
+                print(e)
                 continue

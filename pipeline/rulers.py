@@ -140,8 +140,8 @@ def rule(json_folder):
 						cell = find_cell(i, intersection_points[idx:])
 						if cell:
 							cells.append(cell)
-
-					new = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
+					
+					new = cv2.imread(table["outlineURL"].replace("outlines", "png"))
 					for cell in cells:
 						new = cv2.rectangle(new, cell[0], cell[1], (0,0,255))
 					cv2.imshow('image', new)
