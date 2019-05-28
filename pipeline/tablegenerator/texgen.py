@@ -11,7 +11,7 @@ class TexGenerator():
     def generate_tex(self, table):
         latex = table.df.to_latex(bold_rows=table.bold_stub, column_format=table.column_format, header=table.n_headers > 0, index=table.n_stubs > 0)
         hline = "\\\\ \hline" 
-        next_line = "\\\\[0.4pt]"  
+        next_line = "\\\\[\\arrayrulewidth]"  
         row_size = "\\renewcommand{\\arraystretch}{%f}" % table.row_size
         latex_splitted = re.split(r"\\\\", latex)
         latex = ""

@@ -105,7 +105,7 @@ class Table():
         self.rows = rows
 
     def generate_column_format(self):
-        column_format = "".join(np.random.choice(['r', 'c','l'], self.n_columns+self.n_stubs, replace=True).tolist())
+        column_format = "".join(np.random.choice(['r', 'c', 'l'], self.n_columns+self.n_stubs, replace=True).tolist())
         for i in sorted(self.v_lines, reverse=True):
             column_format = column_format[:i] + '|' + column_format[i:]
         return column_format
