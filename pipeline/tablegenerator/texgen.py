@@ -11,7 +11,8 @@ class TexGenerator():
     def generate_tex(self, table):
         latex = table.df.to_latex(bold_rows=table.bold_stub, column_format=table.column_format, header=table.n_headers > 0, index=table.n_stubs > 0)
         hline = "\\\\ \hline" 
-        next_line = "\\\\[0.4pt]"    
+        next_line = "\\\\[0.4pt]"  
+        row_size = "\\renewcommand{\\arraystretch}{%f}" % table.row_size
         latex_splitted = re.split(r"\\\\", latex)
         latex = ""
         for idx, i in enumerate(latex_splitted):
@@ -25,13 +26,14 @@ class TexGenerator():
         latex = latex.replace("\\toprule", "\hline")
         latex = latex.replace("\\bottomrule", "")
         latex = latex.replace("\\midrule", "")
-        return self.doc_start + table.font_size + latex + self.doc_end
+        return self.doc_start + row_size + table.font_size + latex + self.doc_end
 
     def generate_tex_outline(self, table):
         latex = table.df.to_latex(bold_rows=table.bold_stub, column_format=table.column_format, header=table.n_headers > 0, index=table.n_stubs > 0)
         latex = self.replace_unwanted(table, latex)
         latex = self.add_vlines(latex)
-        return self.doc_start + table.font_size + self.colors + latex + self.doc_end
+        row_size = "\\renewcommand{\\arraystretch}{%f}" % table.row_size
+        return self.doc_start + row_size + table.font_size + self.colors + latex + self.doc_end
     
     def replace_unwanted(self, table, latex):
         latex = re.sub(r"\\\\", r"\\\\ \\hline", latex)

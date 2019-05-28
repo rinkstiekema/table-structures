@@ -24,6 +24,7 @@ class Table():
         self.indicator = self.generate_indicator()
         self.v_lines = self.generate_v_lines()
         self.h_lines = self.generate_h_lines()
+        self.row_size = self.generate_row_size()
         self.column_format = self.generate_column_format()
         self.font_size = random.choice([r"\normalsize", r"\large", r"\Large", r"\LARGE"])
         self.df = self.create_df()
@@ -111,7 +112,7 @@ class Table():
 
     def generate_v_lines(self):
         if random.choice([True, False]):
-            return random.sample(range(self.n_columns+2), random.randint(0, self.n_columns+1))
+            return random.sample(range(self.n_columns+2), random.randint(0, self.n_columns))
         else:
             return []
 
@@ -120,3 +121,6 @@ class Table():
             return random.sample(range(self.n_rows+2), random.randint(0, self.n_rows+1))
         else:
             return []
+
+    def generate_row_size(self):
+        return random.uniform(1, 2)
