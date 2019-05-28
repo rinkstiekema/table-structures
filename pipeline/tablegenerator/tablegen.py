@@ -98,5 +98,5 @@ if __name__ == '__main__':
                 subprocess.call('latex -interaction=batchmode -output-directory='+ os.path.join(png_path, path[1]) + ' ' + os.path.join(tex_path, path[1], str(idx)+'-'+str(i)) + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
                 subprocess.call('dvipng -q* -T tight -o ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
 
-            cleanup(os.path.join(png_path, path[0]))
-            cleanup(os.path.join(png_path, path[1]))
+                cleanup(os.path.join(png_path, path[0]))
+                cleanup(os.path.join(png_path, path[1]))

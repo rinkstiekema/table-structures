@@ -81,7 +81,7 @@ class Table():
             for idx, i in enumerate(row):
                 if idx in self.text_column_pos:
                     length = current_word_lengths[0]
-                    row[idx] = " ".join(picked_words[0:length-1])
+                    row[idx] = " ".join(picked_words[0:length])
                     current_word_lengths.pop(0)
                     picked_words.pop(0)
                 else:
@@ -112,13 +112,13 @@ class Table():
 
     def generate_v_lines(self):
         if random.choice([True, False]):
-            return random.sample(range(self.n_columns+2), random.randint(0, self.n_columns))
+            return random.sample(range(self.n_columns+1), random.randint(0, self.n_columns+1))
         else:
             return []
 
     def generate_h_lines(self):
         if random.choice([True, False]):
-            return random.sample(range(self.n_rows+2), random.randint(0, self.n_rows+1))
+            return random.sample(range(self.n_rows+1), random.randint(0, self.n_rows+1))
         else:
             return []
 
