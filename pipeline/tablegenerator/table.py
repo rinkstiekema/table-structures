@@ -14,6 +14,7 @@ class Table():
         self.n_text_columns = n_text_column
         self.text_column_pos = self.get_text_column_pos()
         self.number_lengths = self.generate_number_lengths()
+        self.word_lengths = self.generate_word_lengths()
         self.rows = self.generate_rows()
         self.product = random.choice([True, False])
         self.bold_stub = random.choice([True, False])
@@ -24,7 +25,7 @@ class Table():
         self.v_lines = self.generate_v_lines()
         self.h_lines = self.generate_h_lines()
         self.column_format = self.generate_column_format()
-        self.font_size = random.choice([r"\small", r"\normalsize", r"\large", r"\Large", r"\LARGE"])
+        self.font_size = random.choice([r"\normalsize", r"\large", r"\Large", r"\LARGE"])
         self.df = self.create_df()
 
     def create_df(self):
@@ -38,9 +39,9 @@ class Table():
             table = pd.DataFrame(data=self.rows)
 
         if self.indicator_type == "stub":
-            table.index.name = self.indicator
+            table.index.names = self.indicator
         elif self.indicator_type == "column":
-            table.column.name = self.indicator
+            table.column.names = self.indicator
         return table
 
 
@@ -48,7 +49,12 @@ class Table():
         return np.array(self.headers + self.rows)
 
     def generate_indicator(self):
-        return random.sample(words.words(), 1)[0]
+        n = 0
+        if self.indicator_type == "stub":
+            n = self.n_stubs
+        elif self.indicator_type == "column":
+            n = self.n_columns
+        return random.sample(words.words(), n)
 
     def generate_stubs(self):
         stubs = [random.sample(words.words(), self.n_rows) for x in range(self.n_stubs)]
@@ -66,13 +72,16 @@ class Table():
 
     def generate_rows(self):
         rows = []
-        picked_words = random.sample(words.words(), self.n_rows * self.n_text_columns)
+        picked_words = random.sample(words.words(), sum(self.word_lengths) * self.n_rows)
         for row in range(self.n_rows):
             row = [None] * self.n_columns
             current_number_lengths = self.number_lengths.copy()
+            current_word_lengths = self.word_lengths.copy()
             for idx, i in enumerate(row):
                 if idx in self.text_column_pos:
-                    row[idx] = picked_words[0]
+                    length = current_word_lengths[0]
+                    row[idx] = " ".join(picked_words[0:length-1])
+                    current_word_lengths.pop(0)
                     picked_words.pop(0)
                 else:
                     range_start = 10**(current_number_lengths[0]-1)
@@ -84,6 +93,9 @@ class Table():
         
     def generate_number_lengths(self):
         return [random.randint(1, 5) for x in range(self.n_columns-self.n_text_columns)]
+    
+    def generate_word_lengths(self):
+        return [random.randint(1, 3) for x in range(self.n_text_columns)]
         
     def get_text_column_pos(self):
         return sorted(random.sample(range(self.n_columns), self.n_text_columns))
@@ -99,12 +111,12 @@ class Table():
 
     def generate_v_lines(self):
         if random.choice([True, False]):
-            return random.sample(range(self.n_columns), random.randint(0, self.n_columns))
+            return random.sample(range(self.n_columns+2), random.randint(0, self.n_columns+1))
         else:
             return []
 
     def generate_h_lines(self):
         if random.choice([True, False]):
-            return random.sample(range(self.n_rows), random.randint(0, self.n_rows))
+            return random.sample(range(self.n_rows+2), random.randint(0, self.n_rows+1))
         else:
             return []
