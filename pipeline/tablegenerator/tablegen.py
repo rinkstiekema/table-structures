@@ -77,7 +77,7 @@ if __name__ == '__main__':
         table_generator = TableGenerator(table_type)
         
         for path in np.array(paths).reshape(-1, 2):
-            n = 10 #get_amount(path)
+            n = get_amount(path)
             for i in tqdm(range(n)):
                 table = table_generator.generate()
                 csv = table.df.to_csv().replace("\n", "")
