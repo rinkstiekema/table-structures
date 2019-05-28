@@ -4,6 +4,7 @@ import json
 import subprocess
 import string 
 import numpy as np
+from tqdm import tqdm
 from texgen import TexGenerator
 from random import randrange, randint, getrandbits, choice, sample
 from table import Table
@@ -76,11 +77,8 @@ if __name__ == '__main__':
         table_generator = TableGenerator(table_type)
         
         for path in np.array(paths).reshape(-1, 2):
-            n = get_amount(path)
-            for i in range(n):
-                if i % 100 == 0:
-                    print("%i out of %i" % (i, n))
-
+            n = 10 #get_amount(path)
+            for i in tqdm(range(n)):
                 table = table_generator.generate()
                 csv = table.df.to_csv().replace("\n", "")
                 with open(os.path.join(csv_path, path[0] ,str(idx))+'-'+str(i)+'.csv', 'w+') as csv_file:

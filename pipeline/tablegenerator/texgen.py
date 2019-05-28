@@ -25,21 +25,6 @@ class TexGenerator():
         latex = latex.replace("\\toprule", "\hline")
         latex = latex.replace("\\bottomrule", "")
         latex = latex.replace("\\midrule", "")
-        # latex = latex.replace("\midrule", "")
-
-        # to_find = [r"\\\\"]
-        # for s in to_find:
-        #     latex = re.sub(s, r"\\hline, latex)
-
-        # latex = re.sub(r"\\midrule", "", latex)
-        # latex = re.sub(r"\\bottomrule", "", latex)
-
-        # occurences = [m.start() for m in re.finditer(r"\\hline, latex)]
-        # for idx, i in enumerate(sorted(occurences, reverse=True)):
-        #     color = "black" if idx in table.h_lines else "white"
-        #     latex = latex[:i] + r"\\ \arrayrulecolor{"+ color +r"}\cline{1-"+str(table.n_columns + table.n_stubs)+r"}\arrayrulecolor{black} " + latex[i+len(r"\cline{1-"+str(table.n_columns + table.n_stubs)+"}"):]
-
-        # latex = re.sub(r"\\toprule", r"\\hline", latex)
         return self.doc_start + table.font_size + latex + self.doc_end
 
     def generate_tex_outline(self, table):
