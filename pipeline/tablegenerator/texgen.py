@@ -4,7 +4,7 @@ from pprint import pprint
 
 class TexGenerator():
     def __init__(self):
-        self.doc_start = r"""\documentclass[preview]{standalone}\usepackage{colortbl}\begin{document}\thispagestyle{empty}\begin{table}"""
+        self.doc_start = r"""\documentclass{article}\usepackage{colortbl}\begin{document}\thispagestyle{empty}\begin{table}"""
         self.doc_end = r"""\end{table}\end{document}"""
         self.colors = r"""\color{white}\arrayrulecolor{red}"""
 
