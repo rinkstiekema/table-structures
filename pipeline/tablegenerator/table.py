@@ -14,7 +14,7 @@ class Table():
         self.n_text_columns = n_text_column
         self.text_column_pos = self.get_text_column_pos()
         self.number_lengths = self.generate_number_lengths()
-        self.word_lengths = self.generate_word_lengths()
+        self.text_lengths = self.generate_text_lengths()
         self.rows = self.generate_rows()
         self.product = random.choice([True, False])
         self.bold_stub = random.choice([True, False])
@@ -30,6 +30,7 @@ class Table():
         self.df = self.create_df()
 
     def create_df(self):
+        pd.set_option('display.max_colwidth', -1)
         if self.n_stubs > 0 and self.n_headers > 0:
             table = pd.DataFrame(data=self.rows, index=self.stubs, columns=self.headers)
         elif self.n_stubs > 0:
@@ -73,16 +74,16 @@ class Table():
 
     def generate_rows(self):
         rows = []
-        picked_words = random.sample(words.words(), sum(self.word_lengths) * self.n_rows)
+        picked_words = random.sample(words.words(), sum(self.text_lengths) * self.n_rows)
         for row in range(self.n_rows):
             row = [None] * self.n_columns
             current_number_lengths = self.number_lengths.copy()
-            current_word_lengths = self.word_lengths.copy()
+            current_text_lengths = self.text_lengths.copy()
             for idx, i in enumerate(row):
                 if idx in self.text_column_pos:
-                    length = current_word_lengths[0]
-                    row[idx] = " ".join(picked_words[0:length])
-                    current_word_lengths.pop(0)
+                    length = current_text_lengths[0]
+                    row[idx] = "\\makecell{" + " \\\\ ".join(picked_words[0:length]) + "}"
+                    current_text_lengths.pop(0)
                     picked_words.pop(0)
                 else:
                     range_start = 10**(current_number_lengths[0]-1)
@@ -95,8 +96,8 @@ class Table():
     def generate_number_lengths(self):
         return [random.randint(1, 5) for x in range(self.n_columns-self.n_text_columns)]
     
-    def generate_word_lengths(self):
-        return [random.randint(1, 3) for x in range(self.n_text_columns)]
+    def generate_text_lengths(self):
+        return [random.randint(1, 3) if random.choice([True, False, False]) else 1 for x in range(self.n_text_columns)]
         
     def get_text_column_pos(self):
         return sorted(random.sample(range(self.n_columns), self.n_text_columns))

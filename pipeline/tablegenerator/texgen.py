@@ -4,7 +4,7 @@ from pprint import pprint
 
 class TexGenerator():
     def __init__(self):
-        self.doc_start = r"""\documentclass{article}\usepackage{colortbl}\begin{document}\thispagestyle{empty}\begin{table}"""
+        self.doc_start = r"""\documentclass{article}\usepackage{makecell}\usepackage{colortbl}\begin{document}\thispagestyle{empty}\begin{table}"""
         self.doc_end = r"""\end{table}\end{document}"""
         self.colors = r"""\color{white}\arrayrulecolor{red}"""
 
@@ -26,12 +26,15 @@ class TexGenerator():
         latex = latex.replace("\\toprule", "\hline")
         latex = latex.replace("\\bottomrule", "")
         latex = latex.replace("\\midrule", "")
+        latex = self.make_cells(latex)
+
         return self.doc_start + row_size + table.font_size + latex + self.doc_end
 
     def generate_tex_outline(self, table):
         latex = table.df.to_latex(bold_rows=table.bold_stub, column_format=table.column_format, header=table.n_headers > 0, index=table.n_stubs > 0)
         latex = self.replace_unwanted(table, latex)
         latex = self.add_vlines(latex)
+        latex = self.make_cells(latex)
         row_size = "\\renewcommand{\\arraystretch}{%f}" % table.row_size
         return self.doc_start + row_size + table.font_size + self.colors + latex + self.doc_end
     
@@ -42,7 +45,6 @@ class TexGenerator():
         latex = re.sub(r"\\bottomrule", r"", latex)
         return latex
         
-
     def add_vlines(self, latex):
         idx = latex.find(r"\begin{tabular}{") + len(r"\begin{tabular}{")
         idx_end = idx + latex[idx:].find(r"}") + 1
@@ -50,4 +52,11 @@ class TexGenerator():
         ruling = ruling.replace("|", "")
         ruling = "|" + "|".join(ruling) + "|}"
         latex = latex[:idx] + ruling + latex[idx_end:]
+        return latex
+
+    def make_cells(self, latex):
+        latex = latex.replace("makecell\\", r"\makecell")
+        latex = latex.replace("\\}", "}")
+        latex = latex.replace(r"\textbackslash \textbackslash", "\\\\")
+        latex = latex.replace(r"\textbackslash", "")
         return latex
