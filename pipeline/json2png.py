@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-# import tabula
 
 def json2png(root, file_name):
 	png_folder = os.path.join(root, "../png")

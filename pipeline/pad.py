@@ -16,7 +16,6 @@ if len(sys.argv) < 2:
 folder = sys.argv[1]
 resolution = (int(sys.argv[2]), int(sys.argv[2]), 3)
 for image in os.listdir(folder):
-    print(image)
     location = os.path.join(folder, image)
     img = scipy.misc.imread(location, mode='RGB').astype(np.float)
     if(img.shape[0] <= 1024 and img.shape[1] <= 1024):
