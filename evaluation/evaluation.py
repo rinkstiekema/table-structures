@@ -13,4 +13,3 @@ if __name__ == '__main__':
         gt_csv = pd.read_csv(os.path.join(gt_location, f))
         pred_csv = pd.read_csv(os.path.join(pred_location), f))
         
-        

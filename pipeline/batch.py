@@ -72,7 +72,6 @@ if __name__ == '__main__':
 			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables-hd', opt.checkpoint_dir, opt.dataroot, outlines_folder))
 		else:
 			predict(opt.checkpoint_dir, png_folder, outlines_folder)
-			#subprocess.call('sh ./edpred.sh %s %s %s' % (opt.checkpoint_dir, png_folder, outlines_folder))
 	add_outline_url(json_folder, outlines_folder)
 
 	# Interpret ruling lines and write individual cells to json file

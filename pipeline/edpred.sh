@@ -1,1 +1,0 @@
-python ./Semantic-Segmentation-Suite/predict.py --dataset tables --checkpoint_path $1/model.ckpt --datadir $2 --resultdir $3 --crop_height 1024 --crop_width 1024 --model Encoder-Decoder-Skip

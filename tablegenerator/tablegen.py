@@ -4,6 +4,7 @@ import json
 import subprocess
 import string 
 import numpy as np
+from pad import pad
 from tqdm import tqdm
 from texgen import TexGenerator
 from random import randrange, randint, getrandbits, choice, sample
@@ -44,10 +45,14 @@ def get_amount(path):
 
 if __name__ == '__main__':
     if(len(sys.argv) < 2):
-        print("Missing argument. Usage: <location>")
+        print("Missing required argument. Usage: <location> <pad (optional)>")
         exit(-1)
 
     location = sys.argv[1]
+    apply_padding = True
+    if sys.argv[2]:
+        apply_padding = sys.argv[2]
+
     tex_generator = TexGenerator()
 
     csv_path = os.path.join(location, 'csv')
@@ -100,3 +105,7 @@ if __name__ == '__main__':
 
                 cleanup(os.path.join(png_path, path[0]))
                 cleanup(os.path.join(png_path, path[1]))
+
+                if apply_padding:
+                    pad(os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png ', 1024)
+                    pad(os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png ', 1024)
