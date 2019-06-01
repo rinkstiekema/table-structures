@@ -39,7 +39,7 @@ def prepare_data(dataset_dir):
     for file in os.listdir(dataset_dir + "/test"):
         cwd = os.getcwd()
         test_input_names.append(cwd + "/" + dataset_dir + "/test/" + file)
-    val_output_names = [i.replace('test', 'test_labels') for i in test_input_names]    
+    test_output_names = [i.replace('test', 'test_labels') for i in test_input_names]    
     # for file in os.listdir(dataset_dir + "/test_labels"):
     #     cwd = os.getcwd()
     #     test_output_names.append(cwd + "/" + dataset_dir + "/test_labels/" + file)
