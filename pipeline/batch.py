@@ -4,8 +4,7 @@ import json
 import os
 import sys
 import subprocess 
-import predictor
-import combine
+import pad
 import rulers 
 import scipy.misc
 import textboxtract
@@ -62,7 +61,7 @@ if __name__ == '__main__':
 			if img.shape[0] > 1024 or img.shape[1] > 1024:
 				os.remove(os.path.join(png_folder, image))
 				continue
-			img = combine.pad(img, (1024, 1024, 3))
+			img = pad.pad(img, (1024, 1024, 3))
 			scipy.misc.imsave(os.path.join(png_folder, image), img)
 
 	# Process the tables, add outline URL to respective JSON file
