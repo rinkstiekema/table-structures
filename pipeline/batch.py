@@ -55,7 +55,7 @@ if __name__ == '__main__':
 	if not opt.skip_generate_pdf:
 		print("Generating pdfs")
 		for tex_file in tqdm(os.listdir(os.path.join(opt.dataroot, 'tex', 'val'))):
-			tex_path = os.path.join(opt.dataroot, tex_file)
+			tex_path = os.path.join(opt.dataroot, 'tex', 'val', tex_file)
 			os.system('pdflatex '+tex_path+' --ouput-dir='+pdf_folder)
 
 	if not opt.skip_generate_images:
