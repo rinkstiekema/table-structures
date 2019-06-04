@@ -5,6 +5,7 @@ import json
 import fitz
 import sys
 import time 
+import tqdm 
 
 def texboxtract(pdf, tables):
     for table in tables:
@@ -25,7 +26,7 @@ def texboxtract(pdf, tables):
     return tables
 
 def extract(json_folder, pdf_folder):
-    for json_file in os.listdir(json_folder):
+    for json_file in tqdm(os.listdir(json_folder)):
         json_file_location = os.path.join(json_folder, json_file)
         with open(json_file_location, 'r+') as jfile:
             print("Starting on extracting text from: "+json_file_location)

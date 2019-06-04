@@ -4,6 +4,7 @@ import json
 import cv2
 import traceback
 import random
+import tqdm
 
 def align(points, d):
     n = len(points)
@@ -151,7 +152,7 @@ def rule(image_folder):
 def rule(image_folder):
 	json_file_list = os.listdir(json_folder)
 
-	for json_file in json_file_list:
+	for json_file in tqdm(json_file_list):
 		json_file_location = os.path.join(json_folder, json_file)
 		with open(json_file_location, 'r+') as jfile:
 			result = [] # eventually new json file

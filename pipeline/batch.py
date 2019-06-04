@@ -9,6 +9,7 @@ import rulers
 import scipy.misc
 import textboxtract
 import json2csv
+import tqdm
 from segmentation.predict import predict
 
 def init_folders(base_folder):
@@ -53,14 +54,15 @@ if __name__ == '__main__':
 	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
 
 	if not opt.skip_generate_pdf:
-		for tex_file in os.listdir(opt.dataroot, 'tex', 'val'):
+		print("Generating pdfs")
+		for tex_file in tqdm(os.listdir(opt.dataroot, 'tex', 'val')):
 			tex_path = os.path.join(opt.dataroot, tex_file)
 			os.system('pdflatex '+tex_path+' --ouput-dir='+pdf_folder)
 
 	if not opt.skip_generate_images:
 		print("Generating images")
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
-		for image in os.listdir(png_folder):
+		for image in tqdm(os.listdir(png_folder)):
 			# to do remove from json file
 			img = scipy.misc.imread(os.path.join(png_folder, image), mode='RGB').astype(np.float)
 			if img.shape[0] > 1024 or img.shape[1] > 1024:
