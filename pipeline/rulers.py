@@ -149,7 +149,7 @@ def rule(json_folder):
 					print("Skipping step", traceback.format_exc())
 					continue
 
-def rule(image_folder):
+def rule(json_folder):
 	json_file_list = os.listdir(json_folder)
 
 	for json_file in tqdm(json_file_list):
