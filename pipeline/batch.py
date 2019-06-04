@@ -10,7 +10,7 @@ import scipy.misc
 import textboxtract
 import json2csv
 import tqdm
-from segmentation.predict import predict
+# from segmentation.predict import predict
 
 def init_folders(base_folder):
 	pdf_folder = os.path.join(base_folder, "pdf")
@@ -76,8 +76,8 @@ if __name__ == '__main__':
 		print("Predicting outlines")
 		if opt.model == 'pix2pix':
 			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, opt.dataroot, outlines_folder))
-		else:
-			predict(opt.checkpoint_dir, png_folder, outlines_folder)
+		# else:
+		# 	predict(opt.checkpoint_dir, png_folder, outlines_folder)
 	add_outline_url(json_folder, outlines_folder)
 
 	# Interpret ruling lines and write individual cells to json file
