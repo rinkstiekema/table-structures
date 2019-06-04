@@ -14,9 +14,8 @@ import tqdm
 
 def init_folders(base_folder):
 	pdf_folder = os.path.join(base_folder, "pdf")
-	if not os.path.isdir(pdf_folder):
-		print(pdf_folder+" is not a directory")
-		exit(-1)
+	if not os.path.exists(pdf_folder):
+		os.makedirs(pdf_folder)
 
 	json_folder = os.path.join(base_folder, "json")
 	if not os.path.exists(json_folder):
