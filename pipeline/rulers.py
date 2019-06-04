@@ -4,7 +4,7 @@ import json
 import cv2
 import traceback
 import random
-import tqdm
+from tqdm import tqdm
 
 def align(points, d):
     n = len(points)

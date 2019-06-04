@@ -5,7 +5,7 @@ import json
 import fitz
 import sys
 import time 
-import tqdm 
+from tqdm import tqdm
 
 def texboxtract(pdf, tables):
     for table in tables:

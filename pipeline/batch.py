@@ -9,7 +9,7 @@ import rulers
 import scipy.misc
 import textboxtract
 import json2csv
-import tqdm
+from tqdm import tqdm
 # from segmentation.predict import predict
 
 def init_folders(base_folder):
