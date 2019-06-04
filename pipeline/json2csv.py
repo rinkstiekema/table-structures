@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import json
+from tqdm import tqdm
 
 def json2csv(json_folder, csv_folder):
     for json_file in tqdm(os.listdir(json_folder)):
