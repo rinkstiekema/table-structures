@@ -54,9 +54,8 @@ if __name__ == '__main__':
 
 	if not opt.skip_generate_pdf:
 		print("Generating pdfs")
-		for tex_file in tqdm(os.listdir(os.path.join(opt.dataroot, 'tex', 'val'))):
-			tex_path = os.path.join(opt.dataroot, 'tex', 'val', tex_file)
-			os.system('pdflatex '+tex_path+' --ouput-dir='+pdf_folder)
+		tex_path = os.path.join(opt.dataroot, 'tex', 'val')
+		os.system('pdflatex -quiet -ouput-directory='+pdf_folder+' '+tex_path)
 
 	if not opt.skip_generate_images:
 		print("Generating images")
@@ -92,4 +91,4 @@ if __name__ == '__main__':
 	# Create CSV files from the extracted text and locations of said text
 	if not opt.skip_create_csv:
 		print("Creating csv")
-		json2csv.json2csv(json_folder, csv_folder)
+		json2csv.json2csv(json_folder, opt.resultsroot)

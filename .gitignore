@@ -9,3 +9,5 @@ __pycache__/
 pipeline/model/
 scraper/papers/*
 pipeline/segmentation/checkpoints/*
+pipeline/pix2pixHD/checkpoints/*
+*.ckpt
