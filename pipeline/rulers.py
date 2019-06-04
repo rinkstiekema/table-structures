@@ -88,7 +88,40 @@ def find_cell(intersection, intersections):
 				return (intersection, i)
 	return None
 
-def rule(json_folder):
+def preprocess_image(img):
+	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	kernel_size = 5
+	blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+	low_threshold = 50
+	high_threshold = 150
+	img = cv2.Canny(blur_gray, low_threshold, high_threshold)
+	kernel = np.ones((3,3),np.uint8)
+	img = cv2.dilate(img, kernel,iterations = 1)
+	kernel = np.ones((5,5),np.uint8)
+	return cv2.erode(img,kernel,iterations = 1)
+
+def get_intersections(lines):
+	intersection_points = []
+	for idx, i in enumerate(lines):
+		for j in lines[idx+1:]:
+			try:
+				intersection_points.append(line_intersection(i, j))
+			except Exception as e:
+				#print(e)
+				continue
+	return intersection_points
+
+def get_cells(intersection_points):
+	cells = []
+	intersection_points.sort()
+
+	for idx, i in enumerate(intersection_points):
+		cell = find_cell(i, intersection_points[idx:])
+		if cell:
+			cells.append(cell)
+	return cells
+
+def rule(image_folder):
 	json_file_list = os.listdir(json_folder)
 
 	for json_file in json_file_list:
@@ -98,56 +131,41 @@ def rule(json_folder):
 			tables = json.load(jfile) # current json file
 			for table in tables:
 				try:
-					# original_size = (table["regionBoundary"]["x2"] - table["regionBoundary"]["x1"], table["regionBoundary"]["y2"] - table["regionBoundary"]["y1"])
-					# original_size = (int(original_size[0]*300/150), int(original_size[1]*300/150))
-
 					img = cv2.imread(table["outlineURL"])
-					# img = img[0:original_size[1], 0:original_size[0]]
-					# img = cv2.rectangle(img, (0,0), (img.shape[1]-1, img.shape[0]-1), (0,0,255))
-
-					gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-					kernel_size = 5
-					blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
-					low_threshold = 50
-					high_threshold = 150
-					img = cv2.Canny(blur_gray, low_threshold, high_threshold)
-					# img = cv2.Canny(gray, 500, 500,apertureSize = 3)
-					kernel = np.ones((3,3),np.uint8)
-					img = cv2.dilate(img, kernel,iterations = 1)
-					kernel = np.ones((5,5),np.uint8)
-					img = cv2.erode(img,kernel,iterations = 1)
-
+					img = preprocess_image(img)
 					lines = get_hough_lines(img)
 
-					intersection_points = []
-					for idx, i in enumerate(lines):
-						for j in lines[idx+1:]:
-							try:
-								intersection_points.append(line_intersection(i, j))
-							except Exception as e:
-								#print(e)
-								continue
-
+					intersection_points = get_intersections(lines)
 					intersection_points = unique_intersections(intersection_points)
-					# intersection_points = align(intersection_points, 10)
-					# intersection_points = fuse(intersection_points, 5)
-					# intersection_points = unique_intersections(intersection_points)
-
-					cells = []
-					intersection_points.sort()
-
-					for idx, i in enumerate(intersection_points):
-						cell = find_cell(i, intersection_points[idx:])
-						if cell:
-							cells.append(cell)
+					cells = get_cells(intersection_points)
 					
-					new = cv2.imread(table["outlineURL"].replace("outlines", "png"))
-					for cell in cells:
-						new = cv2.rectangle(new, cell[0], cell[1], (0,0,255))
-					cv2.imshow('image', new)
-					cv2.waitKey(0)
-					cv2.destroyAllWindows()
+					table["cells"] = cells
+					result.append(table)
+					jfile.seek(0)
+					jfile.write(json.dumps(result))
+					jfile.truncate()
+				except Exception as e:
+					print("Skipping step", traceback.format_exc())
+					continue
 
+def rule(image_folder):
+	json_file_list = os.listdir(json_folder)
+
+	for json_file in json_file_list:
+		json_file_location = os.path.join(json_folder, json_file)
+		with open(json_file_location, 'r+') as jfile:
+			result = [] # eventually new json file
+			tables = json.load(jfile) # current json file
+			for table in tables:
+				try:
+					img = cv2.imread(table["outlineURL"])
+					img = preprocess_image(img)
+					lines = get_hough_lines(img)
+
+					intersection_points = get_intersections(lines)
+					intersection_points = unique_intersections(intersection_points)
+					cells = get_cells(intersection_points)
+					
 					table["cells"] = cells
 					result.append(table)
 					jfile.seek(0)

@@ -52,6 +52,11 @@ if __name__ == '__main__':
 	opt = Options().parse()
 	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
 
+	if not opt.skip_generate_pdf:
+		for tex_file in os.listdir(opt.dataroot, 'tex', 'val'):
+			tex_path = os.path.join(opt.dataroot, tex_file)
+			os.system('pdflatex '+tex_path+' --ouput-dir='+pdf_folder)
+
 	if not opt.skip_generate_images:
 		print("Generating images")
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
@@ -68,7 +73,7 @@ if __name__ == '__main__':
 	if not opt.skip_predict:
 		print("Predicting outlines")
 		if opt.model == 'pix2pix':
-			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables-hd', opt.checkpoint_dir, opt.dataroot, outlines_folder))
+			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, opt.dataroot, outlines_folder))
 		else:
 			predict(opt.checkpoint_dir, png_folder, outlines_folder)
 	add_outline_url(json_folder, outlines_folder)

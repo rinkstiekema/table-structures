@@ -11,14 +11,12 @@ class AlignedDataset(BaseDataset):
         self.root = opt.dataroot    
 
         ### input A (label maps)
-        dir_A = '_A' if self.opt.label_nc == 0 else '_label'
-        self.dir_A = os.path.join(opt.dataroot, opt.phase + dir_A)
+        self.dir_A = os.path.join(opt.dataroot, opt.phase)
         self.A_paths = sorted(make_dataset(self.dir_A))
 
         ### input B (real images)
         if opt.isTrain or opt.use_encoded_image:
-            dir_B = '_B' if self.opt.label_nc == 0 else '_img'
-            self.dir_B = os.path.join(opt.dataroot, opt.phase + dir_B)  
+            self.dir_B = os.path.join(opt.dataroot, opt.phase+'_labels')  
             self.B_paths = sorted(make_dataset(self.dir_B))
 
         ### instance maps
