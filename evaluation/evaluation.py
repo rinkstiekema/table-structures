@@ -3,20 +3,35 @@ import sys
 import pandas as pd 
 import csv
 import numpy as np
+import tabula
+from tqdm import tqdm 
+import io 
 
 if __name__ == '__main__':
     if(len(sys.argv) < 3):
         print("Missing argument. Usage: <ground truth location> <prediction location>")
         exit(-1)
 
-    gt_location = sys.argv[1]
-    pred_location = sys.argv[2]
-    for f in os.listdir(gt_location):
-        with open(os.path.join(gt_location, f)) as gt_file, open(os.path.join(pred_location, f)) as pred_file:
-            gt = csv.reader(gt_file)
-            pred = csv.reader(pred_file)
-            gt = list(map(list, zip(*[x for x in gt])))
-            pred = list(map(list, zip(*[x for x in pred])))
-            
-            
+    pdf_path = sys.argv[1]
+    gt_path = sys.argv[2]
+
+    correct = 0
+    wrong = 0
+    for pdf in tqdm(os.listdir(pdf_path)[:3000]):
+        df_pred = tabula.read_pdf(os.path.join(pdf_path, pdf))
+        df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(pdf)[0]+'.csv'))
+        
+        print(df_pred)
+        print(df_gt)
+
+        # try:
+
+        #     if df_pred.equals(df_gt):
+        #         correct += 1
+        #     else: 
+        #         wrong += 1
+        # except:
+        #     wrong += 1
+        # print("%i correct | %i wrong"%(correct, wrong))
+
 

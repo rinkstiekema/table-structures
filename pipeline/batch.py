@@ -59,6 +59,7 @@ if __name__ == '__main__':
 
 	if not opt.skip_generate_images:
 		print("Generating images")
+		print(pdf_folder)
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
 		for image in tqdm(os.listdir(png_folder)):
 			# to do remove from json file

@@ -175,7 +175,7 @@ for epoch in range(args.epoch_start_i, args.num_epochs):
             input_image = utils.load_image(train_input_names[id])
             output_image = utils.load_image(train_output_names[id])
 
-            with tf.device('/cpu:0'):
+            with tf.device('/gpu:0'):
                 input_image, output_image = data_augmentation(input_image, output_image)
 
 
@@ -303,37 +303,37 @@ for epoch in range(args.epoch_start_i, args.num_epochs):
     scores_list = []
 
 
-    fig1, ax1 = plt.subplots(figsize=(11, 8))
+    #fig1, ax1 = plt.subplots(figsize=(11, 8))
 
-    ax1.plot(range(epoch+1), avg_scores_per_epoch)
-    ax1.set_title("Average validation accuracy vs epochs")
-    ax1.set_xlabel("Epoch")
-    ax1.set_ylabel("Avg. val. accuracy")
+    # ax1.plot(range(epoch+1), avg_scores_per_epoch)
+    # ax1.set_title("Average validation accuracy vs epochs")
+    # ax1.set_xlabel("Epoch")
+    # ax1.set_ylabel("Avg. val. accuracy")
 
 
-    plt.savefig('accuracy_vs_epochs.png')
+    # plt.savefig('accuracy_vs_epochs.png')
 
-    plt.clf()
+    # plt.clf()
 
-    fig2, ax2 = plt.subplots(figsize=(11, 8))
+    # fig2, ax2 = plt.subplots(figsize=(11, 8))
 
-    ax2.plot(range(epoch+1), avg_loss_per_epoch)
-    ax2.set_title("Average loss vs epochs")
-    ax2.set_xlabel("Epoch")
-    ax2.set_ylabel("Current loss")
+    # ax2.plot(range(epoch+1), avg_loss_per_epoch)
+    # ax2.set_title("Average loss vs epochs")
+    # ax2.set_xlabel("Epoch")
+    # ax2.set_ylabel("Current loss")
 
-    plt.savefig('loss_vs_epochs.png')
+    # plt.savefig('loss_vs_epochs.png')
 
-    plt.clf()
+    # plt.clf()
 
-    fig3, ax3 = plt.subplots(figsize=(11, 8))
+    # fig3, ax3 = plt.subplots(figsize=(11, 8))
 
-    ax3.plot(range(epoch+1), avg_iou_per_epoch)
-    ax3.set_title("Average IoU vs epochs")
-    ax3.set_xlabel("Epoch")
-    ax3.set_ylabel("Current IoU")
+    # ax3.plot(range(epoch+1), avg_iou_per_epoch)
+    # ax3.set_title("Average IoU vs epochs")
+    # ax3.set_xlabel("Epoch")
+    # ax3.set_ylabel("Current IoU")
 
-    plt.savefig('iou_vs_epochs.png')
+    # plt.savefig('iou_vs_epochs.png')
 
 
 
