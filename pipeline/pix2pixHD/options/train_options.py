@@ -34,3 +34,4 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--pool_size', type=int, default=0, help='the size of image buffer that stores previously generated images')
 
         self.isTrain = True
+        self.isPredict = False
