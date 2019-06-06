@@ -41,6 +41,7 @@ parser.add_argument('--batch_size', type=int, default=1, help='Number of images 
 parser.add_argument('--num_val_images', type=int, default=20, help='The number of images to used for validations')
 parser.add_argument('--h_flip', type=str2bool, default=False, help='Whether to randomly flip the image horizontally for data augmentation')
 parser.add_argument('--v_flip', type=str2bool, default=False, help='Whether to randomly flip the image vertically for data augmentation')
+parser.add-argument('--move', type=str2bool, default=False, help='Whether to randomly move the image for data augmentation')
 parser.add_argument('--brightness', type=float, default=None, help='Whether to randomly change the image brightness for data augmentation. Specifies the max bightness change as a factor between 0.0 and 1.0. For example, 0.1 represents a max brightness change of 10%% (+-).')
 parser.add_argument('--rotation', type=float, default=None, help='Whether to randomly rotate the image for data augmentation. Specifies the max rotation angle in degrees.')
 parser.add_argument('--model', type=str, default="FC-DenseNet56", help='The model you are using. See model_builder.py for supported models')
@@ -51,13 +52,29 @@ args = parser.parse_args()
 def data_augmentation(input_image, output_image):
     # Data augmentation
     input_image, output_image = utils.random_crop(input_image, output_image, args.crop_height, args.crop_width)
-
+    
+    if args.move and random.randint(0,1):
+        gray = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
+        gray = 255*(gray < 128).astype(np.uint8)
+        coords = cv2.findNonZero(gray)
+        x, y, w, h = cv2.boundingRect(coords)
+        crop_input = input_img[y:y+h, x:x+w]
+        crop_output = output_img[y:y+h, x:x+w]
+        input_image = np.full(input_image.shape, 255)
+        new_coordinate = (random.randint(0, input_image.shape[0]-crop_input.shape[0]),random.randint(0, input_image.shape[1]-crop_input.shape[1]))
+        input_image[new_coordinate[0]:new_coordinate[0]+crop_input.shape[0], new_coordinate[1]:new_coordinate[1]+crop_input.shape[1]] = crop_input
+        output_image[new_coordinate[0]:new_coordinate[0]+crop_output.shape[0], new_coordinate[1]:new_coordinate[1]+crop_output.shape[1]] = crop_output
     if args.h_flip and random.randint(0,1):
         input_image = cv2.flip(input_image, 1)
         output_image = cv2.flip(output_image, 1)
     if args.v_flip and random.randint(0,1):
         input_image = cv2.flip(input_image, 0)
         output_image = cv2.flip(output_image, 0)
+
+
+
+
+    
     if args.brightness:
         factor = 1.0 + random.uniform(-1.0*args.brightness, args.brightness)
         table = np.array([((i / 255.0) * factor) * 255 for i in np.arange(0, 256)]).astype(np.uint8)

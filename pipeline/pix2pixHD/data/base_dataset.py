@@ -5,6 +5,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 import numpy as np
 import random
+import cv2
 
 class BaseDataset(data.Dataset):
     def __init__(self):
@@ -30,7 +31,8 @@ def get_params(opt, size):
     y = random.randint(0, np.maximum(0, new_h - opt.fineSize))
     
     flip = random.random() > 0.5
-    return {'crop_pos': (x, y), 'flip': flip}
+    move = random.random() > 0.5
+    return {'crop_pos': (x, y), 'flip': flip, 'move': move}
 
 def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
     transform_list = []
@@ -43,6 +45,8 @@ def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
     if 'crop' in opt.resize_or_crop:
         transform_list.append(transforms.Lambda(lambda img: __crop(img, params['crop_pos'], opt.fineSize)))
 
+
+
     if opt.resize_or_crop == 'none':
         base = float(2 ** opt.n_downsample_global)
         if opt.netG == 'local':
@@ -51,6 +55,9 @@ def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
 
     if opt.isTrain and not opt.no_flip:
         transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
+
+    if opt.isTrain and not opt.no_move:
+        transform_list.append(transforms.Lambda(lambda img: __move(img, params['move'])))
 
     transform_list += [transforms.ToTensor()]
 
@@ -89,4 +96,17 @@ def __crop(img, pos, size):
 def __flip(img, flip):
     if flip:
         return img.transpose(Image.FLIP_LEFT_RIGHT)
+    return img
+
+def __move(img, move):
+    if move:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = 255*(gray < 128).astype(np.uint8)
+        coords = cv2.findNonZero(gray)
+        x, y, w, h = cv2.boundingRect(coords)
+        crop_input = img[y:y+h, x:x+w]
+        img = np.full(img.shape, 255)
+        new_coordinate = (random.randint(0, img.shape[0]-crop_input.shape[0]),random.randint(0, img.shape[1]-crop_input.shape[1]))
+        img[new_coordinate[0]:new_coordinate[0]+crop_input.shape[0], new_coordinate[1]:new_coordinate[1]+crop_input.shape[1]] = crop_input
+        return img
     return img

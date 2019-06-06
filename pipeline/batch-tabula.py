@@ -44,7 +44,11 @@ if __name__ == '__main__':
                 for table in json_data:
                     area = table["regionBoundary"]
                     area = [area["x1"], area["y1"], area["x2"], area["y2"]]
-                    df = read_pdf(pdf_path, pages=table["page"]+1, area=area, silent=True)
-                    if df is not None and not df.empty:
-                        df = df.loc[:, ~df.columns.str.match('Unnamed')]
-                        df.to_csv(os.path.join(csv_folder, os.path.splitext(json_file_name)[0]+"-"+table["name"]+'.csv'))
+                    try:            
+                        df = read_pdf(pdf_path, pages=table["page"]+1, area=area, silent=True)
+                        if df is not None and not df.empty:
+                            df.loc[:, ~df.columns.str.match('Unnamed')]
+                            df.to_csv(os.path.join(csv_folder, os.path.splitext(json_file_name)[0]+"-"+table["name"]+'.csv'))
+                    except Exception as e:
+                        print("skipping.. %s"%e)
+                        continue
