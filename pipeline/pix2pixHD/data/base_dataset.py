@@ -110,5 +110,5 @@ def __move(img, move, seed):
         img = np.full(img.shape, 255)
         new_coordinate = (random.randint(0, img.shape[0]-crop_input.shape[0]),random.randint(0, img.shape[1]-crop_input.shape[1]))
         img[new_coordinate[0]:new_coordinate[0]+crop_input.shape[0], new_coordinate[1]:new_coordinate[1]+crop_input.shape[1]] = crop_input
-        return Image.fromarray(img)
+        return Image.fromarray(img.astype('uint8'), 'RGB')
     return img
