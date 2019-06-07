@@ -101,7 +101,7 @@ def __flip(img, flip):
 def __move(img, move):
     if move:
         gray = cv2.cvtColor(cv2.UMat(img), cv2.COLOR_BGR2GRAY)
-        gray = 255*(gray < 128).astype(np.uint8)
+        gray = 255*(gray.get() < 128).astype(np.uint8)
         coords = cv2.findNonZero(gray)
         x, y, w, h = cv2.boundingRect(coords)
         crop_input = img[y:y+h, x:x+w]

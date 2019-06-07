@@ -55,11 +55,11 @@ def data_augmentation(input_image, output_image):
     
     if args.move and random.randint(0,1):
         gray = cv2.cvtColor(cv2.UMat(input_image), cv2.COLOR_BGR2GRAY)
-        gray = 255*(gray < 128).astype(np.uint8)
+        gray = 255*(gray.get() < 128).astype(np.uint8)
         coords = cv2.findNonZero(gray)
         x, y, w, h = cv2.boundingRect(coords)
-        crop_input = input_img[y:y+h, x:x+w]
-        crop_output = output_img[y:y+h, x:x+w]
+        crop_input = input_image[y:y+h, x:x+w]
+        crop_output = output_image[y:y+h, x:x+w]
         input_image = np.full(input_image.shape, 255)
         new_coordinate = (random.randint(0, input_image.shape[0]-crop_input.shape[0]),random.randint(0, input_image.shape[1]-crop_input.shape[1]))
         input_image[new_coordinate[0]:new_coordinate[0]+crop_input.shape[0], new_coordinate[1]:new_coordinate[1]+crop_input.shape[1]] = crop_input
