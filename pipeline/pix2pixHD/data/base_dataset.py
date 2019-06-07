@@ -100,7 +100,7 @@ def __flip(img, flip):
 
 def __move(img, move):
     if move:
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(cv2.UMat(img), cv2.COLOR_BGR2GRAY)
         gray = 255*(gray < 128).astype(np.uint8)
         coords = cv2.findNonZero(gray)
         x, y, w, h = cv2.boundingRect(coords)

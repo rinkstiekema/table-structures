@@ -4,12 +4,14 @@ import json
 import subprocess
 import string 
 import numpy as np
-from pad import pad
-from tqdm import tqdm
+from functools import partial
+from multiprocessing import Pool
+from pad import pad_image
 from texgen import TexGenerator
 from random import randrange, randint, getrandbits, choice, sample
 from table import Table
 from pprint import pprint
+import argparse
 
 class TableGenerator():
     def __init__(self, table_type):
@@ -43,17 +45,45 @@ def get_amount(path):
     else:
         return 550
 
-if __name__ == '__main__':
-    if(len(sys.argv) < 2):
-        print("Missing required argument. Usage: <location> <pad (optional)>")
-        exit(-1)
-
-    location = sys.argv[1]
-    apply_padding = True
-    if sys.argv[2]:
-        apply_padding = sys.argv[2]
-
+def generate(idx, table_type, paths, csv_path, png_path, tex_path, args):
     tex_generator = TexGenerator()
+    table_generator = TableGenerator(table_type)
+    for path in np.array(paths).reshape(-1, 2):
+        n = get_amount(path)
+        for i in range(n):
+            table = table_generator.generate()
+            csv = table.df.to_csv().replace("\n", "").replace(" \\\\ ", " ").replace("\\makecell{", "").replace("}", "")
+            with open(os.path.join(csv_path, path[0] ,str(idx))+'-'+str(i)+'.csv', 'w+') as csv_file:
+                csv_file.write(csv)
+            
+            table_tex = tex_generator.generate_tex(table)
+            outline_tex = tex_generator.generate_tex_outline(table)
+
+            with open(os.path.join(tex_path, path[0],str(idx))+'-'+str(i)+'.tex', 'w+') as tex_file:
+                tex_file.write(table_tex)
+            
+            subprocess.call('latex -interaction=batchmode -output-directory='+ os.path.join(png_path, path[0]) + ' ' + os.path.join(tex_path, path[0], str(idx)+'-'+str(i)) + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png ' + os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
+            
+            with open(os.path.join(tex_path, path[1],str(idx))+'-'+str(i)+'.tex', 'w+') as tex_file:
+                tex_file.write(outline_tex)
+            subprocess.call('latex -interaction=batchmode -output-directory='+ os.path.join(png_path, path[1]) + ' ' + os.path.join(tex_path, path[1], str(idx)+'-'+str(i)) + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
+            subprocess.call('dvipng -q* -T tight -o ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
+
+            if args.padding:
+                pad_image(os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png', args.resolution)
+                pad_image(os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png', args.resolution)
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--location', type=str, help='Path to save the dataset to.')
+    parser.add_argument('--padding', type=bool, default=False, help='Pad images')
+    parser.add_argument('--resolution', type=int, default=1024, help='Resolution to pad images to')
+    args = parser.parse_args()
+    
+    location = args.location
 
     csv_path = os.path.join(location, 'csv')
     make_dir(csv_path)
@@ -77,35 +107,11 @@ if __name__ == '__main__':
     with open('tabletypes.json') as data_file:    
         types = json.load(data_file)
 
-    tex_generator = TexGenerator()
-    for idx, table_type in enumerate(types):
-        table_generator = TableGenerator(table_type)
-        
-        for path in np.array(paths).reshape(-1, 2):
-            n = get_amount(path)
-            for i in tqdm(range(n)):
-                table = table_generator.generate()
-                csv = table.df.to_csv().replace("\n", "")
-                with open(os.path.join(csv_path, path[0] ,str(idx))+'-'+str(i)+'.csv', 'w+') as csv_file:
-                    csv_file.write(csv)
-                
-                table_tex = tex_generator.generate_tex(table)
-                outline_tex = tex_generator.generate_tex_outline(table)
+    pool = Pool()
+    pool.starmap(partial(generate, paths=paths, csv_path=csv_path, png_path=png_path, tex_path=tex_path, args=args), list(enumerate(types)))
 
-                with open(os.path.join(tex_path, path[0],str(idx))+'-'+str(i)+'.tex', 'w+') as tex_file:
-                    tex_file.write(table_tex)
-                
-                subprocess.call('latex -interaction=batchmode -output-directory='+ os.path.join(png_path, path[0]) + ' ' + os.path.join(tex_path, path[0], str(idx)+'-'+str(i)) + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
-                subprocess.call('dvipng -q* -T tight -o ' + os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png ' + os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
-                
-                with open(os.path.join(tex_path, path[1],str(idx))+'-'+str(i)+'.tex', 'w+') as tex_file:
-                    tex_file.write(outline_tex)
-                subprocess.call('latex -interaction=batchmode -output-directory='+ os.path.join(png_path, path[1]) + ' ' + os.path.join(tex_path, path[1], str(idx)+'-'+str(i)) + '.tex', shell=True, stdout=open(os.devnull, 'wb'))
-                subprocess.call('dvipng -q* -T tight -o ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
-
-                cleanup(os.path.join(png_path, path[0]))
-                cleanup(os.path.join(png_path, path[1]))
-
-                if apply_padding:
-                    pad(os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png ', 1024)
-                    pad(os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png ', 1024)
+    for path in np.array(paths).reshape(-1, 2):
+        cleanup(os.path.join(png_path, path[0]))
+        cleanup(os.path.join(png_path, path[1]))
+    # for idx, table_type in enumerate(types):
+    #     generate(table_type)
