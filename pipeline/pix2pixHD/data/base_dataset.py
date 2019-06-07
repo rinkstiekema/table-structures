@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 import numpy as np
 import random
 import cv2
+import sys 
 
 class BaseDataset(data.Dataset):
     def __init__(self):
@@ -32,7 +33,8 @@ def get_params(opt, size):
     
     flip = random.random() > 0.5
     move = random.random() > 0.5
-    return {'crop_pos': (x, y), 'flip': flip, 'move': move}
+    seed = random.randint(0, sys.maxsize)
+    return {'crop_pos': (x, y), 'flip': flip, 'move': move, 'seed': seed}
 
 def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
     transform_list = []
@@ -45,8 +47,6 @@ def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
     if 'crop' in opt.resize_or_crop:
         transform_list.append(transforms.Lambda(lambda img: __crop(img, params['crop_pos'], opt.fineSize)))
 
-
-
     if opt.resize_or_crop == 'none':
         base = float(2 ** opt.n_downsample_global)
         if opt.netG == 'local':
@@ -57,7 +57,7 @@ def get_transform(opt, params, method=Image.BICUBIC, normalize=True):
         transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
 
     if opt.isTrain and not opt.no_move:
-        transform_list.append(transforms.Lambda(lambda img: __move(img, params['move'])))
+        transform_list.append(transforms.Lambda(lambda img: __move(img, params['move'], params['seed'])))
 
     transform_list += [transforms.ToTensor()]
 
@@ -98,8 +98,9 @@ def __flip(img, flip):
         return img.transpose(Image.FLIP_LEFT_RIGHT)
     return img
 
-def __move(img, move):
+def __move(img, move, seed):
     if move:
+        random.seed(seed)
         gray = cv2.cvtColor(cv2.UMat(img), cv2.COLOR_BGR2GRAY)
         gray = 255*(gray.get() < 128).astype(np.uint8)
         coords = cv2.findNonZero(gray)

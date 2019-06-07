@@ -10,6 +10,7 @@ class AlignedDataset(BaseDataset):
         self.opt = opt
         self.root = opt.dataroot    
 
+        
         ### input A (label maps)
         self.dir_A = os.path.join(opt.dataroot, opt.phase)
         self.A_paths = sorted(make_dataset(self.dir_A))
