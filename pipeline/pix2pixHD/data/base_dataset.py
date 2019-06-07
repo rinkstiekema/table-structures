@@ -101,6 +101,7 @@ def __flip(img, flip):
 def __move(img, move, seed):
     if move:
         random.seed(seed)
+        img = np.array(img)
         gray = cv2.cvtColor(cv2.UMat(np.float32(img)), cv2.COLOR_BGR2GRAY)
         gray = 255*(gray.get() < 128).astype(np.uint8)
         coords = cv2.findNonZero(gray)
@@ -109,5 +110,5 @@ def __move(img, move, seed):
         img = np.full(img.shape, 255)
         new_coordinate = (random.randint(0, img.shape[0]-crop_input.shape[0]),random.randint(0, img.shape[1]-crop_input.shape[1]))
         img[new_coordinate[0]:new_coordinate[0]+crop_input.shape[0], new_coordinate[1]:new_coordinate[1]+crop_input.shape[1]] = crop_input
-        return img
+        return Image.fromarray(img)
     return img
