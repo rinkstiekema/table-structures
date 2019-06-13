@@ -53,7 +53,7 @@ class BaseModel(torch.nn.Module):
         save_filename = '%s_net_%s.pth' % (epoch_label, network_label)
         if not save_dir:
             save_dir = self.save_dir
-        save_path = os.path.join(save_dir, save_filename)        
+        save_path = os.path.join(save_dir, save_filename)   
         if not os.path.isfile(save_path):
             print('%s not exists yet!' % save_path)
             if network_label == 'G':

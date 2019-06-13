@@ -13,7 +13,7 @@ from tqdm import tqdm
 # from segmentation.predict import predict
 
 def init_folders(base_folder):
-	pdf_folder = os.path.join(base_folder, "pdf")
+	pdf_folder = os.path.join(base_folder, "pdf", "val")
 	if not os.path.exists(pdf_folder):
 		os.makedirs(pdf_folder)
 
@@ -21,7 +21,7 @@ def init_folders(base_folder):
 	if not os.path.exists(json_folder):
 		os.makedirs(json_folder)
 
-	png_folder = os.path.join(base_folder, "png")
+	png_folder = os.path.join(base_folder, "png", "val")
 	if not os.path.exists(png_folder):
 		os.makedirs(png_folder)
 
@@ -29,11 +29,7 @@ def init_folders(base_folder):
 	if not os.path.exists(outlines_folder):
 		os.makedirs(outlines_folder)
 	
-	csv_folder = os.path.join(base_folder, "csv")
-	if not os.path.exists(csv_folder):
-		os.makedirs(csv_folder)
-	
-	return pdf_folder, json_folder, png_folder, outlines_folder, csv_folder
+	return pdf_folder, json_folder, png_folder, outlines_folder
 
 def add_outline_url(json_folder, outline_folder):
 	for json_file in os.listdir(json_folder):
@@ -50,26 +46,28 @@ def add_outline_url(json_folder, outline_folder):
 
 if __name__ == '__main__':
 	opt = Options().parse()
-	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
+	pdf_folder, json_folder, png_folder, outlines_folder = init_folders(opt.dataroot)
 
-    for pdf in pdf_folder:
-        region_boundary = textboxtract.get_region_boundary(os.path.join(pdf_folder, pdf))
-        data = [{
-            "name": os.path.splitext(pdf)[0].split("-")[-1],
-            "page": 1,
-            "dpi": 150,
-            "regionBoundary": region_boundary,
-            "renderURL": os.path.join(png_folder, os.path.splitext(pdf)[0] + '.png')
-        }]
-        json.dump(os.path.join(json_folder, os.path.splitext(pdf)[0]+'.json'))
+    # for pdf in os.listdir(pdf_folder):
+    #     region_boundary = textboxtract.get_region_boundary(os.path.join(pdf_folder, pdf))
+    #     data = [{
+    #         "name": os.path.splitext(pdf)[0].split("-")[-1],
+    #         "page": 1,
+    #         "dpi": 150,
+    #         "regionBoundary": region_boundary,
+    #         "renderURL": os.path.join(png_folder, os.path.splitext(pdf)[0] + '.png')
+    #     }]
+    #     json.dump(os.path.join(json_folder, os.path.splitext(pdf)[0]+'.json'))
+    #     with open(os.path.join(json_folder, os.path.splitext(pdf)[0]+'.json'), 'w') as outfile:
+    #         json.dump(data, outfile)
 
 	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
 		print("Predicting outlines")
-		if opt.model == 'pix2pix':
-			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, opt.dataroot, outlines_folder))
+		if opt.model == 'pix2pixHD':
+			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, png_folder, outlines_folder))
 		else:
-			subprocess.call('sh ./segpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, opt.dataroot, outlines_folder))
+			subprocess.call('sh ./segpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, png_folder, outlines_folder))
 	add_outline_url(json_folder, outlines_folder)
 
 	# Interpret ruling lines and write individual cells to json file

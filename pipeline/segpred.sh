@@ -1,0 +1,1 @@
+python ./segmentation/bulk_predict.py --dataset $1 --checkpoint_path $2 --dataroot $3 --folder $4 --crop_height 1024 --crop_width 1024 --model encoder_decoder_skip 

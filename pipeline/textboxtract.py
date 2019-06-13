@@ -48,14 +48,14 @@ def extract(json_folder, pdf_folder):
                 continue
 
 def get_region_boundary(pdf):
-    fp = open(pdf, 'rb')
-    doc = minecart.Document(fp)
-    page = doc.get_page(0)
-    shapes = [{"x1":shape[0][1], "y1": shape[0][2], "x2": shape[1][1], "y2": shape[1][2]} for shape in page.shapes]
-    characters = [{"x1": letter.get_bbox()[0], "y1":letter.get_bbox()[1], "x2": letter.get_bbox()[2], "y2": letter.get_bbox()[3]} for letter in page.letterings]
-    combined = shapes + characters
-    x1 = min([item['x1'] for item in combined])
-    y1 = max([item['y1'] for item in combined])
-    x2 = max([item['x2'] for item in combined])
-    y2 = min([item['y2'] for item in combined])
-    return {"x1": x1, "y1": y1, "x2": x2, "y2": y2} 
+    with open(pdf, 'rb') as fp:
+        doc = minecart.Document(fp)
+        page = doc.get_page(0)
+        shapes = [{"x1":shape.path[0][1], "y1": shape.path[0][2], "x2": shape.path[1][1], "y2": shape.path[1][2]} for shape in page.shapes]
+        characters = [{"x1": letter.get_bbox()[0], "y1":letter.get_bbox()[1], "x2": letter.get_bbox()[2], "y2": letter.get_bbox()[3]} for letter in page.letterings]
+        combined = shapes + characters
+        x1 = min([item['x1'] for item in combined])
+        y1 = max([item['y1'] for item in combined])
+        x2 = max([item['x2'] for item in combined])
+        y2 = min([item['y2'] for item in combined])
+        return {"x1": x1, "y1": y1, "x2": x2, "y2": y2} 

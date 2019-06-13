@@ -2,12 +2,13 @@ from tabulaOptions import Options
 import os
 import sys
 import subprocess 
-from tqdm import tqdm
 from tabula import read_pdf
 import json
+import textboxtract
+from tqdm import tqdm
 
 def init_folders(base_folder):
-	pdf_folder = os.path.join(base_folder, "pdf")
+	pdf_folder = os.path.join(base_folder, "pdf", "val")
 	if not os.path.exists(pdf_folder):
 		os.makedirs(pdf_folder)
 
@@ -19,19 +20,27 @@ def init_folders(base_folder):
 	if not os.path.exists(png_folder):
 		os.makedirs(png_folder)
 
-	return pdf_folder, json_folder, png_folder, csv_folder
+	return pdf_folder, json_folder, png_folder
 
 if __name__ == '__main__':
     opt = Options().parse()
     pdf_folder, json_folder, png_folder = init_folders(opt.dataroot)
 
-    if not opt.skip_generate_images:
-        print("Generating images into %s"%pdf_folder)
-        os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
+    for pdf in tqdm(os.listdir(pdf_folder)):
+        region_boundary = textboxtract.get_region_boundary(os.path.join(pdf_folder, pdf))
+        data = [{
+            "name": os.path.splitext(pdf)[0].split("-")[-1],
+            "page": 1,
+            "dpi": 150,
+            "regionBoundary": region_boundary,
+            "renderURL": os.path.join(png_folder, os.path.splitext(pdf)[0] + '.png')
+        }]
+        with open(os.path.join(json_folder, os.path.splitext(pdf)[0]+'.json'), 'w') as outfile:
+            json.dump(data, outfile)
 
 	# Create CSV files from the extracted text and locations of said text
     if not opt.skip_create_csv:
-        for json_file_name in os.listdir(json_folder):
+        for json_file_name in tqdm(os.listdir(json_folder)):
             json_path = os.path.join(json_folder, json_file_name)
             pdf_path = os.path.join(pdf_folder, os.path.splitext(json_file_name)[0]+'.pdf')
 
@@ -41,10 +50,9 @@ if __name__ == '__main__':
                     area = table["regionBoundary"]
                     area = [area["x1"], area["y1"], area["x2"], area["y2"]]
                     try:            
-                        df = read_pdf(pdf_path, pages=table["page"]+1, area=area, silent=True)
+                        df = read_pdf(pdf_path, pages=table["page"], silent=True, pandas_options={'index_col': [0]})
                         if df is not None and not df.empty:
-                            df.loc[:, ~df.columns.str.match('Unnamed')]
-                            df.to_csv(os.path.join(opt.resultfolder, os.path.splitext(json_file_name)[0]+"-"+table["name"]+'.csv'))
+                            df.to_csv(os.path.join(opt.resultfolder, os.path.splitext(json_file_name)[0]+'.csv'))
                     except Exception as e:
                         print("skipping.. %s"%e)
                         continue

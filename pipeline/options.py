@@ -14,7 +14,7 @@ class Options():
         """Define options"""
         # basic parameters
         parser.add_argument('--dataroot', required=True, help='Path to image folder')
-        parser.add_argument('--resultsroot', required=True, help='Path to results folder')
+        parser.add_argument('--resultfolder', required=True, help='Path to results folder')
         parser.add_argument('--model', required=False, type=str, default='pix2pixHD', choices=['pix2pixHD', 'encoder-decoder-skip'], help='Model that will predict outlines. Choices: []')
         parser.add_argument('--checkpoint_dir', required=False, type=str, help='Directory where checkpoint for model is stored')
         parser.add_argument('--skip_generate_pdf', action='store_true', help='Skip: creating pdfs')
