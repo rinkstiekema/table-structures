@@ -71,8 +71,7 @@ def generate(idx, table_type, paths, csv_path, png_path, tex_path, args):
             subprocess.call('dvipng -q* -T tight -o ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png ' + os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.dvi', shell=True, stdout=open(os.devnull, 'wb'))
 
             if args.padding:
-                pad_image(os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png', args.resolution)
-                pad_image(os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png', args.resolution)
+                pad_image(os.path.join(png_path, path[0], str(idx)+'-'+str(i)) + '.png', os.path.join(png_path, path[1], str(idx)+'-'+str(i)) + '.png', args.resolution)
 
 
 if __name__ == '__main__':
@@ -94,7 +93,7 @@ if __name__ == '__main__':
     png_path = os.path.join(location, 'png')
     make_dir(png_path)
 
-    paths = ['train', 'train_label', 'val', 'val_label', 'test', 'test_label']
+    paths = ['train', 'train_labels', 'val', 'val_labels', 'test', 'test_labels']
     for idx, path in enumerate(paths):
         new_path_tex = os.path.join(tex_path, path)
         make_dir(new_path_tex)

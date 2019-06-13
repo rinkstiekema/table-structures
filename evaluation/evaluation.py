@@ -9,16 +9,18 @@ import io
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 if __name__ == '__main__':
-    if(len(sys.argv) < 3):
-        print("Missing argument. Usage: <pdf location> <gt location>")
+    if(len(sys.argv) < 4):
+        print("Missing argument. Usage: <pred location> <ground truth location> <scores location>")
         exit(-1)
 
-    pdf_path = sys.argv[1]
+    pred_path = sys.argv[1]
     gt_path = sys.argv[2]
+    scores_path = sys.argv[3]
     cc = SmoothingFunction()
-    for pdf in os.listdir(pdf_path)[2000:]:
-        df_pred = tabula.read_pdf(os.path.join(pdf_path, pdf))
-        df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(pdf)[0]+'.csv'))
+    result_list = []
+    for path in os.listdir(pred_path):
+        df_pred = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'))
+        df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'))
 
         np_pred_row = np.array([df_pred.columns.values.tolist()] + df_pred.values.tolist())
         np_gt_row = np.array([df_gt.columns.values.tolist()] + df_gt.values.tolist())
@@ -28,8 +30,23 @@ if __name__ == '__main__':
         np_pred_row = np_pred_row.flatten()
         np_gt_row = np_gt_row.flatten()
         
-        print(df_pred)
-        print(df_gt)
+        result_list.append([path,
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method0),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method0),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method1),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method1),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method2),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method2),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method3),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method3),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method4),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method4),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method5),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method5),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method6),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method6),
+        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method7),
+        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method7)])
+    result_df = pd.DataFrame(result_list, columns=['file', 'bleu_col0', 'bleu_row0', 'bleu_col1', 'bleu_row1', 'bleu_col2', 'bleu_row2', 'bleu_col3', 'bleu_row3', 'bleu_col4', 'bleu_row4', 'bleu_col5', 'bleu_row6', 'bleu_col7', 'bleu_row7'])
+    result_df.to_csv(scores_path)
         
-        print(sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method7), sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method7))
-

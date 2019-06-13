@@ -1,4 +1,4 @@
-from newOptions import Options
+from tabulaOptions import Options
 import os
 import sys
 import subprocess 
@@ -14,11 +14,7 @@ def init_folders(base_folder):
 	json_folder = os.path.join(base_folder, "json")
 	if not os.path.exists(json_folder):
 		os.makedirs(json_folder)
-	
-	csv_folder = os.path.join(base_folder, "csv")
-	if not os.path.exists(csv_folder):
-		os.makedirs(csv_folder)
-	
+
 	png_folder = os.path.join(base_folder, "png")
 	if not os.path.exists(png_folder):
 		os.makedirs(png_folder)
@@ -27,7 +23,7 @@ def init_folders(base_folder):
 
 if __name__ == '__main__':
     opt = Options().parse()
-    pdf_folder, json_folder, png_folder, csv_folder = init_folders(opt.dataroot)
+    pdf_folder, json_folder, png_folder = init_folders(opt.dataroot)
 
     if not opt.skip_generate_images:
         print("Generating images into %s"%pdf_folder)
@@ -48,7 +44,7 @@ if __name__ == '__main__':
                         df = read_pdf(pdf_path, pages=table["page"]+1, area=area, silent=True)
                         if df is not None and not df.empty:
                             df.loc[:, ~df.columns.str.match('Unnamed')]
-                            df.to_csv(os.path.join(csv_folder, os.path.splitext(json_file_name)[0]+"-"+table["name"]+'.csv'))
+                            df.to_csv(os.path.join(opt.resultfolder, os.path.splitext(json_file_name)[0]+"-"+table["name"]+'.csv'))
                     except Exception as e:
                         print("skipping.. %s"%e)
                         continue

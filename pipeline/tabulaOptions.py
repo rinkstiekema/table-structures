@@ -14,6 +14,7 @@ class Options():
         """Define options"""
         # basic parameters
         parser.add_argument('--dataroot', required=True, help='Path to image folder')        
+        parser.add_argument('--resultfolder', required=True, help='Path to folder where result CSVs should be saved')        
         parser.add_argument('--skip_generate_images', action='store_true', help='Skip: generate images from PDF files')
         parser.add_argument('--skip_create_csv', action='store_true', help='Skip: creating csv from found text')
         self.initialized = True

@@ -9,14 +9,19 @@ def pad(a, img_res):
 	zeros[:a.shape[0], :a.shape[1], :a.shape[2]] = a
 	return zeros
 
-def pad_image(location, res):
+def pad_image(location1, location2, res):
     resolution = (res, res, 3)
-    img = scipy.misc.imread(location, mode='RGB').astype(np.float)
-    if(img.shape[0] <= res and img.shape[1] <= res):
-        padded = pad(img, resolution)
-        scipy.misc.imsave(location, padded)
+    img1 = scipy.misc.imread(location1, mode='RGB').astype(np.float)
+    img2 = scipy.misc.imread(location2, mode='RGB').astype(np.float)
+
+    if((img1.shape[0] <= res and img1.shape[1] <= res) or (img2.shape[0] <= res and img2.shape[1] <= res)):
+        padded = pad(img1, resolution)
+        scipy.misc.imsave(location1, padded)
+        padded = pad(img2, resolution)
+        scipy.misc.imsave(location2, padded)
     else:
-        os.remove(location)
+        os.remove(location1)
+        os.remove(location2)
 
 # if len(sys.argv) < 2:
 #     print("Missing arguments. Usage: <input-folder> <resolution>")    
