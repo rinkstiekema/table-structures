@@ -19,7 +19,7 @@ if __name__ == '__main__':
     cc = SmoothingFunction()
     result_list = []
     for path in os.listdir(pred_path):
-        df_pred = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'))
+        df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'))
         df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'))
 
         np_pred_row = np.array([df_pred.columns.values.tolist()] + df_pred.values.tolist())
@@ -31,22 +31,22 @@ if __name__ == '__main__':
         np_gt_row = np_gt_row.flatten()
         
         result_list.append([path,
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method0),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method0),
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method1),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method1),
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method2),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method2),
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method3),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method3),
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method4),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method4),
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method5),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method5),
-        sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method6),
-        sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method6),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method0),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method0),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method1),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method1),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method2),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method2),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method3),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method3),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method4),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method4),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method5),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method5),
+        # sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method6),
+        # sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method6),
         sentence_bleu([np_gt_col], np_pred_col, smoothing_function=cc.method7),
         sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method7)])
-    result_df = pd.DataFrame(result_list, columns=['file', 'bleu_col0', 'bleu_row0', 'bleu_col1', 'bleu_row1', 'bleu_col2', 'bleu_row2', 'bleu_col3', 'bleu_row3', 'bleu_col4', 'bleu_row4', 'bleu_col5', 'bleu_row6', 'bleu_col7', 'bleu_row7'])
+    result_df = pd.DataFrame(result_list, columns=['file', 'bleu_col7', 'bleu_row7'])
     result_df.to_csv(scores_path)
         

@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	if not opt.skip_predict:
 		print("Predicting outlines")
 		if opt.model == 'pix2pixHD':
-			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, png_folder, outlines_folder))
+			subprocess.call(['python', './pix2pixHD/predict.py', '--name', 'gen-tables', '--checkpoints_dir', opt.checkpoint_dir,  '--dataroot', opt.dataroot, '--loadSize', '1024', '--fineSize', '1024', '--no_instance', '--label_nc', '0', '--results_dir', opt.resultfolder])
 		else:
 			subprocess.call('sh ./segpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, png_folder, outlines_folder))
 	add_outline_url(json_folder, outlines_folder)
