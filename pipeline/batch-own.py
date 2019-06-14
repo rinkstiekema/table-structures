@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	if not opt.skip_predict:
 		print("Predicting outlines")
 		if opt.model == 'pix2pixHD':
-			subprocess.call(['python', './pix2pixHD/predict.py', '--name', 'gen-tables', '--checkpoints_dir', opt.checkpoint_dir,  '--dataroot', opt.dataroot, '--loadSize', '1024', '--fineSize', '1024', '--no_instance', '--label_nc', '0', '--results_dir', opt.resultfolder])
+			subprocess.call(['python', './pix2pixHD/predict.py', '--name', 'gen-tables', '--checkpoints_dir', opt.checkpoint_dir,  '--dataroot', opt.dataroot, '--loadSize', '1024', '--fineSize', '1024', '--no_instance', '--label_nc', '0', '--results_dir', outlines_folder])
 		else:
 			subprocess.call('sh ./segpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, png_folder, outlines_folder))
 	add_outline_url(json_folder, outlines_folder)
@@ -83,4 +83,4 @@ if __name__ == '__main__':
 	# Create CSV files from the extracted text and locations of said text
 	if not opt.skip_create_csv:
 		print("Creating csv")
-		json2csv.json2csv(json_folder, opt.resultsroot)
+		json2csv.json2csv(json_folder, opt.resultfolder)
