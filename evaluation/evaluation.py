@@ -20,7 +20,7 @@ if __name__ == '__main__':
     result_list = []
     for path in os.listdir(pred_path):
         df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'))
-        df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'))
+        df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'), index_col=[0])
 
         np_pred_row = np.array([df_pred.columns.values.tolist()] + df_pred.values.tolist())
         np_gt_row = np.array([df_gt.columns.values.tolist()] + df_gt.values.tolist())

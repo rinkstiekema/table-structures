@@ -30,8 +30,8 @@ def init_folders(base_folder, mode):
 		os.makedirs(outlines_folder)
 
 	results_folder = os.path.join(base_folder, "csv_pred", mode)
-	if not os.path.exists(outlines_folder):
-		os.makedirs(outlines_folder)
+	if not os.path.exists(results_folder):
+		os.makedirs(results_folder)
 
 	return pdf_folder, json_folder, png_folder, outlines_folder, results_folder
 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
 		print("Finding cells")
-		rulers.rule(json_folder)
+		rulers.rule(json_folder, outlines_folder)
 
 	# Extract the text, using the bounding boxes, from the original PDF
 	if not opt.skip_extract_text:

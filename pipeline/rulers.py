@@ -122,37 +122,10 @@ def get_cells(intersection_points):
 			cells.append(cell)
 	return cells
 
-def rule(json_folder):
-	json_file_list = os.listdir(json_folder)
-
-	for json_file in json_file_list:
-		json_file_location = os.path.join(json_folder, json_file)
-		with open(json_file_location, 'r+') as jfile:
-			result = [] # eventually new json file
-			tables = json.load(jfile) # current json file
-			for table in tables:
-				try:
-					img = cv2.imread(table["outlineURL"])
-					img = preprocess_image(img)
-					lines = get_hough_lines(img)
-
-					intersection_points = get_intersections(lines)
-					intersection_points = unique_intersections(intersection_points)
-					cells = get_cells(intersection_points)
-					
-					table["cells"] = cells
-					result.append(table)
-					jfile.seek(0)
-					jfile.write(json.dumps(result))
-					jfile.truncate()
-				except Exception as e:
-					print("Skipping step", traceback.format_exc())
-					continue
-
 def rule(json_folder, outlines_folder):
 	json_file_list = os.listdir(json_folder)
 
-	for json_file in tqdm(json_file_list):
+	for json_file in json_file_list:
 		json_file_location = os.path.join(json_folder, json_file)
 		with open(json_file_location, 'r+') as jfile:
 			result = [] # eventually new json file
@@ -165,8 +138,24 @@ def rule(json_folder, outlines_folder):
 
 					intersection_points = get_intersections(lines)
 					intersection_points = unique_intersections(intersection_points)
+
+					# copy = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+					# for intersection_point in intersection_points:
+					# 	cv2.circle(copy, intersection_point, 2, (255,0,255), -1)
+					# cv2.imshow(table["name"], copy)
+					# cv2.waitKey(0)
+					# cv2.destroyAllWindows()
+
 					cells = get_cells(intersection_points)
 					
+					# for cell in cells:
+					# 	print(cell)
+					# 	cv2.rectangle(copy, (cell[0][0], cell[0][1]), (cell[1][0], cell[1][1]), (random.randint(0,255), random.randint(0,255), random.randint(0,255)), 1)
+					# cv2.imshow(table["name"], copy)
+					# cv2.waitKey(0)
+					# cv2.destroyAllWindows()
+
+
 					table["cells"] = cells
 					result.append(table)
 					jfile.seek(0)

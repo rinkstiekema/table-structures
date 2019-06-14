@@ -5,7 +5,7 @@ import json
 from tqdm import tqdm
 
 def json2csv(json_folder, csv_folder):
-    for json_file in tqdm(os.listdir(json_folder)):
+    for json_file in os.listdir(json_folder):
         json_location = os.path.join(json_folder, json_file)
         with open(json_location, 'r+') as jfile:
             tables = json.load(jfile)
@@ -25,9 +25,8 @@ def json2csv(json_folder, csv_folder):
                     matrix[x][y] = cell["words"]
                     
                 df = pd.DataFrame(matrix)
-                csv_name = os.path.splitext(table["name"] + ".csv")
+                csv_name = os.path.splitext(table["name"])[0] + ".csv"
                 df.to_csv(os.path.join(csv_folder, csv_name), index=False, header=False)
-
 
 
 
