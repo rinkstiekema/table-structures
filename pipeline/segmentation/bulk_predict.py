@@ -7,7 +7,8 @@ from utils import utils, helpers
 from builders import model_builder
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--folder', type=str, default=None, required=True, help='The folder containing the images you want to predict on. ')
+parser.add_argument('--input_folder', type=str, default=None, required=True, help='The folder containing the images you want to predict on. ')
+parser.add_argument('--output_folder', type=str, default=None, required=True, help='The folder to output the images to')
 parser.add_argument('--checkpoint_path', type=str, default=None, required=True, help='The path to the latest checkpoint weights for your model.')
 parser.add_argument('--crop_height', type=int, default=512, help='Height of cropped input image to network')
 parser.add_argument('--crop_width', type=int, default=512, help='Width of cropped input image to network')
@@ -48,7 +49,6 @@ saver=tf.train.Saver(max_to_keep=1000)
 saver.restore(sess, args.checkpoint_path)
 
 for image in os.listdir(args.folder):
-    print("Testing image " + image)
     image_path = os.path.join(args.folder, image)
 
     loaded_image = utils.load_image(image_path)
@@ -67,7 +67,4 @@ for image in os.listdir(args.folder):
 
     image_path_no_ext = os.path.splitext(image_path)[0]
     file_name = utils.filepath_to_name(image_path_no_ext)
-    cv2.imwrite("%s_pred.png"%(file_name),cv2.cvtColor(np.uint8(out_vis_image), cv2.COLOR_RGB2BGR))
-
-    print("Wrote image " + "%s_pred.png"%(file_name))
-print("Finished!")
+    cv2.imwrite(os.path.join(args.output_folder, "%s.png"%(file_name)),cv2.cvtColor(np.uint8(out_vis_image), cv2.COLOR_RGB2BGR))
