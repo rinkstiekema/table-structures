@@ -26,7 +26,8 @@ print("Model -->", args.model)
 print("Crop Height -->", args.crop_height)
 print("Crop Width -->", args.crop_width)
 print("Num Classes -->", num_classes)
-print("Folder -->", args.folder)
+print("Input Folder -->", args.input_folder)
+print("Output Folder -->", args.output_folder)
 
 # Initializing network
 config = tf.ConfigProto()
