@@ -25,7 +25,7 @@ def json2csv(json_folder, csv_folder):
                     matrix[x][y] = cell["words"]
                     
                 df = pd.DataFrame(matrix)
-                csv_name = os.path.splitext(os.path.basename(table["renderURL"]))[0] + ".csv"
+                csv_name = os.path.splitext(table["name"] + ".csv")
                 df.to_csv(os.path.join(csv_folder, csv_name), index=False, header=False)
 
 

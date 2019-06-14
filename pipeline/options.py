@@ -13,6 +13,7 @@ class Options():
     def initialize(self, parser):
         """Define options"""
         # basic parameters
+        parser.add_argument('--mode', default='val', choices=['val', 'test'], help='Which part of the dataset should be predicted?')
         parser.add_argument('--dataroot', required=True, help='Path to image folder')
         parser.add_argument('--resultfolder', required=True, help='Path to results folder')
         parser.add_argument('--model', required=False, type=str, default='pix2pixHD', choices=['pix2pixHD', 'encoder-decoder-skip'], help='Model that will predict outlines. Choices: []')

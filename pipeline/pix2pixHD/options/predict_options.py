@@ -16,6 +16,7 @@ class PredictOptions(BaseOptions):
         self.parser.add_argument("--export_onnx", type=str, help="export ONNX model to a given file")
         self.parser.add_argument("--engine", type=str, help="run serialized TRT engine")
         self.parser.add_argument("--onnx", type=str, help="run ONNX model via TRT")  
+        self.parser.add_argument("--mode", type=str, default='val', choices=['val', 'test'], help="what dataset to load? 'val' or 'test'")
         self.isTrain = False
         self.isPredict = True
       

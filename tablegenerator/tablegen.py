@@ -112,5 +112,5 @@ if __name__ == '__main__':
     for path in np.array(paths).reshape(-1, 2):
         cleanup(os.path.join(png_path, path[0]))
         cleanup(os.path.join(png_path, path[1]))
-    # for idx, table_type in enumerate(types):
-    #     generate(table_type)
+
+    # todo: generate PDF then create describing json
