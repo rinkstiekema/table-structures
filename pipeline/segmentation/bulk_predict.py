@@ -13,15 +13,15 @@ parser.add_argument('--checkpoint_path', type=str, default=None, required=True, 
 parser.add_argument('--crop_height', type=int, default=512, help='Height of cropped input image to network')
 parser.add_argument('--crop_width', type=int, default=512, help='Width of cropped input image to network')
 parser.add_argument('--model', type=str, default=None, required=True, help='The model you are using')
-parser.add_argument('--dataset', type=str, default="CamVid", required=False, help='The dataset you are using')
+# parser.add_argument('--dataset', type=str, default="CamVid", required=False, help='The dataset you are using')
 args = parser.parse_args()
 
-class_names_list, label_values = helpers.get_label_info(os.path.join(args.input_folder, args.dataset, "class_dict.csv"))
+class_names_list, label_values = helpers.get_label_info(os.path.join(args.input_folder, "class_dict.csv"))
 
 num_classes = len(label_values)
 
 print("\n***** Begin prediction *****")
-print("Dataset -->", args.dataset)
+# print("Dataset -->", args.dataset)
 print("Model -->", args.model)
 print("Crop Height -->", args.crop_height)
 print("Crop Width -->", args.crop_width)
