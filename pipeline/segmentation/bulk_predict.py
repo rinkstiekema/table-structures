@@ -49,8 +49,8 @@ print('Loading model checkpoint weights')
 saver=tf.train.Saver(max_to_keep=1000)
 saver.restore(sess, args.checkpoint_path)
 
-for image in os.listdir(args.folder):
-    image_path = os.path.join(args.folder, image)
+for image in os.listdir(args.input_folder):
+    image_path = os.path.join(args.input_folder, image)
 
     loaded_image = utils.load_image(image_path)
     resized_image =cv2.resize(loaded_image, (args.crop_width, args.crop_height))
