@@ -25,7 +25,7 @@ SUPPORTED_MODELS = ["FC-DenseNet56", "FC-DenseNet67", "FC-DenseNet103", "Encoder
 SUPPORTED_FRONTENDS = ["ResNet50", "ResNet101", "ResNet152", "MobileNetV2", "InceptionV4"]
 
 def download_checkpoints(model_name):
-    subprocess.check_output(["python", "utils/get_pretrained_checkpoints.py", "--model=" + model_name])
+    subprocess.check_output(["python", "../utils/get_pretrained_checkpoints.py", "--model=" + model_name])
 
 
 
@@ -50,7 +50,7 @@ def build_model(model_name, net_input, num_classes, crop_width, crop_height, fro
 	if "MobileNetV2" == frontend and not os.path.isfile("models/mobilenet_v2.ckpt.data-00000-of-00001"):
 	    download_checkpoints("MobileNetV2")
 	if "InceptionV4" == frontend and not os.path.isfile("models/inception_v4.ckpt"):
-	    download_checkpoints("InceptionV4") 
+	    download_checkpoints("InceptionV4")
 
 	network = None
 	init_fn = None
