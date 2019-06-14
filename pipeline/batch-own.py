@@ -69,8 +69,7 @@ if __name__ == '__main__':
 		if opt.model == 'pix2pixHD':
 			subprocess.call(['python', './pix2pixHD/predict.py', '--name', 'gen-tables', '--checkpoints_dir', opt.checkpoint_dir,  '--dataroot', opt.dataroot, '--loadSize', '1024', '--fineSize', '1024', '--no_instance', '--label_nc', '0', '--results_dir', outlines_folder, '--mode', opt.mode])
 		else:
-			subprocess.call('sh ./segpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, png_folder, outlines_folder))
-
+			subprocess.call(['python', './segmentation/bulk_predict.py', '--folder', png_folder, '--checkpoint_path', opt.checkpoint_dir, '--crop_height', 1024, '--crop_width', 1024, '--model', 'encoder_decoder_skip', '--dataset', 'gen-tables'])
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
 		print("Finding cells")
