@@ -84,4 +84,4 @@ if __name__ == '__main__':
 	# Create CSV files from the extracted text and locations of said text
 	if not opt.skip_create_csv:
 		print("Creating csv")
-		json2csv.json2csv(json_folder, opt.resultfolder)
+		json2csv.json2csv(json_folder, results_folder)
