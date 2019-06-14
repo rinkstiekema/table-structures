@@ -6,6 +6,29 @@ from tabula import read_pdf
 import json
 import textboxtract
 from tqdm import tqdm
+import multiprocessing
+from functools import partial
+from contextlib import contextmanager
+
+def predict_csv(json_file_name, folders):
+    json_folder = folders[0]
+    pdf_folder = folders[1]
+    results_folder = folders[2]
+    json_path = os.path.join(json_folder, json_file_name)
+    pdf_path = os.path.join(pdf_folder, os.path.splitext(json_file_name)[0]+'.pdf')
+
+    with open(json_path) as jfile:
+        json_data = json.load(jfile)
+        for table in json_data:
+            area = table["regionBoundary"]
+            area = [area["x1"], area["y1"], area["x2"], area["y2"]]
+            try:            
+                df = read_pdf(pdf_path, pages=table["page"], silent=True, pandas_options={'index_col': [0]})
+                if df is not None and not df.empty:
+                    df.to_csv(os.path.join(results_folder, os.path.splitext(json_file_name)[0]+'.csv'))
+            except Exception as e:
+                print("skipping.. %s"%e)
+                continue
 
 def init_folders(base_folder, mode):
     pdf_folder = os.path.join(base_folder, "pdf", mode)
@@ -26,10 +49,19 @@ def init_folders(base_folder, mode):
 
     return pdf_folder, json_folder, png_folder, results_folder
 
+@contextmanager
+def poolcontext(*args, **kwargs):
+    pool = multiprocessing.Pool(*args, **kwargs)
+    yield pool
+    pool.terminate()
+
 if __name__ == '__main__':
     opt = Options().parse()
     pdf_folder, json_folder, png_folder, results_folder = init_folders(opt.dataroot, opt.mode)
 
+    pbar = tqdm(total=len(os.listdir(json_folder)))
+    def update(*a):
+        pbar.update()
     # for pdf in tqdm(os.listdir(pdf_folder)):
     #     region_boundary = textboxtract.get_region_boundary(os.path.join(pdf_folder, pdf))
     #     data = [{
@@ -44,20 +76,6 @@ if __name__ == '__main__':
 
 	# Create CSV files from the extracted text and locations of said text
     if not opt.skip_create_csv:
-        for json_file_name in tqdm(os.listdir(json_folder)):
-            print(json_file_name)
-            json_path = os.path.join(json_folder, json_file_name)
-            pdf_path = os.path.join(pdf_folder, os.path.splitext(json_file_name)[0]+'.pdf')
-
-            with open(json_path) as jfile:
-                json_data = json.load(jfile)
-                for table in json_data:
-                    area = table["regionBoundary"]
-                    area = [area["x1"], area["y1"], area["x2"], area["y2"]]
-                    try:            
-                        df = read_pdf(pdf_path, pages=table["page"], silent=True, pandas_options={'index_col': [0]})
-                        if df is not None and not df.empty:
-                            df.to_csv(os.path.join(results_folder, os.path.splitext(json_file_name)[0]+'.csv'))
-                    except Exception as e:
-                        print("skipping.. %s"%e)
-                        continue
+        pool = multiprocessing.Pool()
+        pool.map(partial(predict_csv, folders=[json_folder, pdf_folder, results_folder]), os.listdir(json_folder))
+            
