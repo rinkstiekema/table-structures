@@ -50,6 +50,9 @@ saver=tf.train.Saver(max_to_keep=1000)
 saver.restore(sess, args.checkpoint_path)
 
 for image in os.listdir(args.input_folder):
+    if not os.path.splitext(image)[-1] == '.png':
+        continue
+        
     image_path = os.path.join(args.input_folder, image)
 
     loaded_image = utils.load_image(image_path)
