@@ -16,6 +16,7 @@ class Options():
         parser.add_argument('--mode', default='val', choices=['val', 'test'], help='Which part of the dataset should be predicted?')
         parser.add_argument('--dataroot', required=True, help='Path to image folder')
         parser.add_argument('--model', required=False, type=str, default='pix2pixHD', choices=['pix2pixHD', 'encoder-decoder-skip'], help='Model that will predict outlines. Choices: []')
+        parser.add_argument('--epoch', required=False, default='latest', type=str, help='What epoch checkpoint to test with? Only works for pix2pixHD')
         parser.add_argument('--checkpoint_dir', required=False, type=str, help='Directory where checkpoint for model is stored')
         parser.add_argument('--skip_generate_pdf', action='store_true', help='Skip: creating pdfs')
         parser.add_argument('--skip_predict', action='store_true', help='Skip: predicting outlines')

@@ -49,5 +49,10 @@ if __name__ == '__main__':
             continue
 
     result_df = pd.DataFrame(result_list, columns=['file', 'bleu_col7', 'bleu_row7'])
+
+    grouped = result_df.copy()
+    grouped['category'] = grouped['file'].apply(lambda x: x.split("-")[0])
+    grouped['file'] = grouped['file'].apply(lambda x: x.split("-")[1])
+    
     result_df.to_csv(scores_path)
-        
+    grouped.groupby('category').mean().to_csv(os.path.splitext(scores_path)[0] + '-grouped' + '.csv')        
