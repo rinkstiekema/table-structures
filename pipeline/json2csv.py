@@ -12,7 +12,6 @@ def json2csv(json_folder, csv_folder):
                 tables = json.load(jfile)
                 
                 for table in tables:
-                    print(table)
                     # Unique occurences of rows and columns
                     rows = list(set([x["rect"][0][1] for x in table["cells"]]))
                     columns = list(set([x["rect"][0][0] for x in table["cells"]]))
