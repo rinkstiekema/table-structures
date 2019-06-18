@@ -10,7 +10,6 @@ import scipy.misc
 import textboxtract
 import json2csv
 from tqdm import tqdm
-# from segmentation.predict import predict
 
 def init_folders(base_folder):
 	pdf_folder = os.path.join(base_folder, "pdf")
@@ -28,12 +27,12 @@ def init_folders(base_folder):
 	outlines_folder = os.path.join(base_folder, "outlines")
 	if not os.path.exists(outlines_folder):
 		os.makedirs(outlines_folder)
-	
-	csv_folder = os.path.join(base_folder, "csv")
-	if not os.path.exists(csv_folder):
-		os.makedirs(csv_folder)
-	
-	return pdf_folder, json_folder, png_folder, outlines_folder, csv_folder
+
+	results_folder = os.path.join(base_folder, "csv_pred")
+	if not os.path.exists(results_folder):
+		os.makedirs(results_folder)
+
+	return pdf_folder, json_folder, png_folder, outlines_folder, results_folder
 
 def add_outline_url(json_folder, outline_folder):
 	for json_file in os.listdir(json_folder):
@@ -50,16 +49,10 @@ def add_outline_url(json_folder, outline_folder):
 
 if __name__ == '__main__':
 	opt = Options().parse()
-	pdf_folder, json_folder, png_folder, outlines_folder, csv_folder = init_folders(opt.dataroot)
-
-	if not opt.skip_generate_pdf:
-		print("Generating pdfs")
-		tex_path = os.path.join(opt.dataroot, 'tex', 'val')
-		os.system('pdflatex -quiet -ouput-directory='+pdf_folder+' '+tex_path)
+	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot, opt.mode)
 
 	if not opt.skip_generate_images:
 		print("Generating images")
-		print(pdf_folder)
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
 		for image in tqdm(os.listdir(png_folder)):
 			# to do remove from json file
@@ -70,19 +63,20 @@ if __name__ == '__main__':
 			img = pad.pad(img, (1024, 1024, 3))
 			scipy.misc.imsave(os.path.join(png_folder, image), img)
 
-	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
 		print("Predicting outlines")
-		if opt.model == 'pix2pix':
-			subprocess.call('sh ./pixpred.sh %s %s %s %s' % ('gen-tables', opt.checkpoint_dir, opt.dataroot, outlines_folder))
-		# else:
-		# 	predict(opt.checkpoint_dir, png_folder, outlines_folder)
-	add_outline_url(json_folder, outlines_folder)
+		if opt.model == 'pix2pixHD':
+			subprocess.call(['python', './pix2pixHD/predict.py', '--name', 'gen-tables', '--checkpoints_dir', opt.checkpoint_dir,  '--dataroot', opt.dataroot, '--loadSize', '1024', '--fineSize', '1024', '--no_instance', '--label_nc', '0', '--results_dir', outlines_folder, '--mode', opt.mode, '--which_epoch', opt.epoch])
+		elif opt.model == 'encoder-decoder-skip':
+			subprocess.call(['python', './segmentation/bulk_predict.py', '--input_folder', png_folder, '--output_folder', outlines_folder, '--checkpoint_path', opt.checkpoint_dir, '--crop_height', '1024', '--crop_width', '1024', '--model', 'Encoder-Decoder-Skip'])
+		else:
+			print("Unknown model")
+			exit(-1)
 
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
 		print("Finding cells")
-		rulers.rule(json_folder)
+		rulers.rule(json_folder, outlines_folder)
 
 	# Extract the text, using the bounding boxes, from the original PDF
 	if not opt.skip_extract_text:
@@ -92,4 +86,4 @@ if __name__ == '__main__':
 	# Create CSV files from the extracted text and locations of said text
 	if not opt.skip_create_csv:
 		print("Creating csv")
-		json2csv.json2csv(json_folder, opt.resultsroot)
+		json2csv.json2csv(json_folder, results_folder)

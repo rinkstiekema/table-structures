@@ -8,7 +8,7 @@ class Table():
     def __init__(self, table_type, n_rows, n_columns, n_text_column):
         self.n_headers = table_type["n_headers"]
         self.n_stubs = table_type["n_stubs"]
-        self.indicator_type = table_type["indicator_type"]
+        # self.indicator_type = table_type["indicator_type"]
         self.n_rows = n_rows
         self.n_columns = n_columns
         self.n_text_columns = n_text_column
@@ -21,7 +21,7 @@ class Table():
         self.bold_header = random.choice([True, False])
         self.headers = self.generate_headers()
         self.stubs = self.generate_stubs()
-        self.indicator = self.generate_indicator()
+        # self.indicator = self.generate_indicator()
         self.v_lines = self.generate_v_lines()
         self.h_lines = self.generate_h_lines()
         self.row_size = self.generate_row_size()
@@ -30,47 +30,47 @@ class Table():
         self.df = self.create_df()
 
     def create_df(self):
-        pd.set_option('display.max_colwidth', -1)
-        if self.n_stubs > 0 and self.n_headers > 0:
-            table = pd.DataFrame(data=self.rows, index=self.stubs, columns=self.headers)
-        elif self.n_stubs > 0:
-            table = pd.DataFrame(data=self.rows, index=self.stubs)
-        elif self.n_columns > 0:
-            table = pd.DataFrame(data=self.rows, columns=self.headers)
-        else:
-            table = pd.DataFrame(data=self.rows)
-
-        if self.indicator_type == "stub":
-            table.index.names = self.indicator
-        elif self.indicator_type == "column":
-            table.column.names = self.indicator
+        # if self.n_stubs > 0 and self.n_headers > 0:
+        #     table = pd.DataFrame(data=self.rows, index=self.stubs, columns=self.headers)
+        # elif self.n_stubs > 0:
+        #     table = pd.DataFrame(data=self.rows, index=self.stubs)
+        # elif self.n_headers > 0:
+        #     table = pd.DataFrame(data=self.rows, columns=self.headers)
+        # else:
+        table = pd.DataFrame(data=self.rows, index=self.stubs, columns=self.headers)
+        if self.n_stubs > 0:
+            table.index = table.index.droplevel(0)
+        if self.n_headers > 0:
+            table.columns = table.columns.droplevel(0)
+        # table = table.sort_index()
+        # if self.indicator_type == "stub":
+        #     table.index.names = self.indicator
+        # elif self.indicator_type == "column":
+        #     table.column.names = self.indicator
+        # table.sort_index()
         return table
-
-
-    def assemble(self):
-        return np.array(self.headers + self.rows)
 
     def generate_indicator(self):
         n = 0
         if self.indicator_type == "stub":
-            n = self.n_stubs
+            n = self.n_stubs + 1
         elif self.indicator_type == "column":
-            n = self.n_columns
+            n = self.n_columns + 1
         return random.sample(words.words(), n)
 
     def generate_stubs(self):
-        stubs = [random.sample(words.words(), self.n_rows) for x in range(self.n_stubs)]
-        if self.n_stubs > 0:
-            return pd.MultiIndex.from_arrays(stubs)
-        else:
-            return stubs
+        return pd.MultiIndex.from_arrays([list(range(self.n_rows))] + [random.sample(words.words(), self.n_rows) for x in range(self.n_stubs)])
+        # if self.n_stubs > 0:
+        #     return pd.MultiIndex.from_arrays(stubs)
+        # else:
+        # return stubs
 
     def generate_headers(self):
-        headers = [random.sample(words.words(), self.n_columns) for x in range(self.n_headers)]
-        if self.n_headers > 0:
-            return pd.MultiIndex.from_arrays(headers)
-        else:
-            return headers
+        return pd.MultiIndex.from_arrays([list(range(self.n_columns))] + [random.sample(words.words(), self.n_columns) for x in range(self.n_headers)])
+        # if self.n_headers > 0:
+        #     return pd.MultiIndex.from_arrays(headers)
+        # else:
+        #     return headers
 
     def generate_rows(self):
         rows = []

@@ -55,7 +55,9 @@ if __name__ == '__main__':
                     area = table["regionBoundary"]
                     area = [area["x1"], area["y1"], area["x2"], area["y2"]]
                     try:            
-                        df = read_pdf(pdf_path, pages=table["page"], silent=True, pandas_options={'index_col': [0]})
+                        df = read_pdf(pdf_path, pages=table["page"], silent=True)
+                        print(df.to_csv())
+                        exit()
                         if df is not None and not df.empty:
                             df.to_csv(os.path.join(results_folder, os.path.splitext(json_file_name)[0]+'.csv'))
                     except Exception as e:

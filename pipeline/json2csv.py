@@ -12,6 +12,7 @@ def json2csv(json_folder, csv_folder):
                 tables = json.load(jfile)
                 
                 for table in tables:
+                    print(table)
                     # Unique occurences of rows and columns
                     rows = list(set([x["rect"][0][1] for x in table["cells"]]))
                     columns = list(set([x["rect"][0][0] for x in table["cells"]]))
@@ -26,9 +27,10 @@ def json2csv(json_folder, csv_folder):
                         matrix[x][y] = cell["words"]
                         
                     df = pd.DataFrame(matrix)
+                    
                     csv_name = os.path.splitext(table["name"])[0] + ".csv"
                     df.to_csv(os.path.join(csv_folder, csv_name))
-        except:
+        except Exception as e:
             continue
 
 

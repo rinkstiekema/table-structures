@@ -10,7 +10,6 @@ import scipy.misc
 import textboxtract
 import json2csv
 from tqdm import tqdm
-# from segmentation.predict import predict
 
 def init_folders(base_folder, mode):
 	pdf_folder = os.path.join(base_folder, "pdf", mode)
@@ -51,17 +50,6 @@ def add_outline_url(json_folder, outline_folder):
 if __name__ == '__main__':
 	opt = Options().parse()
 	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot, opt.mode)
-
-	# for pdf in os.listdir(pdf_folder):
-	# 	region_boundary = textboxtract.get_region_boundary(os.path.join(pdf_folder, pdf))
-	# 	data = [{
-	# 		"name": os.path.splitext(pdf)[0],
-	# 		"page": 1,
-	# 		"dpi": 150,
-	# 		"regionBoundary": region_boundary
-	# 	}]
-	# 	with open(os.path.join(json_folder, os.path.splitext(pdf)[0]+'.json'), 'w') as outfile:
-	# 		json.dump(data, outfile)
 
 	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
