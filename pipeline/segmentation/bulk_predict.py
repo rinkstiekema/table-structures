@@ -16,7 +16,7 @@ parser.add_argument('--model', type=str, default=None, required=True, help='The 
 # parser.add_argument('--dataset', type=str, default="CamVid", required=False, help='The dataset you are using')
 args = parser.parse_args()
 
-class_names_list, label_values = helpers.get_label_info("class_dict.csv")
+class_names_list, label_values = helpers.get_label_info(os.path.join(os.path.dirname(os.path.abspath(__file__)),"class_dict.csv"))
 
 num_classes = len(label_values)
 
