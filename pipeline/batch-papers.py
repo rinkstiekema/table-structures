@@ -49,7 +49,7 @@ def add_outline_url(json_folder, outline_folder):
 
 if __name__ == '__main__':
 	opt = Options().parse()
-	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot, opt.mode)
+	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot)
 
 	if not opt.skip_generate_images:
 		print("Generating images")
