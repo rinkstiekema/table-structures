@@ -132,7 +132,7 @@ def rule_pdffigures(json_folder, outlines_folder):
 			tables = json.load(jfile) # current json file
 			for table in tables:
 				try:
-					img = cv2.imread(os.path.join(outlines_folder, table["renderURL"].replace("png", "outlines")))
+					img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines")+".png"))
 					img = preprocess_image(img)
 					lines = get_hough_lines(img)
 
