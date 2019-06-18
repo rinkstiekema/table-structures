@@ -122,6 +122,34 @@ def get_cells(intersection_points):
 			cells.append(cell)
 	return cells
 
+def rule_pdffigures(json_folder, outlines_folder):
+	json_file_list = os.listdir(json_folder)
+
+	for json_file in json_file_list:
+		json_file_location = os.path.join(json_folder, json_file)
+		with open(json_file_location, 'r+') as jfile:
+			result = [] # eventually new json file
+			tables = json.load(jfile) # current json file
+			for table in tables:
+				try:
+					img = cv2.imread(os.path.join(outlines_folder, table["renderURL"].replace("png", "outlines"))
+					img = preprocess_image(img)
+					lines = get_hough_lines(img)
+
+					intersection_points = get_intersections(lines)
+					intersection_points = unique_intersections(intersection_points)
+
+					cells = get_cells(intersection_points)
+
+					table["cells"] = cells
+					result.append(table)
+					jfile.seek(0)
+					jfile.write(json.dumps(result))
+					jfile.truncate()
+				except Exception as e:
+					print("Skipping step", traceback.format_exc())
+					continue
+
 def rule(json_folder, outlines_folder):
 	json_file_list = os.listdir(json_folder)
 
