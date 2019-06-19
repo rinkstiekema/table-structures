@@ -26,6 +26,10 @@ def json2csv(json_folder, csv_folder):
                         matrix[x][y] = cell["words"]
                         
                     df = pd.DataFrame(matrix)
+                    
+                    # drop completely empty rows and columns
+                    df_pred = df_pred.dropna(how='all', axis=0)
+                    df_pred = df_pred.dropna(how='all', axis=1)
                     df.to_csv(os.path.join(csv_folder, table["name"]+'.csv'))
         except Exception as e:
             continue
