@@ -142,6 +142,7 @@ def rule_pdffigures(json_folder, outlines_folder):
 					cells = get_cells(intersection_points)
 
 					table["cells"] = cells
+					table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
 					result.append(table)
 					jfile.seek(0)
 					jfile.write(json.dumps(result))

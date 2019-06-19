@@ -61,7 +61,7 @@ if __name__ == '__main__':
 				os.remove(os.path.join(png_folder, image))
 				continue
 			img = pad.pad(img, (1024, 1024, 3))
-			scipy.misc.imsave(os.path.join(png_folder, image), img)
+			scipy.misc.imsave(os.path.join(png_folder, image), img)				
 
 	if not opt.skip_predict:
 		print("Predicting outlines")
