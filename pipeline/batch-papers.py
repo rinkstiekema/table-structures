@@ -6,6 +6,7 @@ import sys
 import subprocess 
 import pad
 import rulers 
+import scipy.misc
 import textboxtract
 import json2csv
 import imagio
@@ -56,7 +57,7 @@ if __name__ == '__main__':
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
 		for image in tqdm(os.listdir(png_folder)):
 			# to do remove from json file
-			img = imageio.imread(os.path.join(png_folder, image), mode='RGB').astype(np.float)
+			img = np.asarray(imageio.imread(os.path.join(png_folder, image), mode='RGB'))
 			if img.shape[0] > 1024 or img.shape[1] > 1024:
 				os.remove(os.path.join(png_folder, image))
 				continue
