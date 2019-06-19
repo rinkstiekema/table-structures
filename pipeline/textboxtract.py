@@ -9,8 +9,11 @@ import minecart
 from tqdm import tqdm
 
 def validify_rect(rect, regionBoundary):
+    # Check if rectangle is within the region boundary
     if rect[2] > regionBoundary["x2"] and rect[3] > regionBoundary["y2"]:
         return False
+
+    # If x or y is outside regionBoundary, take regionBoundary as new x or y
     rect[2] = min(rect[2], regionBoundary["x2"])
     rect[3] = min(rect[3], regionBoundary["y2"])
     return rect
@@ -40,7 +43,7 @@ def texboxtract_pdffigures(pdf, tables):
         page = doc[int(table["page"])-1]
         words = page.getTextWords()
         for idx, cell in enumerate(table["cells"]):
-            rect = [cell[0][0]*0.75+table["regionBoundary"]["x1"], cell[0][1]*0.75+table["regionBoundary"]["y1"], cell[1][0]*0.75+table["regionBoundary"]["x1"], cell[1][1]*0.75+table["regionBoundary"]["y1"]]
+            rect = [cell[0][0]*72/table["dpi"]+table["regionBoundary"]["x1"], cell[0][1]*72/table["dpi"]+table["regionBoundary"]["y1"], cell[1][0]*72/table["dpi"]+table["regionBoundary"]["x1"], cell[1][1]*72/table["dpi"]+table["regionBoundary"]["y1"]]
             
             rect = validify_rect(rect, table["regionBoundary"])
             if not rect:
