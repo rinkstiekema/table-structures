@@ -12,6 +12,15 @@ import json2csv
 import imageio
 from tqdm import tqdm
 
+def remove_from_json(json_folder, name):
+	base_name = os.path.splitext(name)[0]
+	with open(os.path.join(json_folder, base_name.split("-")[0]+".json")), 'r+') as jfile:
+		tables = json.load(jfile)
+		filter(lambda table: table['name'] == base_name.split("-")[-1], tables)
+		jfile.seek(0)
+		jfile.write(json.dumps(result))
+		jfile.truncate()
+
 def init_folders(base_folder):
 	pdf_folder = os.path.join(base_folder, "pdf")
 	if not os.path.exists(pdf_folder):
@@ -35,19 +44,6 @@ def init_folders(base_folder):
 
 	return pdf_folder, json_folder, png_folder, outlines_folder, results_folder
 
-def add_outline_url(json_folder, outline_folder):
-	for json_file in os.listdir(json_folder):
-		json_file_location = os.path.join(json_folder, json_file)
-		with open(json_file_location, 'r+') as jfile:
-			result = [] # eventually new json file
-			tables = json.load(jfile) # current json file
-			for table in tables:
-				table["outlineURL"] = os.path.join(outline_folder, os.path.basename(table["renderURL"]))
-				result.append(table)
-			jfile.seek(0)
-			jfile.write(json.dumps(result))
-			jfile.truncate()
-
 if __name__ == '__main__':
 	opt = Options().parse()
 	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot)
@@ -55,11 +51,12 @@ if __name__ == '__main__':
 	if not opt.skip_generate_images:
 		print("Generating images")
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
+		print("Padding images")
 		for image in tqdm(os.listdir(png_folder)):
-			# to do remove from json file
 			img = np.asarray(imageio.imread(os.path.join(png_folder, image), pilmode='RGB'), dtype=np.uint8)
 			if img.shape[0] > 1024 or img.shape[1] > 1024:
 				os.remove(os.path.join(png_folder, image))
+				remove_from_json(image)
 				continue
 			img = pad.pad(img, (1024, 1024, 3))
 			imageio.imwrite(os.path.join(png_folder, image), img)				
@@ -88,3 +85,5 @@ if __name__ == '__main__':
 	if not opt.skip_create_csv:
 		print("Creating csv")
 		json2csv.json2csv(json_folder, results_folder)
+
+	print("Finished")

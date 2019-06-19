@@ -149,7 +149,6 @@ def rule_pdffigures(json_folder, outlines_folder):
 					jfile.write(json.dumps(result))
 					jfile.truncate()
 				except Exception as e:
-					print("Skipping step", traceback.format_exc())
 					continue
 
 def rule(json_folder, outlines_folder):
