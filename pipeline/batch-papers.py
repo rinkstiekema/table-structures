@@ -56,7 +56,7 @@ if __name__ == '__main__':
 			img = np.asarray(imageio.imread(os.path.join(png_folder, image), pilmode='RGB'), dtype=np.uint8)
 			if img.shape[0] > 1024 or img.shape[1] > 1024:
 				os.remove(os.path.join(png_folder, image))
-				remove_from_json(image)
+				remove_from_json(json_folder, image)
 				continue
 			img = pad.pad(img, (1024, 1024, 3))
 			imageio.imwrite(os.path.join(png_folder, image), img)				
