@@ -18,7 +18,7 @@ def remove_from_json(json_folder, name):
 		tables = json.load(jfile)
 		tables = list(filter(lambda table: table['name'] == base_name.split("-")[-1], tables))
 		jfile.seek(0)
-		jfile.write(json.dumps(result))
+		jfile.write(json.dumps(tables))
 		jfile.truncate()
 
 def init_folders(base_folder):
