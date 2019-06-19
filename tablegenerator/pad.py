@@ -11,8 +11,8 @@ def pad(a, img_res):
 
 def pad_image(location1, location2, res):
     resolution = (res, res, 3)
-    img1 = imageio.imread(location1, mode='RGB').astype(np.float)
-    img2 = imageio.imread(location2, mode='RGB').astype(np.float)
+    img1 = imageio.imread(location1, pilmode='RGB').astype(np.float)
+    img2 = imageio.imread(location2, pilmode='RGB').astype(np.float)
 
     if((img1.shape[0] <= res and img1.shape[1] <= res) or (img2.shape[0] <= res and img2.shape[1] <= res)):
         padded = pad(img1, resolution)

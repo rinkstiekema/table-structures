@@ -11,7 +11,7 @@ def pad(a, img_res):
 
 def pad_image(location, res):
     resolution = (res, res, 3)
-    img = imageio.imread(location, mode='RGB').astype(np.float)
+    img = imageio.imread(location, pilmode='RGB').astype(np.float)
     if(img.shape[0] <= res and img.shape[1] <= res):
         padded = pad(img, resolution)
         imageio.imsave(location, padded)

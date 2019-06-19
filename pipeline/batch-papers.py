@@ -57,7 +57,7 @@ if __name__ == '__main__':
 		os.system('java -jar pdffigures2.jar -e -q -a Table -m ' + png_folder + '/ -d ' + json_folder + '/ ' + pdf_folder + '/')
 		for image in tqdm(os.listdir(png_folder)):
 			# to do remove from json file
-			img = np.asarray(imageio.imread(os.path.join(png_folder, image), mode='RGB'))
+			img = np.asarray(imageio.imread(os.path.join(png_folder, image), pilmode='RGB'))
 			if img.shape[0] > 1024 or img.shape[1] > 1024:
 				os.remove(os.path.join(png_folder, image))
 				continue
