@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import sys
-import imagio
+import imageio
 
 def pad(a, img_res):
 	"""Return bottom right padding."""
