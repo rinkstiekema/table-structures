@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import sys
-import scipy.misc
+import imagio
 
 def pad(a, img_res):
 	"""Return bottom right padding."""
@@ -11,29 +11,14 @@ def pad(a, img_res):
 
 def pad_image(location1, location2, res):
     resolution = (res, res, 3)
-    img1 = scipy.misc.imread(location1, mode='RGB').astype(np.float)
-    img2 = scipy.misc.imread(location2, mode='RGB').astype(np.float)
+    img1 = imagio.imread(location1, mode='RGB').astype(np.float)
+    img2 = imageio.imread(location2, mode='RGB').astype(np.float)
 
     if((img1.shape[0] <= res and img1.shape[1] <= res) or (img2.shape[0] <= res and img2.shape[1] <= res)):
         padded = pad(img1, resolution)
-        scipy.misc.imsave(location1, padded)
+        imageio.imsave(location1, padded)
         padded = pad(img2, resolution)
-        scipy.misc.imsave(location2, padded)
+        imageio.imsave(location2, padded)
     else:
         os.remove(location1)
         os.remove(location2)
-
-# if len(sys.argv) < 2:
-#     print("Missing arguments. Usage: <input-folder> <resolution>")    
-#     exit(-1)
-
-# folder = sys.argv[1]
-# resolution = (int(sys.argv[2]), int(sys.argv[2]), 3)
-# for image in os.listdir(folder):
-#     location = os.path.join(folder, image)
-#     img = scipy.misc.imread(location, mode='RGB').astype(np.float)
-#     if(img.shape[0] <= 1024 and img.shape[1] <= 1024):
-#         padded = pad(img, resolution)
-#         scipy.misc.imsave(location, padded)
-#     else:
-#         os.remove(location)

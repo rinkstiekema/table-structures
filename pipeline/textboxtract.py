@@ -32,17 +32,14 @@ def extract(json_folder, pdf_folder):
         json_file_location = os.path.join(json_folder, json_file)
         with open(json_file_location, 'r+') as jfile:
             try:
-                start_time = time.time()
                 tables = json.load(jfile)
-                filename, file_extension  = os.path.splitext(os.path.basename(json_file_location))
-                pdf_location = os.path.join(pdf_folder, filename) + ".pdf"
+                file_name = os.path.splitext(json_file)[0]
+                pdf_location = os.path.join(pdf_folder, file_name) + ".pdf"
                 tables = texboxtract(pdf_location, tables)
 
                 jfile.seek(0)
                 jfile.write(json.dumps(tables))
                 jfile.truncate()
-                elapsed_time = time.time() - start_time
-                # print("Took: "+time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
             except Exception as e:
                 print(e)
                 continue

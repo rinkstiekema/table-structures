@@ -5,8 +5,8 @@ import tensorflow.contrib.slim as slim
 import numpy as np
 import time, datetime
 import os, random
-from scipy.misc import imread
 import ast
+import imagio
 from sklearn.metrics import precision_score, \
     recall_score, confusion_matrix, classification_report, \
     accuracy_score, f1_score
@@ -273,7 +273,7 @@ def compute_class_weights(labels_dir, label_values):
     total_pixels = 0.0
 
     for n in range(len(image_files)):
-        image = imread(image_files[n])
+        image = imageio.imread(image_files[n])
 
         for index, colour in enumerate(label_values):
             class_map = np.all(np.equal(image, colour), axis = -1)

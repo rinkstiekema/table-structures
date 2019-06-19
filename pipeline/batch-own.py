@@ -6,7 +6,6 @@ import sys
 import subprocess 
 import pad
 import rulers 
-import scipy.misc
 import textboxtract
 import json2csv
 from tqdm import tqdm

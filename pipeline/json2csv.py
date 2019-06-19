@@ -26,9 +26,7 @@ def json2csv(json_folder, csv_folder):
                         matrix[x][y] = cell["words"]
                         
                     df = pd.DataFrame(matrix)
-                    
-                    csv_name = os.path.splitext(table["name"])[0] + ".csv"
-                    df.to_csv(os.path.join(csv_folder, csv_name))
+                    df.to_csv(os.path.join(csv_folder, table["name"]+'.csv'))
         except Exception as e:
             continue
 
