@@ -41,7 +41,7 @@ def extract(json_folder, pdf_folder):
                 jfile.write(json.dumps(tables))
                 jfile.truncate()
             except Exception as e:
-                print("Error for %s, error:"%(json_file, e))
+                print("Error for %s, error: %s"%(json_file, e))
                 continue
 
 def get_region_boundary(pdf):
