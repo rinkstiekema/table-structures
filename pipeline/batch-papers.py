@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 def remove_from_json(json_folder, name):
 	base_name = os.path.splitext(name)[0]
-	with open(os.path.join(json_folder, base_name.split("-")[0]+".json")), 'r+') as jfile:
+	with open(os.path.join(json_folder, base_name.split("-")[0]+".json"), 'r+') as jfile:
 		tables = json.load(jfile)
 		filter(lambda table: table['name'] == base_name.split("-")[-1], tables)
 		jfile.seek(0)
