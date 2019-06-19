@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import sys
-import imagio
+import imageio
 
 def pad(a, img_res):
 	"""Return bottom right padding."""
@@ -11,7 +11,7 @@ def pad(a, img_res):
 
 def pad_image(location1, location2, res):
     resolution = (res, res, 3)
-    img1 = imagio.imread(location1, mode='RGB').astype(np.float)
+    img1 = imageio.imread(location1, mode='RGB').astype(np.float)
     img2 = imageio.imread(location2, mode='RGB').astype(np.float)
 
     if((img1.shape[0] <= res and img1.shape[1] <= res) or (img2.shape[0] <= res and img2.shape[1] <= res)):

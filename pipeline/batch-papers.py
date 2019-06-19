@@ -9,7 +9,7 @@ import rulers
 import scipy.misc
 import textboxtract
 import json2csv
-import imagio
+import imageio
 from tqdm import tqdm
 
 def init_folders(base_folder):
