@@ -79,7 +79,7 @@ if __name__ == '__main__':
 	# Extract the text, using the bounding boxes, from the original PDF
 	if not opt.skip_extract_text:
 		print("Extracting text")
-		textboxtract.extract(json_folder, pdf_folder)
+		textboxtract.extract_pdffigures(json_folder, pdf_folder)
 
 	# Create CSV files from the extracted text and locations of said text
 	if not opt.skip_create_csv:
