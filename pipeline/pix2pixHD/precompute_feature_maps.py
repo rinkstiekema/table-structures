@@ -29,7 +29,7 @@ util.mkdirs(os.path.join(opt.dataroot, opt.phase + '_feat'))
 for i, data in enumerate(dataset):
 	print('%d / %d images' % (i+1, dataset_size)) 
 	feat_map = model.module.netE.forward(Variable(data['image'].cuda(), volatile=True), data['inst'].cuda())
-	feat_map = nn.Upsample(scale_factor=2, pilmode='nearest')(feat_map)
+	feat_map = nn.Upsample(scale_factor=2, mode='nearest')(feat_map)
 	image_numpy = util.tensor2im(feat_map.data[0])
 	save_path = data['path'][0].replace('/train_label/', '/train_feat/')
 	util.save_image(image_numpy, save_path)
