@@ -49,7 +49,6 @@ if __name__ == '__main__':
             sentence_bleu([np_gt_row], np_pred_row, smoothing_function=cc.method6)])
         except Exception as e:
             result_list.append([path, 0, 0])
-            print(e)
             continue
 
     result_df = pd.DataFrame(result_list, columns=['file', 'bleu_col7', 'bleu_row7'])

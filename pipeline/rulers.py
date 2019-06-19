@@ -109,7 +109,6 @@ def get_intersections(lines):
 			try:
 				intersection_points.append(line_intersection(i, j))
 			except Exception as e:
-				#print(e)
 				continue
 	return intersection_points
 
@@ -144,6 +143,7 @@ def rule_pdffigures(json_folder, outlines_folder):
 
 					table["cells"] = cells
 					table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
+					table["page"] = table["page"] + 1
 					result.append(table)
 					jfile.seek(0)
 					jfile.write(json.dumps(result))
