@@ -6,7 +6,7 @@ import numpy as np
 import time, datetime
 import os, random
 import ast
-import imagio
+import imageio
 from sklearn.metrics import precision_score, \
     recall_score, confusion_matrix, classification_report, \
     accuracy_score, f1_score
