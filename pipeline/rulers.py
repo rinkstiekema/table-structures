@@ -64,20 +64,20 @@ def get_hough_lines(img):
 	return lines
 
 def line_intersection(line1, line2, regionBoundary):
-    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
-    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+	xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+	ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
 
-    def det(a, b):
-        return a[0] * b[1] - a[1] * b[0]
+	def det(a, b):
+		return a[0] * b[1] - a[1] * b[0]
 
-    div = det(xdiff, ydiff)
-    if div == 0:
-       return false
+	div = det(xdiff, ydiff)
+	if div == 0:
+		return false
 
-    d = (det(*line1), det(*line2))
-    x = int(det(d, xdiff) / div)
-    y = int(det(d, ydiff) / div)
-		
+	d = (det(*line1), det(*line2))
+	x = int(det(d, xdiff) / div)
+	y = int(det(d, ydiff) / div)
+
 	# Check if intersection is at line segments
 	if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or y > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
 		return False
