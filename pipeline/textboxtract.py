@@ -39,43 +39,44 @@ def texboxtract(pdf, tables):
 
 def texboxtract_pdffigures(pdf, tables):
     for table in tables:
-        doc = fitz.open(pdf)
-        page = doc[int(table["page"])-1]
-        words = page.getTextWords()
-        for idx, cell in enumerate(table["cells"]):
-            rect = [cell[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"], cell[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]
-            
-            # rect = validify_rect(rect, table["regionBoundary"])
-            # if not rect:
-            #     pass
+        try:
+            doc = fitz.open(pdf)
+            page = doc[int(table["page"])-1]
+            words = page.getTextWords()
+            for idx, cell in enumerate(table["cells"]):
+                rect = [cell[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"], cell[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]
+                
+                # rect = validify_rect(rect, table["regionBoundary"])
+                # if not rect:
+                #     pass
 
-            mywords = [w for w in words if fitz.Rect([(w[0]+w[2])/2,(w[1]+w[3])/2,(w[0]+w[2])/2+1,(w[1]+w[3])/2+1]) in fitz.Rect(rect)]
-            mywords.sort(key = itemgetter(3, 0))   # sort by y1, x0 of the word rect
-            group = groupby(mywords, key = itemgetter(3))
-            
-            result = ""
-            for y1, gwords in group:
-                result += " ".join(w[4] for w in gwords)
-            cell = {"rect": [(rect[0], rect[1]), (rect[2], rect[3])], "words": result}
-            table["cells"][idx] = cell
+                mywords = [w for w in words if fitz.Rect([(w[0]+w[2])/2,(w[1]+w[3])/2,(w[0]+w[2])/2+1,(w[1]+w[3])/2+1]) in fitz.Rect(rect)]
+                mywords.sort(key = itemgetter(3, 0))   # sort by y1, x0 of the word rect
+                group = groupby(mywords, key = itemgetter(3))
+                
+                result = ""
+                for y1, gwords in group:
+                    result += " ".join(w[4] for w in gwords)
+                cell = {"rect": [(rect[0], rect[1]), (rect[2], rect[3])], "words": result}
+                table["cells"][idx] = cell
+        except Exception as e:
+            print("Error when extracting text for %s | error: %s"%(table["name"], e))
+            continue
     return tables
 
 def extract_pdffigures(json_folder, pdf_folder):
     for json_file in os.listdir(json_folder):
         json_file_location = os.path.join(json_folder, json_file)
         with open(json_file_location, 'r+') as jfile:
-            try:
-                tables = json.load(jfile)
-                file_name = os.path.splitext(json_file)[0]
-                pdf_location = os.path.join(pdf_folder, file_name) + ".pdf"
-                tables = texboxtract_pdffigures(pdf_location, tables)
+            tables = json.load(jfile)
+            file_name = os.path.splitext(json_file)[0]
+            pdf_location = os.path.join(pdf_folder, file_name) + ".pdf"
+            tables = texboxtract_pdffigures(pdf_location, tables)
 
-                jfile.seek(0)
-                jfile.write(json.dumps(tables))
-                jfile.truncate()
-            except Exception as e:
-                print("Error when extracting text for %s | error: %s"%(json_file, e))
-                continue
+            jfile.seek(0)
+            jfile.write(json.dumps(tables))
+            jfile.truncate()
+
 
 def extract(json_folder, pdf_folder):
     for json_file in os.listdir(json_folder):
