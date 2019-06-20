@@ -149,6 +149,7 @@ def rule_pdffigures(json_folder, outlines_folder):
 					jfile.write(json.dumps(result))
 					jfile.truncate()
 				except Exception as e:
+					print("Error when ruling for %s | error: %s" % (json_file, e))
 					continue
 
 def rule(json_folder, outlines_folder):
