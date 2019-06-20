@@ -72,7 +72,7 @@ def line_intersection(line1, line2, regionBoundary):
 
 	div = det(xdiff, ydiff)
 	if div == 0:
-		return false
+		return False
 
 	d = (det(*line1), det(*line2))
 	x = int(det(d, xdiff) / div)
