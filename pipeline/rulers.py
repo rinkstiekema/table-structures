@@ -6,6 +6,7 @@ import imageio
 import traceback
 import random
 from tqdm import tqdm
+from shapely.geometry import LineString
 
 def align(points, d):
     n = len(points)
@@ -58,26 +59,28 @@ def get_lines_img(img):
 def get_hough_lines(img):
 	# gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=10, minLineLength=1, maxLineGap=1)
-	lines = list(map(lambda x: [(x[0][0], x[0][1]),(x[0][2], x[0][3])], lines))
+	lines = list(map(lambda x: LineString((x[0][0], x[0][1]), (x[0][2], x[0][3])), lines))
 
 	# Flatten lines list
 	return lines
 
 def line_intersection(line1, line2):
-    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
-    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+	a1 = line1[1][1] - line1[0][1]
+	b1 =  line1[0][0] - line1[1][0]
+	c1 = a1*line1[0][0] + b1*line1[0][1]; 
 
-    def det(a, b):
-        return a[0] * b[1] - a[1] * b[0]
+	a2 = line2[1][1] - line2[0][1]
+	b2 =  line2[0][0] - line2[1][0]
+	c2 = a2*line2[0][0] + b2*line2[0][1]; 
 
-    div = det(xdiff, ydiff)
-    if div == 0:
-       raise Exception('lines do not intersect')
+	determinant = a1*b2 - a2*b1; 
 
-    d = (det(*line1), det(*line2))
-    x = int(det(d, xdiff) / div)
-    y = int(det(d, ydiff) / div)
-    return x, y
+	if determinant == 0:
+		return False
+	else:
+		x = (b2*c1 - b1*c2)/determinant; 
+		y = (a1*c2 - a2*c1)/determinant; 
+		return x,y
 
 def find_cell(intersection, intersections):
 	for i in intersections:
@@ -106,10 +109,10 @@ def get_intersections(lines):
 	intersection_points = []
 	for idx, i in enumerate(lines):
 		for j in lines[idx+1:]:
-			try:
-				intersection_points.append(line_intersection(i, j))
-			except Exception as e:
+			intersection = line_intersection(i, j)
+			if not intersection:
 				continue
+			intersection_points.append(intersection)
 	return intersection_points
 
 def get_cells(intersection_points):
