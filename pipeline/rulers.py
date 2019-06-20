@@ -97,9 +97,9 @@ def preprocess_image(img):
 	blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0, borderType=cv2.BORDER_REFLECT)
 	low_threshold = 50
 	high_threshold = 150
-	img = cv2.Canny(gray, low_threshold, high_threshold)
+	img = cv2.Canny(gray, low_threshold, high_threshold, borderType=cv2.BORDER_REFLECT)
 	kernel = np.ones((3,3),np.uint8)
-	img = cv2.dilate(img, kernel,iterations = 1)
+	img = cv2.dilate(img, kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
 	kernel = np.ones((5,5),np.uint8)
 	return cv2.erode(img,kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
 
