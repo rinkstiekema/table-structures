@@ -93,15 +93,15 @@ def find_cell(intersection, intersections):
 
 def preprocess_image(img):
 	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	# kernel_size = 5
-	# blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+	kernel_size = 5
+	blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0, borderType=cv2.BORDER_REFLECT)
 	low_threshold = 50
 	high_threshold = 150
 	img = cv2.Canny(gray, low_threshold, high_threshold)
 	kernel = np.ones((3,3),np.uint8)
 	img = cv2.dilate(img, kernel,iterations = 1)
 	kernel = np.ones((5,5),np.uint8)
-	return cv2.erode(img,kernel,iterations = 1)
+	return cv2.erode(img,kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
 
 def get_intersections(lines):
 	intersection_points = []
