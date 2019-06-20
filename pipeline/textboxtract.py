@@ -43,7 +43,7 @@ def texboxtract_pdffigures(pdf, tables):
         page = doc[int(table["page"])-1]
         words = page.getTextWords()
         for idx, cell in enumerate(table["cells"]):
-            rect = [cell[0][0]*0.75+table["regionBoundary"]["x1"], cell[0][1]*0.75+table["regionBoundary"]["y1"], cell[1][0]*0.75+table["regionBoundary"]["x1"], cell[1][1]*0.75+table["regionBoundary"]["y1"]]
+            rect = [cell[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"], cell[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]
             
             # rect = validify_rect(rect, table["regionBoundary"])
             # if not rect:
@@ -74,7 +74,7 @@ def extract_pdffigures(json_folder, pdf_folder):
                 jfile.write(json.dumps(tables))
                 jfile.truncate()
             except Exception as e:
-                print("Error for %s, error: %s"%(json_file, e))
+                print("Error for %s, table %i | error: %s"%(json_file, , e))
                 continue
 
 def extract(json_folder, pdf_folder):
