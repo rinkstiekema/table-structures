@@ -81,7 +81,7 @@ def line_intersection(line1, line2, regionBoundary):
 		y = (a1*c2 - a2*c1)/determinant; 
 		
 		# Check if intersection is at line segments
-		if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or x > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
+		if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or y > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
 			return False
 		return x,y
 
