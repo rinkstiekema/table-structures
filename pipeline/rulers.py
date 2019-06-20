@@ -58,7 +58,7 @@ def get_lines_img(img):
 def get_hough_lines(img):
 	# gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=10, minLineLength=1, maxLineGap=1)
-	lines = list(map(lambda x: LineString((x[0][0], x[0][1]), (x[0][2], x[0][3])), lines))
+	lines = list(map(lambda x: [(x[0][0], x[0][1]), (x[0][2], x[0][3])], lines))
 
 	# Flatten lines list
 	return lines
