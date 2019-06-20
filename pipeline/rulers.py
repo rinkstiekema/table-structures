@@ -6,7 +6,6 @@ import imageio
 import traceback
 import random
 from tqdm import tqdm
-from shapely.geometry import LineString
 
 def align(points, d):
     n = len(points)
