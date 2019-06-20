@@ -64,7 +64,7 @@ def get_hough_lines(img):
 	return lines
 
 def line_intersection(line1, line2):
-	s = np.vstack([line1[0], line1[1], line2[0], line2[1])        # s for stacked
+	s = np.vstack([line1[0], line1[1], line2[0], line2[1]])        # s for stacked
 	h = np.hstack((s, np.ones((4, 1)))) # h for homogeneous
 	l1 = np.cross(h[0], h[1])           # get first line
 	l2 = np.cross(h[2], h[3])           # get second line
