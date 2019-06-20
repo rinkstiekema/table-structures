@@ -64,26 +64,24 @@ def get_hough_lines(img):
 	return lines
 
 def line_intersection(line1, line2, regionBoundary):
-	a1 = line1[1][1] - line1[0][1]
-	b1 =  line1[0][0] - line1[1][0]
-	c1 = a1*line1[0][0] + b1*line1[0][1]; 
+    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
 
-	a2 = line2[1][1] - line2[0][1]
-	b2 =  line2[0][0] - line2[1][0]
-	c2 = a2*line2[0][0] + b2*line2[0][1]; 
+    def det(a, b):
+        return a[0] * b[1] - a[1] * b[0]
 
-	determinant = a1*b2 - a2*b1; 
+    div = det(xdiff, ydiff)
+    if div == 0:
+       return false
 
-	if determinant == 0:
-		return False
-	else:
-		x = (b2*c1 - b1*c2)/determinant; 
-		y = (a1*c2 - a2*c1)/determinant; 
+    d = (det(*line1), det(*line2))
+    x = int(det(d, xdiff) / div)
+    y = int(det(d, ydiff) / div)
 		
-		# Check if intersection is at line segments
-		if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or y > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
-			return False
-		return x,y
+	# Check if intersection is at line segments
+	if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or y > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
+		return False
+	return x,y
 
 def find_cell(intersection, intersections):
 	for i in intersections:
