@@ -63,20 +63,17 @@ def get_hough_lines(img):
 	# Flatten lines list
 	return lines
 
-def line_intersection(line1, line2, regionBoundary):
-	xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
-	ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
-
-	def det(a, b):
-		return a[0] * b[1] - a[1] * b[0]
-
-	div = det(xdiff, ydiff)
-	if div == 0:
+def line_intersection(line1, line2):
+	s = np.vstack([line1[0], line1[1], line2[0], line2[1])        # s for stacked
+	h = np.hstack((s, np.ones((4, 1)))) # h for homogeneous
+	l1 = np.cross(h[0], h[1])           # get first line
+	l2 = np.cross(h[2], h[3])           # get second line
+	x, y, z = np.cross(l1, l2)          # point of intersection
+	if z == 0:                          # lines are parallel
 		return False
 
-	d = (det(*line1), det(*line2))
-	x = int(det(d, xdiff) / div)
-	y = int(det(d, ydiff) / div)
+	x = x/z
+	y = y/z
 
 	# Check if intersection is at line segments
 	if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or y > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
@@ -106,11 +103,11 @@ def preprocess_image(img):
 	kernel = np.ones((5,5),np.uint8)
 	return cv2.erode(img,kernel,iterations = 1)
 
-def get_intersections(lines, regionBoundary):
+def get_intersections(lines):
 	intersection_points = []
 	for idx, i in enumerate(lines):
 		for j in lines[idx+1:]:
-			intersection = line_intersection(i, j, regionBoundary)
+			intersection = line_intersection(i, j)
 			if not intersection:
 				continue
 			intersection_points.append(intersection)
@@ -140,7 +137,7 @@ def rule_pdffigures(json_folder, outlines_folder):
 					img = preprocess_image(img)
 					lines = get_hough_lines(img)
 
-					intersection_points = get_intersections(lines, table["regionBoundary"])
+					intersection_points = get_intersections(lines)
 					intersection_points = unique_intersections(intersection_points)
 
 					cells = get_cells(intersection_points)
