@@ -43,7 +43,7 @@ def texboxtract_pdffigures(pdf, tables):
         page = doc[int(table["page"])-1]
         words = page.getTextWords()
         for idx, cell in enumerate(table["cells"]):
-            rect = [(cell[0][0]+table["regionBoundary"]["x1"])*72/table["dpi"], (cell[0][1]+table["regionBoundary"]["y1"])*72/table["dpi"], (cell[1][0]+table["regionBoundary"]["x1"])*72/table["dpi"], (cell[1][1]+table["regionBoundary"]["y1"])*72/table["dpi"]]
+            rect = [cell[0][0]*0.75+table["regionBoundary"]["x1"], cell[0][1]*0.75+table["regionBoundary"]["y1"], cell[1][0]*0.75+table["regionBoundary"]["x1"], cell[1][1]*0.75+table["regionBoundary"]["y1"]]
             
             rect = validify_rect(rect, table["regionBoundary"])
             if not rect:
