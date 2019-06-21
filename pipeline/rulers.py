@@ -76,7 +76,7 @@ def line_intersection(line1, line2):
 	y = y/z
 
 	# Check if intersection is at line segments
-	if(x < min([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or x > max([line1[0][0], line1[1][0], line2[0][0], line2[1][0]]) or y < min([line1[0][1], line1[1][1], line2[0][1], line2[1][1]]) or y > max([line1[0][1], line1[1][1], line2[0][1], line2[1][1]])):
+	if(x < 0 or x > 1024 or y < 0 or y > 1024):
 		return False
 	return x,y
 
@@ -92,12 +92,10 @@ def find_cell(intersection, intersections):
 	return None
 
 def preprocess_image(img):
-	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	kernel_size = 5
-	blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0, borderType=cv2.BORDER_REFLECT)
+	img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	low_threshold = 50
 	high_threshold = 150
-	img = cv2.Canny(gray, low_threshold, high_threshold)
+	img = cv2.Canny(img, low_threshold, high_threshold)
 	kernel = np.ones((3,3),np.uint8)
 	img = cv2.dilate(img, kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
 	kernel = np.ones((5,5),np.uint8)
