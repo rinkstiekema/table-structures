@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 json_data = json.load(jfile)
                 for table in json_data:
                     area = table["regionBoundary"]
-                    area = [area["y1"], area["x1"], area["y2"], area["x2"]]
+                    area = [792-area["y1"], area["x1"], 792-area["y2"], area["x2"]]
                     try:            
                         df = read_pdf(pdf_path, pages=table["page"], area=area, guess=False, silent=True)
                         if df is not None and not df.empty:
