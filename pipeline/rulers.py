@@ -63,7 +63,7 @@ def get_hough_lines(img):
 	# Flatten lines list
 	return lines
 
-def line_intersection(line1, line2):
+def line_intersection(line1, line2, regionBoundary):
 	s = np.vstack([line1[0], line1[1], line2[0], line2[1]])        # s for stacked
 	h = np.hstack((s, np.ones((4, 1)))) # h for homogeneous
 	l1 = np.cross(h[0], h[1])           # get first line
@@ -74,9 +74,12 @@ def line_intersection(line1, line2):
 
 	x = x/z
 	y = y/z
+	
+	max_x = (regionBoundary["x2"] - regionBoundary["x1"])*72/150
+	max_y = (regionBoundary["y2"] - regionBoundary["y1"])*72/150
 
-	# Check if intersection is at line segments
-	if(x < 0 or x > 1024 or y < 0 or y > 1024):
+	# Check if intersection is within regionBoundary
+	if(x < 0 or x > max_x or y < 0 or y > max_y):
 		return False
 	return x,y
 
@@ -101,11 +104,11 @@ def preprocess_image(img):
 	kernel = np.ones((5,5),np.uint8)
 	return cv2.erode(img,kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
 
-def get_intersections(lines):
+def get_intersections(lines, regionBoundary):
 	intersection_points = []
 	for idx, i in enumerate(lines):
 		for j in lines[idx+1:]:
-			intersection = line_intersection(i, j)
+			intersection = line_intersection(i, j, regionBoundary)
 			if not intersection:
 				continue
 			intersection_points.append(intersection)
@@ -136,7 +139,7 @@ def rule_pdffigures(json_folder, outlines_folder):
 					
 					lines = get_hough_lines(img)
 
-					intersection_points = get_intersections(lines)
+					intersection_points = get_intersections(lines, table["regionBoundary"])
 					intersection_points = unique_intersections(intersection_points)
 
 					cells = get_cells(intersection_points)
