@@ -47,7 +47,7 @@ if __name__ == '__main__':
                     area = table["regionBoundary"]
                     area = [area["x1"], area["y1"], area["x2"], area["y2"]]
                     try:            
-                        df = read_pdf(pdf_path, pages=table["page"], area=area, silent=True)
+                        df = read_pdf(pdf_path, pages=table["page"], area=area, guess=False, silent=True)
                         if df is not None and not df.empty:
                             df.to_csv(os.path.join(results_folder, table["name"]+'.csv'))
                     except Exception as e:
