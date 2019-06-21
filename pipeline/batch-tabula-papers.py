@@ -47,7 +47,7 @@ if __name__ == '__main__':
                     area = table["regionBoundary"]
                     area = str(area["x1"]) + "," + str(area["y1"]) + "," + str(area["x2"]) + "," + str(area["y2"])
                     try:            
-                        df = read_pdf(pdf_path, pages=table["page"], java_options="--area "+area silent=True)
+                        df = read_pdf(pdf_path, pages=table["page"], java_options="--area "+area, silent=True)
                         if df is not None and not df.empty:
                             df.to_csv(os.path.join(results_folder, table["name"]+'.csv'))
                     except Exception as e:
