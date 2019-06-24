@@ -75,13 +75,13 @@ def line_intersection(line1, line2, regionBoundary):
 	x = x/z
 	y = y/z
 	
-	max_x = (regionBoundary["x2"] - regionBoundary["x1"])*72/150
-	max_y = (regionBoundary["y2"] - regionBoundary["y1"])*72/150
+	max_x = (regionBoundary["x2"] - regionBoundary["x1"])/72*150
+	max_y = (regionBoundary["y2"] - regionBoundary["y1"])/72*150
 
 	# Check if intersection is within regionBoundary
 	if(x < 0 or x > max_x or y < 0 or y > max_y):
 		return False
-	return x,y
+	return x,y125.28
 
 def find_cell(intersection, intersections):
 	for i in intersections:
