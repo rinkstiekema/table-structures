@@ -57,7 +57,7 @@ def texboxtract_pdffigures(pdf, tables):
                 result = ""
                 for y1, gwords in group:
                     result += " ".join(w[4] for w in gwords)
-                cell = {"rect": [(rect[0], rect[1]), (rect[2], rect[3])], "words": result}
+                cell = {"cell": cell, "rect": [(rect[0], rect[1]), (rect[2], rect[3])], "words": result}
                 table["cells"][idx] = cell
         except Exception as e:
             print("Error when extracting text for %s | error: %s"%(table["name"], e))
