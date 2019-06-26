@@ -41,7 +41,7 @@ def texboxtract_pdffigures(pdf, tables):
     for table in tables:
         try:
             doc = fitz.open(pdf)
-            page = doc[int(table["page"])-1]
+            page = doc[int(table["page"])]
             words = page.getTextWords()
             for idx, cell in enumerate(table["cells"]):
                 rect = [cell[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"], cell[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]
