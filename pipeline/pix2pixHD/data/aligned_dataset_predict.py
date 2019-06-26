@@ -11,7 +11,7 @@ class AlignedDatasetPredict(BaseDataset):
         self.root = opt.dataroot    
 
         ### input A (label maps)
-        self.dir_A = os.path.join(opt.dataroot, 'png', opt.mode)
+        self.dir_A = os.path.join(opt.dataroot, 'png')
         self.A_paths = sorted(make_dataset(self.dir_A))
         print("Found %s images" % len(self.A_paths))
 
