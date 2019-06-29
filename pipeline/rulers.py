@@ -56,11 +56,8 @@ def get_lines_img(img):
 	return output_img
 
 def get_hough_lines(img):
-	# gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=10, minLineLength=1, maxLineGap=1)
+	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=5, minLineLength=1, maxLineGap=1)
 	lines = list(map(lambda x: [(x[0][0], x[0][1]), (x[0][2], x[0][3])], lines))
-
-	# Flatten lines list
 	return lines
 
 def line_intersection(line1, line2, regionBoundary):
@@ -81,7 +78,7 @@ def line_intersection(line1, line2, regionBoundary):
 	# Check if intersection is within regionBoundary
 	if(x < -20 or x > max_x or y < -20 or y > max_y):
 		return False
-	return x,y
+	return int(x), int(y)
 
 def find_cell(intersection, intersections):
 	for i in intersections:
@@ -96,13 +93,15 @@ def find_cell(intersection, intersections):
 
 def preprocess_image(img):
 	img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	img = cv2.copyMakeBorder(img,10,10,10,10,cv2.BORDER_CONSTANT,value=(255,255,255))
 	low_threshold = 50
 	high_threshold = 150
 	img = cv2.Canny(img, low_threshold, high_threshold)
 	kernel = np.ones((3,3),np.uint8)
-	img = cv2.dilate(img, kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
+	img = cv2.dilate(img, kernel, iterations = 1)
 	kernel = np.ones((5,5),np.uint8)
-	return cv2.erode(img,kernel,iterations = 1, borderType=cv2.BORDER_REFLECT)
+	img = cv2.erode(img,kernel, iterations = 1, borderType=cv2.BORDER_CONSTANT)
+	return img[10:len(img[0])-10, 10:len(img[1])-10]
 
 def get_intersections(lines, regionBoundary):
 	intersection_points = []
@@ -116,12 +115,19 @@ def get_intersections(lines, regionBoundary):
 
 def get_cells(intersection_points):
 	cells = []
-	intersection_points.sort()
 
-	for idx, i in enumerate(intersection_points):
-		cell = find_cell(i, intersection_points[idx:])
-		if cell:
-			cells.append(cell)
+	x_points = list(map(lambda item: item[0], intersection_points))
+	y_points = list(map(lambda item: item[1], intersection_points))
+	# x_points = list(set(sorted(filter(lambda x: x_points.count(x) > 3, x_points))))
+	# y_points = list(set(sorted(filter(lambda y: y_points.count(y) > 3, y_points))))
+	x_points = sorted(list(set(x_points)))
+	y_points = sorted(list(set(y_points)))
+	
+	for idx_y, y in enumerate(y_points[:-1]):
+		for idx_x, x in enumerate(x_points[:-1]):
+			cells.append([(x,y), (x_points[idx_x+1],y_points[idx_y+1])])
+	cells = list(filter(lambda cell: cell[1][0] - cell[0][0] > 10 and cell[1][1] - cell[0][1] > 10, cells))
+
 	return cells
 
 def rule_pdffigures(json_folder, outlines_folder):
@@ -134,15 +140,26 @@ def rule_pdffigures(json_folder, outlines_folder):
 			tables = json.load(jfile) # current json file
 			for table in tables:
 				try:
-					img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines")+".png")
+					img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines")+".png")	
 					img = preprocess_image(img)
-					
+
 					lines = get_hough_lines(img)
 
 					intersection_points = get_intersections(lines, table["regionBoundary"])
 					intersection_points = unique_intersections(intersection_points)
 
 					cells = get_cells(intersection_points)
+
+					# cv2.imshow('a', img)
+					# copy = cv2.cvtColor(img.copy(),cv2.COLOR_GRAY2RGB)
+					# for i in intersection_points:
+					# 	copy = cv2.circle(copy, i, 3, (255,0,0), -1)
+					# for i in cells:
+					# 	print(i)
+					# 	x = cv2.rectangle(copy.copy(), i[0], i[1], (0, 255, 0), 1)
+					# 	cv2.imshow('image', x)
+					# 	cv2.waitKey(0)
+					# 	cv2.destroyAllWindows()
 
 					table["cells"] = cells
 					table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
