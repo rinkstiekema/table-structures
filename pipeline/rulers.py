@@ -162,8 +162,8 @@ def rule_json_file(json_folder, json_file):
 def rule_pdffigures(json_folder, outlines_folder):
 	json_file_list = os.listdir(json_folder)
 
-    pool = Pool()                         
-    pool.map(partial(rule_json_file, json_folder=json_folder), json_file_list)
+	pool = Pool()                         
+	pool.map(partial(rule_json_file, json_folder=json_folder), json_file_list)
 
 
 def rule(json_folder, outlines_folder):
