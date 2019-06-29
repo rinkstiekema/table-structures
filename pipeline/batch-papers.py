@@ -21,7 +21,7 @@ def remove_from_json(json_folder, name):
 		jfile.write(json.dumps(tables))
 		jfile.truncate()
 
-def init_folders(base_folder):
+def init_folders(base_folder, model):
 	pdf_folder = os.path.join(base_folder, "pdf")
 	if not os.path.exists(pdf_folder):
 		os.makedirs(pdf_folder)
@@ -34,11 +34,11 @@ def init_folders(base_folder):
 	if not os.path.exists(png_folder):
 		os.makedirs(png_folder)
 
-	outlines_folder = os.path.join(base_folder, "outlines")
+	outlines_folder = os.path.join(base_folder, "outlines_"+model)
 	if not os.path.exists(outlines_folder):
 		os.makedirs(outlines_folder)
 
-	results_folder = os.path.join(base_folder, "csv_pred")
+	results_folder = os.path.join(base_folder, "csv_pred_"+model)
 	if not os.path.exists(results_folder):
 		os.makedirs(results_folder)
 
@@ -46,7 +46,7 @@ def init_folders(base_folder):
 
 if __name__ == '__main__':
 	opt = Options().parse()
-	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot)
+	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot, opt.model)
 
 	if not opt.skip_generate_images:
 		print("Generating images")
