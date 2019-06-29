@@ -132,7 +132,7 @@ def get_cells(intersection_points):
 
 	return cells
 
-def rule_json_file(json_folder, json_file):
+def rule_json_file(json_file, json_folder):
 	json_file_location = os.path.join(json_folder, json_file)
 	with open(json_file_location, 'r+') as jfile:
 		result = [] # eventually new json file
