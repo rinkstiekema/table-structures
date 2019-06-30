@@ -178,29 +178,16 @@ def rule(json_folder, outlines_folder):
 				try:
 					img = cv2.imread(os.path.join(outlines_folder, table["name"]+'.png'))
 					img = preprocess_image(img)
+
 					lines = get_hough_lines(img)
 
-					intersection_points = get_intersections(lines)
+					intersection_points = get_intersections(lines, table["regionBoundary"])
 					intersection_points = unique_intersections(intersection_points)
 
-					# copy = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
-					# for intersection_point in intersection_points:
-					# 	cv2.circle(copy, intersection_point, 2, (255,0,255), -1)
-					# cv2.imshow(table["name"], copy)
-					# cv2.waitKey(0)
-					# cv2.destroyAllWindows()
-
 					cells = get_cells(intersection_points)
-					
-					# for cell in cells:
-					# 	print(cell)
-					# 	cv2.rectangle(copy, (cell[0][0], cell[0][1]), (cell[1][0], cell[1][1]), (random.randint(0,255), random.randint(0,255), random.randint(0,255)), 1)
-					# cv2.imshow(table["name"], copy)
-					# cv2.waitKey(0)
-					# cv2.destroyAllWindows()
-
 
 					table["cells"] = cells
+					table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
 					result.append(table)
 					jfile.seek(0)
 					jfile.write(json.dumps(result))

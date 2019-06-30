@@ -57,7 +57,7 @@ if __name__ == '__main__':
                     try:            
                         df = read_pdf(pdf_path, pages=table["page"], silent=True)
                         if df is not None and not df.empty:
-                            df.to_csv(os.path.join(results_folder, os.path.splitext(json_file_name)[0]+'.csv'))
+                            df.to_csv(os.path.join(results_folder, os.path.splitext(json_file_name)[0]+'.csv'), index=False)
                     except Exception as e:
                         print("skipping.. %s"%e)
                         continue
