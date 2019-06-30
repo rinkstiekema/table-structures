@@ -139,7 +139,7 @@ def rule_json_file(json_file, json_folder, opt):
 		tables = json.load(jfile) # current json file
 		for table in tables:
 			try:
-				img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines_"+opt.mode)+".png")	
+				img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines_"+opt.model)+".png")	
 				img = preprocess_image(img)
 
 				lines = get_hough_lines(img)
