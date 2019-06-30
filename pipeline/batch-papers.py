@@ -11,10 +11,11 @@ import textboxtract
 import json2csv
 import imageio
 from tqdm import tqdm
+from bs4 import UnicodeDammit
 
 def remove_from_json(json_folder, name):
 	base_name = os.path.splitext(name)[0]
-	with open(os.path.join(json_folder, base_name.split("-")[0]+".json"), 'r+') as jfile:
+	with open(os.path.join(json_folder, base_name.split("-")[0]+".json")) as jfile:
 		tables = json.load(jfile)
 		tables = list(filter(lambda table: not table['name'] == base_name.split("-")[-1], tables))
 		jfile.seek(0)
@@ -74,7 +75,7 @@ if __name__ == '__main__':
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
 		print("Finding cells")
-		rulers.rule_pdffigures(json_folder, outlines_folder)
+		rulers.rule_pdffigures(json_folder, outlines_folder, opt)
 
 	# Extract the text, using the bounding boxes, from the original PDF
 	if not opt.skip_extract_text:

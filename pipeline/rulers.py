@@ -132,14 +132,14 @@ def get_cells(intersection_points):
 
 	return cells
 
-def rule_json_file(json_file, json_folder):
+def rule_json_file(json_file, json_folder, opt):
 	json_file_location = os.path.join(json_folder, json_file)
 	with open(json_file_location, 'r+') as jfile:
 		result = [] # eventually new json file
 		tables = json.load(jfile) # current json file
 		for table in tables:
 			try:
-				img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines")+".png")	
+				img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines_"+opt.mode)+".png")	
 				img = preprocess_image(img)
 
 				lines = get_hough_lines(img)
@@ -159,11 +159,11 @@ def rule_json_file(json_file, json_folder):
 				print("Error when ruling for %s | error: %s" % (json_file, e))
 				continue
 
-def rule_pdffigures(json_folder, outlines_folder):
+def rule_pdffigures(json_folder, outlines_folder, opt):
 	json_file_list = os.listdir(json_folder)
 
 	pool = Pool()                         
-	pool.map(partial(rule_json_file, json_folder=json_folder), json_file_list)
+	pool.map(partial(rule_json_file, json_folder=json_folder, opt=opt), json_file_list)
 
 
 def rule(json_folder, outlines_folder):
