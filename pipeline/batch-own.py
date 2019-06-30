@@ -63,7 +63,7 @@ if __name__ == '__main__':
 	# Interpret ruling lines and write individual cells to json file
 	if not opt.skip_find_cells:
 		print("Finding cells")
-		rulers.rule(json_folder, outlines_folder)
+		rulers.rule(json_folder, outlines_folder, opt)
 
 	# Extract the text, using the bounding boxes, from the original PDF
 	if not opt.skip_extract_text:

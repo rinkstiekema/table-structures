@@ -166,32 +166,37 @@ def rule_pdffigures(json_folder, outlines_folder, opt):
 	pool.map(partial(rule_json_file, json_folder=json_folder, opt=opt), json_file_list)
 
 
-def rule(json_folder, outlines_folder):
+def rule(json_folder, outlines_folder, opt):
 	json_file_list = os.listdir(json_folder)
 
-	for json_file in json_file_list:
-		json_file_location = os.path.join(json_folder, json_file)
-		with open(json_file_location, 'r+') as jfile:
-			result = [] # eventually new json file
-			tables = json.load(jfile) # current json file
-			for table in tables:
-				try:
-					img = cv2.imread(os.path.join(outlines_folder, table["name"]+'.png'))
-					img = preprocess_image(img)
+	pool = Pool()                         
+	pool.map(partial(rule_json_file, json_folder=json_folder, opt=opt), json_file_list)
+	
+	json_file_list = os.listdir(json_folder)
 
-					lines = get_hough_lines(img)
+	# for json_file in json_file_list:
+	# 	json_file_location = os.path.join(json_folder, json_file)
+	# 	with open(json_file_location, 'r+') as jfile:
+	# 		result = [] # eventually new json file
+	# 		tables = json.load(jfile) # current json file
+	# 		for table in tables:
+	# 			try:
+	# 				img = cv2.imread(os.path.join(outlines_folder, table["name"]+'.png'))
+	# 				img = preprocess_image(img)
 
-					intersection_points = get_intersections(lines, table["regionBoundary"])
-					intersection_points = unique_intersections(intersection_points)
+	# 				lines = get_hough_lines(img)
 
-					cells = get_cells(intersection_points)
+	# 				intersection_points = get_intersections(lines, table["regionBoundary"])
+	# 				intersection_points = unique_intersections(intersection_points)
 
-					table["cells"] = cells
-					table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
-					result.append(table)
-					jfile.seek(0)
-					jfile.write(json.dumps(result))
-					jfile.truncate()
-				except Exception as e:
-					print("Skipping step", traceback.format_exc())
-					continue
+	# 				cells = get_cells(intersection_points)
+
+	# 				table["cells"] = cells
+	# 				table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
+	# 				result.append(table)
+	# 				jfile.seek(0)
+	# 				jfile.write(json.dumps(result))
+	# 				jfile.truncate()
+	# 			except Exception as e:
+	# 				print("Skipping step", traceback.format_exc())
+	# 				continue
