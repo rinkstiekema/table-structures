@@ -10,24 +10,24 @@ import textboxtract
 import json2csv
 from tqdm import tqdm
 
-def init_folders(base_folder, mode):
-	pdf_folder = os.path.join(base_folder, "pdf", mode)
+def init_folders(base_folder, model):
+	pdf_folder = os.path.join(base_folder, "pdf")
 	if not os.path.exists(pdf_folder):
 		os.makedirs(pdf_folder)
 
-	json_folder = os.path.join(base_folder, "json", mode)
+	json_folder = os.path.join(base_folder, "json")
 	if not os.path.exists(json_folder):
 		os.makedirs(json_folder)
 
-	png_folder = os.path.join(base_folder, "png", mode)
+	png_folder = os.path.join(base_folder, "png")
 	if not os.path.exists(png_folder):
 		os.makedirs(png_folder)
 
-	outlines_folder = os.path.join(base_folder, "outlines", mode)
+	outlines_folder = os.path.join(base_folder, "outlines_"+model)
 	if not os.path.exists(outlines_folder):
 		os.makedirs(outlines_folder)
 
-	results_folder = os.path.join(base_folder, "csv_pred", mode)
+	results_folder = os.path.join(base_folder, "csv_pred_"+model)
 	if not os.path.exists(results_folder):
 		os.makedirs(results_folder)
 
@@ -48,7 +48,7 @@ def add_outline_url(json_folder, outline_folder):
 
 if __name__ == '__main__':
 	opt = Options().parse()
-	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot, opt.mode)
+	pdf_folder, json_folder, png_folder, outlines_folder, results_folder = init_folders(opt.dataroot, opt.model)
 
 	# Process the tables, add outline URL to respective JSON file
 	if not opt.skip_predict:
