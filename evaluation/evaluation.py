@@ -108,13 +108,16 @@ if __name__ == '__main__':
     result_list = []
     for path in tqdm(os.listdir(pred_path)):
         try:
-            df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
+            df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'), index_col=0, dtype=str)
             df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
-
+            
             # drop completely empty rows and columns
             df_pred = df_pred.dropna(how='all', axis=0)
             df_pred = df_pred.dropna(how='all', axis=1)
 
+            print(df_pred)
+            print(df_gt)
+            exit()
             if mode == 'bleu':
                 result_list.append(calc_bleu(df_pred, df_gt))
             else:
