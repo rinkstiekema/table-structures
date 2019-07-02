@@ -149,7 +149,7 @@ def rule_json_file(json_file, json_folder, opt):
 
 				cells = get_cells(intersection_points)
 
-				table["cells"] = cells
+				table["cells"] = list(map(lambda x: {"cell": x}, cells))
 				table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
 				result.append(table)
 				jfile.seek(0)
@@ -158,7 +158,6 @@ def rule_json_file(json_file, json_folder, opt):
 			except Exception as e:
 				print("Error when ruling for %s | error: %s" % (json_file, e))
 				continue
-
 
 def rule_pdffigures(json_folder, outlines_folder, opt):
 	json_file_list = os.listdir(json_folder)
@@ -172,5 +171,4 @@ def rule(json_folder, outlines_folder, opt):
 
 	pool = Pool(5)                         
 	pool.map(partial(rule_json_file, json_folder=json_folder, opt=opt), json_file_list)
-	
 	json_file_list = os.listdir(json_folder)

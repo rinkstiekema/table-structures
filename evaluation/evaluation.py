@@ -110,9 +110,7 @@ if __name__ == '__main__':
         try:
             df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
             df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
-            print(df_pred)
-            print(df_gt)
-            exit()
+
             # drop completely empty rows and columns
             df_pred = df_pred.dropna(how='all', axis=0)
             df_pred = df_pred.dropna(how='all', axis=1)

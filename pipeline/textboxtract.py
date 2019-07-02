@@ -25,7 +25,7 @@ def texboxtract(pdf, tables):
             page = doc[table["page"]-1]
             words = page.getTextWords()
             for idx, cell in enumerate(table["cells"]):
-                rect = [cell[0][0]+table["regionBoundary"]["x1"], cell[0][1]+table["regionBoundary"]["y1"], cell[1][0]+table["regionBoundary"]["x1"], cell[1][1]+table["regionBoundary"]["y1"]]
+                rect = [cell["cell"][0][0]+table["regionBoundary"]["x1"], cell["cell"][0][1]+table["regionBoundary"]["y1"], cell["cell"][1][0]+table["regionBoundary"]["x1"], cell["cell"][1][1]+table["regionBoundary"]["y1"]]
                 rect = list(map(lambda i: i*72/table["dpi"], rect))
                 # rect = validify_rect(rect, table["regionBoundary"])
                 # if not rect:
