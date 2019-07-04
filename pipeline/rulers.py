@@ -103,7 +103,9 @@ def preprocess_image(img):
 	img = cv2.dilate(img, kernel, iterations = 1)
 	kernel = np.ones((5,5),np.uint8)
 	img = cv2.erode(img,kernel, iterations = 1, borderType=cv2.BORDER_CONSTANT)
-	return img[10:len(img[0])-10, 10:len(img[1])-10]
+	img = img[10:len(img[0])-10, 10:len(img[1])-10]
+	img = cv2.line(img, (0,0), (1024,0), (0,0,0))
+	return img
 
 def get_intersections(lines, regionBoundary):
 	intersection_points = []
