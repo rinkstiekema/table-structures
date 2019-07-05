@@ -151,7 +151,7 @@ def rule_json_file(json_file, json_folder, opt):
 
 				cells = get_cells(intersection_points)
 
-				table["cells"] = list(map(lambda x: {"cell": x}, cells))
+				table["cells"] = cells
 				table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
 				result.append(table)
 				jfile.seek(0)
