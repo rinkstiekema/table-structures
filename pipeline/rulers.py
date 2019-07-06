@@ -155,12 +155,13 @@ def rule_json_file(json_file, json_folder, opt):
 				table["cells"] = cells
 				table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
 				result.append(table)
-				jfile.seek(0)
-				jfile.write(json.dumps(result))
-				jfile.truncate()
 			except Exception as e:
 				print("Error when ruling for %s | error: %s" % (json_file, e))
 				continue
+		
+		jfile.seek(0)
+		jfile.write(json.dumps(result))
+		jfile.truncate()
 
 def rule_pdffigures(json_folder, outlines_folder, opt):
 	json_file_list = os.listdir(json_folder)
