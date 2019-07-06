@@ -76,7 +76,7 @@ def texboxtract_pdffigures(pdf, tables):
 def extract_pdffigures(json_folder, pdf_folder):
     for json_file in os.listdir(json_folder):
         json_file_location = os.path.join(json_folder, json_file)
-        open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
+        with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
             tables = json.load(jfile)
             file_name = os.path.splitext(json_file)[0]
             pdf_location = os.path.join(pdf_folder, file_name) + ".pdf"
@@ -90,7 +90,7 @@ def extract_pdffigures(json_folder, pdf_folder):
 def extract(json_folder, pdf_folder):
     for json_file in os.listdir(json_folder):
         json_file_location = os.path.join(json_folder, json_file)
-        open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
+        with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
             try:
                 tables = json.load(jfile)
                 file_name = os.path.splitext(json_file)[0]
