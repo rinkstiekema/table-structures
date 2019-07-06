@@ -2,13 +2,14 @@ import os
 import numpy as np
 import pandas as pd
 import json
+import utils
 from tqdm import tqdm
 
 def json2csv(json_folder, csv_folder):
     for json_file in os.listdir(json_folder):
         try:
             json_location = os.path.join(json_folder, json_file)
-            with open(json_location, 'r+') as jfile:
+            with open(json_location, 'r+' encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
                 tables = json.load(jfile)
                 
                 for table in tables:
