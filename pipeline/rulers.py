@@ -5,15 +5,10 @@ import cv2
 import imageio
 import traceback
 import random
+import utils
 from multiprocessing import Pool
 from functools import partial
 from tqdm import tqdm
-from chardet import detect
-
-def get_encoding_type(file):
-    with open(file, 'rb') as f:
-        rawdata = f.read()
-    return detect(rawdata)['encoding']
 
 def align(points, d):
     n = len(points)
@@ -142,7 +137,7 @@ def get_cells(intersection_points):
 
 def rule_json_file(json_file, json_folder, opt):
 	json_file_location = os.path.join(json_folder, json_file)
-	with open(json_file_location, 'r+', encoding=get_encoding_type(json_file_location), errors='ignore') as jfile:
+	with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
 		result = [] # eventually new json file
 		tables = json.load(jfile) # current json file
 		for table in tables:
