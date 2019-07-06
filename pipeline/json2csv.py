@@ -34,6 +34,7 @@ def json2csv(json_folder, csv_folder):
                     df = df.dropna(how='all', axis=1)
                     df.to_csv(os.path.join(csv_folder, table["name"]+'.csv'), index=False, header=False)
         except Exception as e:
+            print(e)
             continue
 
 
