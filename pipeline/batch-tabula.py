@@ -45,7 +45,6 @@ if __name__ == '__main__':
 	# Create CSV files from the extracted text and locations of said text
     if not opt.skip_create_csv:
         for json_file_name in tqdm(os.listdir(json_folder)):
-            print(json_file_name)
             json_path = os.path.join(json_folder, json_file_name)
             pdf_path = os.path.join(pdf_folder, os.path.splitext(json_file_name)[0]+'.pdf')
 
