@@ -8,19 +8,19 @@ import textboxtract
 from tqdm import tqdm
 
 def init_folders(base_folder, mode):
-    pdf_folder = os.path.join(base_folder, "pdf", mode)
+    pdf_folder = os.path.join(base_folder, "pdf")
     if not os.path.exists(pdf_folder):
         os.makedirs(pdf_folder)
 
-    json_folder = os.path.join(base_folder, "json", mode)
+    json_folder = os.path.join(base_folder, "json")
     if not os.path.exists(json_folder):
         os.makedirs(json_folder)
 
-    png_folder = os.path.join(base_folder, "png", mode)
+    png_folder = os.path.join(base_folder, "png")
     if not os.path.exists(png_folder):
         os.makedirs(png_folder)
 
-    results_folder = os.path.join(base_folder, "csv_tabula", mode)
+    results_folder = os.path.join(base_folder, "csv_tabula")
     if not os.path.exists(results_folder):
         os.makedirs(results_folder)
 
