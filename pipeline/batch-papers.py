@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
 			for table in tables:
 				try:
-					basename = os.path.splitext(paper)[0] + '-Table' + table["name"] + '-1'
+					basename = table["name"]
 					table = rulers.rule(table, opt)
 					pdf_location = os.path.join(pdf_folder, basename.split("-")[0]+'.pdf')
 					table = textboxtract.texboxtract(pdf_location, table)
