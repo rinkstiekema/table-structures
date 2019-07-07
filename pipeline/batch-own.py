@@ -63,7 +63,6 @@ if __name__ == '__main__':
 			exit(-1)
 
 	for paper in tqdm(os.listdir(json_folder)):
-		print("\n", paper, "\n")
 		json_file_location = os.path.join(json_folder, paper)
 		with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
 			tables = json.load(jfile)
