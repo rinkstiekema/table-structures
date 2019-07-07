@@ -8,6 +8,7 @@ import pad
 import rulers 
 import textboxtract
 import json2csv
+import utils
 from tqdm import tqdm
 
 def init_folders(base_folder, model):
