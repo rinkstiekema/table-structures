@@ -2,11 +2,9 @@ from operator import itemgetter
 from itertools import groupby
 import os
 import json
-import fitz
 import sys
-import time 
-import minecart
 import utils
+import fitz
 from tqdm import tqdm
 
 def texboxtract_synthetic(pdf, table):
@@ -29,8 +27,7 @@ def texboxtract_synthetic(pdf, table):
     return table
 
 def texboxtract(pdf, table):
-    doc = fitz.open(pdf)
-    page = doc[int(table["page"])]
+    page = pdf[int(table["page"])]
     words = page.getTextWords()
     for idx, cell in enumerate(table["cells"]):
         rect = [cell[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"], cell[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], cell[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]

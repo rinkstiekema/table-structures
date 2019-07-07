@@ -11,6 +11,7 @@ import textboxtract
 import json2csv
 import imageio
 import utils
+import fitz
 from tqdm import tqdm
 from bs4 import UnicodeDammit
 
@@ -78,12 +79,15 @@ if __name__ == '__main__':
 		with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
 			tables = json.load(jfile)
 
+			pdf_name = os.path.splitext(os.path.basename(table["renderURL"]))[0].split("-")[0]
+			pdf_location = os.path.join(pdf_folder, pdf_name+'.pdf')
+			pdf = fitz.open(pdf_location)
+
 			for table in tables:
 				try:
 					basename = os.path.basename(os.path.splitext(table["renderURL"])[0])
 					table = rulers.rule(table, opt)
-					pdf_location = os.path.join(pdf_folder, basename.split("-")[0]+'.pdf')
-					table = textboxtract.texboxtract(pdf_location, table)
+					table = textboxtract.texboxtract(pdf, table)
 					
 					csv = json2csv.json2csv(table)
 					csv_location = os.path.join(results_folder, basename+'.csv')
