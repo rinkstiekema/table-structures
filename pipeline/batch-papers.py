@@ -10,6 +10,8 @@ import scipy.misc
 import textboxtract
 import json2csv
 import imageio
+import utils
+import time
 from tqdm import tqdm
 from bs4 import UnicodeDammit
 
@@ -72,19 +74,25 @@ if __name__ == '__main__':
 			print("Unknown model")
 			exit(-1)
 
-	# Interpret ruling lines and write individual cells to json file
-	if not opt.skip_find_cells:
-		print("Finding cells")
-		rulers.rule_pdffigures(json_folder, outlines_folder, opt)
+	for paper in tqdm(os.listdir(json_folder)):
+		json_file_location = os.path.join(json_folder, paper)
+		with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
+			tables = json.load(jfile)
 
-	# Extract the text, using the bounding boxes, from the original PDF
-	if not opt.skip_extract_text:
-		print("Extracting text")
-		textboxtract.extract_pdffigures(json_folder, pdf_folder)
-
-	# Create CSV files from the extracted text and locations of said text
-	if not opt.skip_create_csv:
-		print("Creating csv")
-		json2csv.json2csv(json_folder, results_folder)
-
+			for table in tables:
+				try:
+					time1 = time.time()
+					basename = os.path.splitext(paper)[0] + '-Table' + table["name"] + '-1'
+					table = rulers.rule(table, opt)
+					pdf_location = os.path.join(pdf_folder, basename.split("-")[0]+'.pdf')
+					table = textboxtract.texboxtract(pdf_location, table)
+					
+					csv = json2csv.json2csv(table)
+					csv_location = os.path.join(results_folder, basename+'.csv')
+					with open(csv_location, 'w', encoding='utf-8') as csv_file:
+						csv_file.write(csv)
+						print(time.time() - time1)
+				except Exception as e:
+					print(e)
+					continue
 	print("Finished")

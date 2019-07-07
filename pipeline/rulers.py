@@ -10,53 +10,8 @@ from multiprocessing import Pool
 from functools import partial
 from tqdm import tqdm
 
-def align(points, d):
-    n = len(points)
-    for i in range(n):
-        for j in range(n):
-            if abs(points[i][0] - points[j][0]) < d:
-                mean = (points[i][0] + points[j][0]) / 2
-                points[i] = (int(mean), points[i][1])
-                points[j] = (int(mean), points[j][1])
-            if abs(points[i][1] - points[j][1]) < d:
-                mean = (points[i][1] + points[j][1]) / 2
-                points[i] = (points[i][0], int(mean))
-                points[j] = (points[j][0], int(mean))
-    return points
-
-def dist2(p1, p2):
-    return (p1[0]-p2[0])**2 + (p1[1]-p2[1])**2
-
-def fuse(points, d):
-    ret = []
-    d2 = d * d
-    n = len(points)
-    taken = [False] * n
-    for i in range(n):
-        if not taken[i]:
-            count = 1
-            point = [points[i][0], points[i][1]]
-            taken[i] = True
-            for j in range(i+1, n):
-                if dist2(points[i], points[j]) < d2:
-                    point[0] += points[j][0]
-                    point[1] += points[j][1]
-                    count+=1
-                    taken[j] = True
-            point[0] /= count
-            point[1] /= count
-            ret.append((int(point[0]), int(point[1])))
-    return ret
-
 def unique_intersections(intersections):
 	return list(set(intersections))
-
-def get_lines_img(img):
-	red = np.array([0,0,255])
-	mask = cv2.inRange(img, red, red)
-	output_img = img.copy()
-	output_img[np.where(mask==0)] = 0
-	return output_img
 
 def get_hough_lines(img):
 	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=5, minLineLength=1, maxLineGap=1)
@@ -83,17 +38,6 @@ def line_intersection(line1, line2, regionBoundary):
 		return False
 	return int(x), int(y)
 
-def find_cell(intersection, intersections):
-	for i in intersections:
-		if intersection[0] < i[0] and intersection[1] < i[1]:
-			width = i[0] - intersection[0]
-			height = i[1] - intersection[1]
-			if width < 20 or height < 10:
-				return None
-			else:
-				return (intersection, i)
-	return None
-
 def preprocess_image(img):
 	img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	img = cv2.copyMakeBorder(img,10,10,10,10,cv2.BORDER_CONSTANT,value=(255,255,255))
@@ -105,8 +49,6 @@ def preprocess_image(img):
 	kernel = np.ones((5,5),np.uint8)
 	img = cv2.erode(img,kernel, iterations = 1, borderType=cv2.BORDER_CONSTANT)
 	img = img[10:len(img[0])-10, 10:len(img[1])-10]
-	img = cv2.line(img, (0,0), (1024,0), (255,255,255))
-	img = cv2.line(img, (0,0), (0, 1024), (255,255,255))
 	return img
 
 def get_intersections(lines, regionBoundary):
@@ -136,44 +78,17 @@ def get_cells(intersection_points):
 
 	return cells
 
-def rule_json_file(json_file, json_folder, opt):
-	json_file_location = os.path.join(json_folder, json_file)
-	with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
-		result = [] # eventually new json file
-		tables = json.load(jfile) # current json file
-		for table in tables:
-			try:
-				img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines_"+opt.model)+".png")	
-				img = preprocess_image(img)
+def rule(table, opt):
+	img = cv2.imread(os.path.splitext(table["renderURL"])[0].replace("png", "outlines_"+opt.model)+".png")	
+	img = preprocess_image(img)
 
-				lines = get_hough_lines(img)
+	lines = get_hough_lines(img)
 
-				intersection_points = get_intersections(lines, table["regionBoundary"])
-				intersection_points = unique_intersections(intersection_points)
+	intersection_points = get_intersections(lines, table["regionBoundary"])
+	intersection_points = unique_intersections(intersection_points)
 
-				cells = get_cells(intersection_points)
+	cells = get_cells(intersection_points)
 
-				table["cells"] = cells
-				table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
-				result.append(table)
-			except Exception as e:
-				print("Error when ruling for %s | error: %s" % (json_file, e))
-				continue
-		
-		jfile.seek(0)
-		jfile.write(json.dumps(result))
-		jfile.truncate()
-
-def rule_pdffigures(json_folder, outlines_folder, opt):
-	json_file_list = os.listdir(json_folder)
-
-	pool = Pool(5)                         
-	pool.map(partial(rule_json_file, json_folder=json_folder, opt=opt), json_file_list)
-	pool.close()
-
-def rule(json_folder, outlines_folder, opt):
-	json_file_list = os.listdir(json_folder)
-
-	pool = Pool(5)                         
-	pool.map(partial(rule_json_file, json_folder=json_folder, opt=opt), json_file_list)
-	json_file_list = os.listdir(json_folder)
+	table["cells"] = cells
+	table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
+	return table
