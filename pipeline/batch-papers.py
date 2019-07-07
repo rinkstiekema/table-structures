@@ -82,7 +82,7 @@ if __name__ == '__main__':
 				try:
 					basename = table["name"]
 					table = rulers.rule(table, opt)
-					pdf_location = os.path.join(pdf_folder, basename.split("-")[0]+'.pdf')
+					pdf_location = os.path.join(pdf_folder, basename+'.pdf')
 					table = textboxtract.texboxtract(pdf_location, table)
 					
 					csv = json2csv.json2csv(table)
