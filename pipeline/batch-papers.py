@@ -11,7 +11,6 @@ import textboxtract
 import json2csv
 import imageio
 import utils
-import time
 from tqdm import tqdm
 from bs4 import UnicodeDammit
 
@@ -81,7 +80,6 @@ if __name__ == '__main__':
 
 			for table in tables:
 				try:
-					time1 = time.time()
 					basename = os.path.splitext(paper)[0] + '-Table' + table["name"] + '-1'
 					table = rulers.rule(table, opt)
 					pdf_location = os.path.join(pdf_folder, basename.split("-")[0]+'.pdf')
@@ -91,7 +89,6 @@ if __name__ == '__main__':
 					csv_location = os.path.join(results_folder, basename+'.csv')
 					with open(csv_location, 'w', encoding='utf-8') as csv_file:
 						csv_file.write(csv)
-						print(time.time() - time1)
 				except Exception as e:
 					print(e)
 					continue
