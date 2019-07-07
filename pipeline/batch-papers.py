@@ -79,6 +79,9 @@ if __name__ == '__main__':
 		with open(json_file_location, 'r+', encoding=utils.get_encoding_type(json_file_location), errors='ignore') as jfile:
 			tables = json.load(jfile)
 
+			if len(tables) == 0:
+				continue
+				
 			pdf_name = os.path.splitext(os.path.basename(tables[0]["renderURL"]))[0].split("-")[0]
 			pdf_location = os.path.join(pdf_folder, pdf_name+'.pdf')
 			pdf = fitz.open(pdf_location)
