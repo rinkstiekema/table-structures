@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
 			for table in tables:
 				try:
-					basename = table["name"]
+					basename = os.path.basename(os.path.splitext(table["renderURL"])[0])
 					table = rulers.rule(table, opt)
 					pdf_location = os.path.join(pdf_folder, basename.split("-")[0]+'.pdf')
 					table = textboxtract.texboxtract(pdf_location, table)
