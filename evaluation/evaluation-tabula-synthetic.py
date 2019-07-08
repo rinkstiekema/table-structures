@@ -26,7 +26,8 @@ def calc_bleu(df_pred, df_gt):
 
 def normalize_text(text):
     text = "".join(text.split())
-    return re.sub('[^a-zA-Z0-9]', '', text).upper()
+    text = text.upper()
+    return re.sub('[^a-zA-Z0-9]', '', text)
     
 def get_adjacency_relations(matrix):
     adjacency_relations = []

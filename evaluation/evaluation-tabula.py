@@ -8,6 +8,7 @@ import tabula
 from tqdm import tqdm 
 import re
 import math
+import utils
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 def calc_bleu(df_pred, df_gt):
@@ -111,10 +112,13 @@ if __name__ == '__main__':
         if not os.path.isfile(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv')):
             continue
         try:
-            df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'), dtype=str).iloc[:, 1:]
+            pred_csv = utils.open_file(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv')).read()
+            gt_csv = utils.open_file(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv')).read()
+
+            df_pred = pd.read_csv(pd.compat.StringIO(pred_csv), sep=",", dtype=str, error_bad_lines=False).iloc[:, 1:]
             df_pred.columns = [x if not x.startswith('Unnamed') else '' for x in df_pred.columns]
-            df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'), dtype=str, encoding = "ISO-8859-1")
-            
+            df_gt = pd.read_csv(pd.compat.StringIO(gt_csv), sep=",", dtype=str)
+
             # drop completely empty rows and columns
             df_pred = df_pred.dropna(how='all', axis=0)
             df_pred = df_pred.dropna(how='all', axis=1)
@@ -125,9 +129,7 @@ if __name__ == '__main__':
                 precision, recall = calc_adjacency(df_pred, df_gt)
                 result_list.append([path, precision, recall])
         except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(path, e, exc_type, fname, exc_tb.tb_lineno)
+            print(path, e)
             continue
 
     if mode == 'bleu':

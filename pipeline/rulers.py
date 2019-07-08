@@ -14,7 +14,7 @@ def unique_intersections(intersections):
 	return list(set(intersections))
 
 def get_hough_lines(img):
-	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=5, minLineLength=1, maxLineGap=1)
+	lines = cv2.HoughLinesP(image=img,rho=1,theta=np.pi/180, threshold=40, minLineLength=5, maxLineGap=1)
 	lines = list(map(lambda x: [(x[0][0], x[0][1]), (x[0][2], x[0][3])], lines))
 	return lines
 
@@ -92,3 +92,14 @@ def rule(table, opt):
 	table["cells"] = cells
 	table["name"] = os.path.splitext(os.path.basename(table["renderURL"]))[0]
 	return table
+
+def rule_test(img):
+	img = preprocess_image(img)
+
+	lines = get_hough_lines(img)
+
+	intersection_points = get_intersections(lines, {"x1":0, "x2":1024, "y1":0, "y2": 1024})
+	intersection_points = unique_intersections(intersection_points)
+
+	cells = get_cells(intersection_points)
+	return cells, intersection_points

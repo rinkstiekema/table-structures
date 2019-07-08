@@ -8,6 +8,7 @@ import tabula
 from tqdm import tqdm 
 import re
 import math
+import utils
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 def calc_bleu(df_pred, df_gt):
@@ -37,7 +38,6 @@ def get_adjacency_relations(matrix):
             if cell == '' or cell == 'nan' or "Unnamed:" in cell:
                 continue
 
-            cell = normalize_text(col)         
             next_cell_h, next_cell_v = get_next_cells(matrix, row_idx, col_idx)
 
             if not next_cell_h == None:
@@ -108,13 +108,14 @@ if __name__ == '__main__':
     cc = SmoothingFunction()
 
     result_list = []
-    for path in tqdm(os.listdir(gt_path)):
+    for path in os.listdir(gt_path):
         if not os.path.isfile(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv')):
             continue
-
         try:
-            df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
-            df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
+            pred_csv = utils.open_file(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv')).read()
+            gt_csv = utils.open_file(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv')).read()
+            df_pred = pd.read_csv(pd.compat.StringIO(pred_csv), sep=",", dtype=str)
+            df_gt = pd.read_csv(pd.compat.StringIO(gt_csv), sep=",", dtype=str)
 
             # drop completely empty rows and columns
             df_pred = df_pred.dropna(how='all', axis=0)
@@ -126,6 +127,7 @@ if __name__ == '__main__':
                 precision, recall = calc_adjacency(df_pred, df_gt)
                 result_list.append([path, precision, recall])
         except Exception as e:
+            print(path, e)
             result_list.append([path, 0, 0])
             continue
 
