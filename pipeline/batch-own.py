@@ -70,9 +70,10 @@ if __name__ == '__main__':
 			for table in tables:
 				try:
 					basename = table["name"]
-					table = rulers.rule(table, opt)
 					pdf_location = os.path.join(pdf_folder, basename+'.pdf')
-					table = textboxtract.texboxtract_synthetic(pdf_location, table)
+					pdf = fitz.open(pdf_location)
+					table = rulers.rule(table, pdf, opt)
+					table = textboxtract.texboxtract_synthetic(pdf, table)
 					
 					csv = json2csv.json2csv(table)
 					csv_location = os.path.join(results_folder, basename+'.csv')

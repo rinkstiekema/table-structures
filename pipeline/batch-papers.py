@@ -89,7 +89,7 @@ if __name__ == '__main__':
 			for table in tables:
 				try:
 					basename = os.path.basename(os.path.splitext(table["renderURL"])[0])
-					table = rulers.rule(table, opt)
+					table = rulers.rule(table, pdf, opt)
 					table = textboxtract.texboxtract(pdf, table)
 					
 					csv = json2csv.json2csv(table)
