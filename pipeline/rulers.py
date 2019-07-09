@@ -11,8 +11,6 @@ from functools import partial
 from tqdm import tqdm
 
 def validify_lines(lines, words, table):
-	print(table)
-	print(len(lines))
 	lines = [[[line[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], line[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]], [line[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], line[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]] for line in lines]
 	result = []
 	for line in lines:
@@ -25,8 +23,6 @@ def validify_lines(lines, words, table):
 			idx += 1
 		if count < 3:
 			result.append(line)
-	print(len(result))
-	exit()
 	return result
 
 def line_intersection_strict(line1, line2):
