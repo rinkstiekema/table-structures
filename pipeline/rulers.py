@@ -10,21 +10,6 @@ from multiprocessing import Pool
 from functools import partial
 from tqdm import tqdm
 
-def validify_lines(lines, words, table):
-	lines = [[[line[0][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], line[0][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]], [line[1][0]*72/table["renderDpi"]+table["regionBoundary"]["x1"], line[1][1]*72/table["renderDpi"]+table["regionBoundary"]["y1"]]] for line in lines]
-	result = []
-	for line in lines:
-		count = 0
-		idx = 0
-		while count < 3 and idx < len(words):
-			word = words[idx]
-			if line_intersection_strict(line, [[word[0], word[1]], [word[2], word[3]]]):
-				count += 1
-			idx += 1
-		if count < 3:
-			result.append(line)
-	return result
-
 def line_intersection_strict(line1, line2):
 	if line1[0][0] == line1[1][0]:
 		return line1[0][0] > line2[0][0] and line1[0][0] < line2[1][0] and line1[0][1] < line2[0][1] and line1[1][1] > line2[1][1]
@@ -106,8 +91,6 @@ def rule(table, pdf, opt):
 	lines = get_hough_lines(img)
 	page = pdf[int(table["page"])]
 	words = page.getTextWords()
-	
-	lines = validify_lines(lines, words, table)
 
 	intersection_points = get_intersections(lines, table["regionBoundary"])
 	intersection_points = unique_intersections(intersection_points)

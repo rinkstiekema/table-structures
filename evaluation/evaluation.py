@@ -41,9 +41,9 @@ def get_adjacency_relations(matrix):
             next_cell_h, next_cell_v = get_next_cells(matrix, row_idx, col_idx)
 
             if not next_cell_h == None:
-                adjacency_relations.append(('h', cell, next_cell_h))
+                adjacency_relations.append(('h', normalize_text(cell), next_cell_h))
             if not next_cell_v == None:
-                adjacency_relations.append(('v', cell, next_cell_v))
+                adjacency_relations.append(('v', normalize_text(cell), next_cell_v))
     return adjacency_relations
 
 def get_next_cells(matrix, row_idx, col_idx):
@@ -68,9 +68,8 @@ def calc_adjacency(df_pred, df_gt):
 
     gt_adjacency_relations = set(get_adjacency_relations(gt_matrix))
     pred_adjacency_relations = set(get_adjacency_relations(pred_matrix))
-
     intersection = gt_adjacency_relations.intersection(pred_adjacency_relations)
-
+    
     correct_adj_rel = len(intersection)
     total_adj_rel = len(gt_adjacency_relations)
     detected_adj_rel = len(pred_adjacency_relations)

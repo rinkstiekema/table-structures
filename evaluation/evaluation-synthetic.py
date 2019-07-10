@@ -8,6 +8,7 @@ import tabula
 from tqdm import tqdm 
 import re
 import math
+import utils
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 def calc_bleu(df_pred, df_gt):
@@ -26,8 +27,7 @@ def calc_bleu(df_pred, df_gt):
 
 def normalize_text(text):
     text = "".join(text.split())
-    text = text.upper()
-    return re.sub('[^a-zA-Z0-9]', '', text)
+    return re.sub('[^a-zA-Z0-9]', '', text).upper()
     
 def get_adjacency_relations(matrix):
     adjacency_relations = []
@@ -42,9 +42,9 @@ def get_adjacency_relations(matrix):
             next_cell_h, next_cell_v = get_next_cells(matrix, row_idx, col_idx)
 
             if not next_cell_h == None:
-                adjacency_relations.append(('h', cell, next_cell_h))
+                adjacency_relations.append(('h', normalize_text(cell), next_cell_h))
             if not next_cell_v == None:
-                adjacency_relations.append(('v', cell, next_cell_v))
+                adjacency_relations.append(('v', normalize_text(cell), next_cell_v))
     return adjacency_relations
 
 def get_next_cells(matrix, row_idx, col_idx):
@@ -111,8 +111,10 @@ if __name__ == '__main__':
     result_list = []
     for path in tqdm(os.listdir(pred_path)):
         try:
-            df_pred = pd.read_csv(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
-            df_gt = pd.read_csv(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv'), dtype=str)
+            pred_csv = utils.open_file(os.path.join(pred_path, os.path.splitext(path)[0]+'.csv')).read()
+            gt_csv = utils.open_file(os.path.join(gt_path, os.path.splitext(path)[0]+'.csv')).read()
+            df_pred = pd.read_csv(pd.compat.StringIO(pred_csv), sep=",", dtype=str)
+            df_gt = pd.read_csv(pd.compat.StringIO(gt_csv), sep=",", dtype=str)
 
             # drop completely empty rows and columns
             df_pred = df_pred.dropna(how='all', axis=0)
