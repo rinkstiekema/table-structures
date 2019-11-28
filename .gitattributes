@@ -1,0 +1,7 @@
+models/* filter=lfs diff=lfs merge=lfs -text
+models/segment-model/model.ckpt.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
+models/segment-model/model.ckpt.index filter=lfs diff=lfs merge=lfs -text
+models/segment-model/model.ckpt.meta filter=lfs diff=lfs merge=lfs -text
+models/pix2pix-model/ filter=lfs diff=lfs merge=lfs -text
+models/pix2pix-model/50_net_D.pth filter=lfs diff=lfs merge=lfs -text
+models/pix2pix-model/50_net_G.pth filter=lfs diff=lfs merge=lfs -text
