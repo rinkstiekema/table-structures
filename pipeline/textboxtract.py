@@ -86,7 +86,6 @@ def extract_pdffigures(json_folder, pdf_folder):
             jfile.write(json.dumps(tables))
             jfile.truncate()
 
-
 def extract(json_folder, pdf_folder):
     for json_file in os.listdir(json_folder):
         json_file_location = os.path.join(json_folder, json_file)
