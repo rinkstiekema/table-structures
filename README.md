@@ -31,6 +31,10 @@ You can run the pipeline using `python ./pipeline/batch.py`. Following options a
 
 `pip install -r requirements.txt`
 
+## Pretrained models
+
+Pretrained models and a small annotated test set can be found in the following google drive:
+https://drive.google.com/drive/u/0/folders/1dgKISbhBNfR8XXnIxUD_sIhwYNurKHbb
 
 ## Acknowledgments
 
